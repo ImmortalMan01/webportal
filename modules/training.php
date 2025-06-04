@@ -4,9 +4,9 @@ $trainings = [
     ["title" => "Acil Müdahale", "description" => "Acil durumlarda yapılacaklar"],
 ];
 ?>
-<h2>Eğitimler</h2>
-<ul>
+<h2 class="mb-3">Eğitimler</h2>
+<ul class="list-group">
 <?php foreach ($trainings as $t): ?>
-    <li><strong><?php echo $t['title']; ?></strong> - <?php echo $t['description']; ?></li>
+    <li class="list-group-item"><strong><?php echo $t['title']; ?></strong> - <?php echo $t['description']; ?></li>
 <?php endforeach; ?>
 </ul>

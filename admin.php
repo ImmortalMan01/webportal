@@ -12,18 +12,21 @@ $users = $stmt->fetchAll();
 <html lang='tr'>
 <head>
     <meta charset='UTF-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Admin Panel</h2>
+    <div class="container my-4">
+        <h2 class="mb-3">Admin Panel</h2>
         <h3>Kullanıcılar</h3>
-        <ul>
+        <ul class="list-group">
             <?php foreach ($users as $info): ?>
-                <li><?php echo htmlspecialchars($info['username']) . ' (' . $info['role'] . ')'; ?></li>
+                <li class="list-group-item"><?php echo htmlspecialchars($info['username']) . ' (' . $info['role'] . ')'; ?></li>
             <?php endforeach; ?>
         </ul>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

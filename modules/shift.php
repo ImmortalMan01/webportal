@@ -5,8 +5,8 @@ $shifts = [
     ["date" => "2023-05-03", "time" => "00:00 - 08:00"],
 ];
 ?>
-<h2>Vardiya Sistemi</h2>
-<table>
+<h2 class="mb-3">Vardiya Sistemi</h2>
+<table class="table table-striped">
     <tr><th>Tarih</th><th>Vardiya</th></tr>
     <?php foreach ($shifts as $s): ?>
         <tr><td><?php echo $s['date']; ?></td><td><?php echo $s['time']; ?></td></tr>
