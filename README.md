@@ -23,6 +23,34 @@ CREATE TABLE users (
 );
 ```
 
+Additionally create tables for the application data:
+
+```sql
+CREATE TABLE shifts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    date DATE NOT NULL,
+    time VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE trainings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE exams (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    date DATE NOT NULL
+);
+
+CREATE TABLE procedures (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    file VARCHAR(100) NOT NULL
+);
+```
+
 Edit `db.php` if your database credentials differ from the defaults.
 
 The interface includes a minimal style sheet (`style.css`) for a cleaner look.

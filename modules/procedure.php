@@ -1,10 +1,7 @@
 <?php
-$file = __DIR__ . '/../data/procedures.json';
-$procedures = [];
-if (file_exists($file)) {
-    $json = file_get_contents($file);
-    $procedures = json_decode($json, true) ?: [];
-}
+require_once __DIR__ . '/../db.php';
+$stmt = $pdo->query('SELECT name, file FROM procedures ORDER BY name');
+$procedures = $stmt->fetchAll();
 ?>
 <h2 class="mb-3">Prosedürler</h2>
 <ul class="list-group">
