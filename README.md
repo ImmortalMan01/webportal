@@ -11,6 +11,8 @@ This is a simple PHP-based web portal designed for corporate healthcare personne
 
 Serve the project through a PHP-enabled web server. The entry point is `index.php`.
 
+The interface now includes a minimal style sheet (`style.css`) for a cleaner look.
+
 Example using PHP's built-in server:
 
 ```bash

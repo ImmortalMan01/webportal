@@ -5,7 +5,7 @@ $exams = [
 ];
 ?>
 <h2>Sınavlar</h2>
-<table border='1' cellpadding='5'>
+<table>
     <tr><th>Sınav</th><th>Tarih</th></tr>
     <?php foreach ($exams as $e): ?>
         <tr><td><?php echo $e['title']; ?></td><td><?php echo $e['date']; ?></td></tr>

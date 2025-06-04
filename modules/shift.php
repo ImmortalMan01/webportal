@@ -6,7 +6,7 @@ $shifts = [
 ];
 ?>
 <h2>Vardiya Sistemi</h2>
-<table border='1' cellpadding='5'>
+<table>
     <tr><th>Tarih</th><th>Vardiya</th></tr>
     <?php foreach ($shifts as $s): ?>
         <tr><td><?php echo $s['date']; ?></td><td><?php echo $s['time']; ?></td></tr>

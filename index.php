@@ -3,9 +3,9 @@ $module = isset($_GET['module']) ? $_GET['module'] : 'home';
 function render_menu() {
     echo "<ul>";
     echo "<li><a href='?module=shift'>Vardiya Sistemi</a></li>";
-    echo "<li><a href='?module=training'>Egitimler</a></li>";
-    echo "<li><a href='?module=exam'>Sinavlar</a></li>";
-    echo "<li><a href='?module=procedure'>Prosedurler</a></li>";
+    echo "<li><a href='?module=training'>Eğitimler</a></li>";
+    echo "<li><a href='?module=exam'>Sınavlar</a></li>";
+    echo "<li><a href='?module=procedure'>Prosedürler</a></li>";
     echo "</ul>";
 }
 ?>
@@ -14,18 +14,16 @@ function render_menu() {
 <head>
     <meta charset='UTF-8'>
     <title>Sağlık Personeli Portalı</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        nav ul { list-style-type: none; padding: 0; }
-        nav li { display: inline; margin-right: 10px; }
-        section { margin-top: 20px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Sağlık Personeli Portalı</h1>
-    <nav>
-        <?php render_menu(); ?>
-    </nav>
+    <header>
+        <h1>Sağlık Personeli Portalı</h1>
+        <nav>
+            <?php render_menu(); ?>
+        </nav>
+    </header>
+    <div class="container">
     <section>
         <?php
         switch ($module) {
@@ -46,5 +44,6 @@ function render_menu() {
         }
         ?>
     </section>
+    </div>
 </body>
 </html>
