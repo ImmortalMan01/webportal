@@ -56,8 +56,33 @@ CREATE TABLE profiles (
     full_name VARCHAR(100) NOT NULL,
     department VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
+    birthdate DATE,
+    picture VARCHAR(100),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE modules (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    file VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Example initial modules
+INSERT INTO modules (name, file) VALUES
+    ('Vardiya Sistemi','shift'),
+    ('Eğitimler','training'),
+    ('Sınavlar','exam'),
+    ('Prosedürler','procedure');
 ```
 
 Edit `db.php` if your database credentials differ from the defaults.
