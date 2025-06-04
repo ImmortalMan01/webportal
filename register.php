@@ -1,15 +1,17 @@
 <?php
 session_start();
+require 'db.php';
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $users = json_decode(file_get_contents('users.json'), true);
     $u = $_POST['username'] ?? '';
     $p = $_POST['password'] ?? '';
-    if (isset($users[$u])) {
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ?');
+    $stmt->execute([$u]);
+    if ($stmt->fetchColumn() > 0) {
         $message = 'Kullanıcı adı zaten mevcut';
     } else {
-        $users[$u] = ['password' => password_hash($p, PASSWORD_DEFAULT), 'role' => 'user'];
-        file_put_contents('users.json', json_encode($users, JSON_PRETTY_PRINT));
+        $stmt = $pdo->prepare('INSERT INTO users (username, password, role) VALUES (?, ?, ?)');
+        $stmt->execute([$u, password_hash($p, PASSWORD_DEFAULT), 'user']);
         $message = 'Kayıt başarılı. Giriş yapabilirsiniz.';
     }
 }
