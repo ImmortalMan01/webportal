@@ -1,10 +1,7 @@
 <?php
-$file = __DIR__ . '/../data/shifts.json';
-$shifts = [];
-if (file_exists($file)) {
-    $json = file_get_contents($file);
-    $shifts = json_decode($json, true) ?: [];
-}
+require_once __DIR__ . '/../db.php';
+$stmt = $pdo->query('SELECT date, time FROM shifts ORDER BY date');
+$shifts = $stmt->fetchAll();
 ?>
 <h2 class="mb-3">Vardiya Sistemi</h2>
 <table class="table table-striped">

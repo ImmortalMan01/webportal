@@ -1,10 +1,7 @@
 <?php
-$file = __DIR__ . '/../data/exams.json';
-$exams = [];
-if (file_exists($file)) {
-    $json = file_get_contents($file);
-    $exams = json_decode($json, true) ?: [];
-}
+require_once __DIR__ . '/../db.php';
+$stmt = $pdo->query('SELECT title, date FROM exams ORDER BY date');
+$exams = $stmt->fetchAll();
 ?>
 <h2 class="mb-3">Sınavlar</h2>
 <table class="table table-striped">

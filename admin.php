@@ -7,42 +7,43 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
 
 require 'db.php';
 
-function load_data($name) {
-    $file = __DIR__ . "/data/{$name}.json";
-    if (file_exists($file)) {
-        $data = json_decode(file_get_contents($file), true);
-        return $data ?: [];
-    }
-    return [];
-}
-
-function save_data($name, $data) {
-    $file = __DIR__ . "/data/{$name}.json";
-    file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section = $_POST['section'] ?? '';
     $action  = $_POST['action'] ?? '';
-    $data    = load_data($section);
     if ($section && $action) {
-        if ($action === 'add') {
-            if ($section === 'shifts') {
-                $data[] = ['date' => $_POST['date'], 'time' => $_POST['time']];
-            } elseif ($section === 'trainings') {
-                $data[] = ['title' => $_POST['title'], 'description' => $_POST['description']];
-            } elseif ($section === 'exams') {
-                $data[] = ['title' => $_POST['title'], 'date' => $_POST['date']];
-            } elseif ($section === 'procedures') {
-                $data[] = ['name' => $_POST['name'], 'file' => $_POST['file']];
+        if ($section === 'shifts') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO shifts (date, time) VALUES (?, ?)');
+                $stmt->execute([$_POST['date'], $_POST['time']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM shifts WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
             }
-        } elseif ($action === 'delete') {
-            $idx = (int)$_POST['index'];
-            if (isset($data[$idx])) {
-                array_splice($data, $idx, 1);
+        } elseif ($section === 'trainings') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO trainings (title, description) VALUES (?, ?)');
+                $stmt->execute([$_POST['title'], $_POST['description']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM trainings WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
+            }
+        } elseif ($section === 'exams') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO exams (title, date) VALUES (?, ?)');
+                $stmt->execute([$_POST['title'], $_POST['date']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM exams WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
+            }
+        } elseif ($section === 'procedures') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO procedures (name, file) VALUES (?, ?)');
+                $stmt->execute([$_POST['name'], $_POST['file']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM procedures WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
             }
         }
-        save_data($section, $data);
         header('Location: admin.php#' . $section);
         exit;
     }
@@ -50,10 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $stmt = $pdo->query('SELECT username, role FROM users ORDER BY username');
 $users = $stmt->fetchAll();
-$shifts = load_data('shifts');
-$trainings = load_data('trainings');
-$exams = load_data('exams');
-$procedures = load_data('procedures');
+$shifts = $pdo->query('SELECT id, date, time FROM shifts ORDER BY date')->fetchAll();
+$trainings = $pdo->query('SELECT id, title, description FROM trainings ORDER BY id')->fetchAll();
+$exams = $pdo->query('SELECT id, title, date FROM exams ORDER BY date')->fetchAll();
+$procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang='tr'>
@@ -102,7 +103,7 @@ $procedures = load_data('procedures');
                 </form>
                 <table class="table table-sm table-striped">
                     <tr><th>Tarih</th><th>Vardiya</th><th></th></tr>
-                    <?php foreach ($shifts as $i => $s): ?>
+                    <?php foreach ($shifts as $s): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($s['date']); ?></td>
                             <td><?php echo htmlspecialchars($s['time']); ?></td>
@@ -110,7 +111,7 @@ $procedures = load_data('procedures');
                                 <form method="post" class="d-inline">
                                     <input type="hidden" name="section" value="shifts">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="index" value="<?php echo $i; ?>">
+                                    <input type="hidden" name="id" value="<?php echo $s['id']; ?>">
                                     <button class="btn btn-sm btn-danger">Sil</button>
                                 </form>
                             </td>
@@ -127,13 +128,13 @@ $procedures = load_data('procedures');
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <ul class="list-group">
-                    <?php foreach ($trainings as $i => $t): ?>
+                    <?php foreach ($trainings as $t): ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span><strong><?php echo htmlspecialchars($t['title']); ?></strong> - <?php echo htmlspecialchars($t['description']); ?></span>
                             <form method="post" class="ms-3">
                                 <input type="hidden" name="section" value="trainings">
                                 <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="index" value="<?php echo $i; ?>">
+                                <input type="hidden" name="id" value="<?php echo $t['id']; ?>">
                                 <button class="btn btn-sm btn-danger">Sil</button>
                             </form>
                         </li>
@@ -150,7 +151,7 @@ $procedures = load_data('procedures');
                 </form>
                 <table class="table table-sm table-striped">
                     <tr><th>Sınav</th><th>Tarih</th><th></th></tr>
-                    <?php foreach ($exams as $i => $e): ?>
+                    <?php foreach ($exams as $e): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($e['title']); ?></td>
                             <td><?php echo htmlspecialchars($e['date']); ?></td>
@@ -158,7 +159,7 @@ $procedures = load_data('procedures');
                                 <form method="post" class="d-inline">
                                     <input type="hidden" name="section" value="exams">
                                     <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="index" value="<?php echo $i; ?>">
+                                    <input type="hidden" name="id" value="<?php echo $e['id']; ?>">
                                     <button class="btn btn-sm btn-danger">Sil</button>
                                 </form>
                             </td>
@@ -175,13 +176,13 @@ $procedures = load_data('procedures');
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <ul class="list-group">
-                    <?php foreach ($procedures as $i => $p): ?>
+                    <?php foreach ($procedures as $p): ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <a href="docs/<?php echo htmlspecialchars($p['file']); ?>" target="_blank"><?php echo htmlspecialchars($p['name']); ?></a>
                             <form method="post" class="ms-3">
                                 <input type="hidden" name="section" value="procedures">
                                 <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="index" value="<?php echo $i; ?>">
+                                <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
                                 <button class="btn btn-sm btn-danger">Sil</button>
                             </form>
                         </li>
