@@ -78,11 +78,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $from = $_POST['from'] ?? '';
                 $u1 = $_POST['u1'] ?? '';
                 $u2 = $_POST['u2'] ?? '';
+                $to   = $_POST['to']   ?? '';
                 $text = trim($_POST['message'] ?? '');
                 $stmt = $pdo->prepare('SELECT id FROM users WHERE username=?');
                 $stmt->execute([$from]);
                 $sid = $stmt->fetchColumn();
-                $stmt->execute([$from==$u1?$u2:$u1]);
+                if($from === $_SESSION['user']){
+                    $stmt->execute([$to]);
+                } else {
+                    $stmt->execute([$from==$u1?$u2:$u1]);
+                }
                 $rid = $stmt->fetchColumn();
                 if($sid && $rid && $text!=''){
                     $pdo->prepare('INSERT INTO messages (sender_id, receiver_id, message) VALUES (?,?,?)')->execute([$sid,$rid,$text]);
@@ -332,9 +337,12 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                         $id2 = $pdo->prepare('SELECT id FROM users WHERE username=?');
                         $id2->execute([$u2]);
                         $id2 = $id2->fetchColumn();
-                        if($id1 && $id2){
-                            $q = $pdo->prepare('SELECT m.sender_id, m.message, m.created_at, u.role FROM messages m JOIN users u ON m.sender_id=u.id WHERE (m.sender_id=? AND m.receiver_id=?) OR (m.sender_id=? AND m.receiver_id=?) ORDER BY m.id');
-                            $q->execute([$id1,$id2,$id2,$id1]);
+                        $adminIdStmt = $pdo->prepare('SELECT id FROM users WHERE username=?');
+                        $adminIdStmt->execute([$_SESSION['user']]);
+                        $adminId = $adminIdStmt->fetchColumn();
+                        if($id1 && $id2 && $adminId){
+                            $q = $pdo->prepare('SELECT m.sender_id, m.receiver_id, m.message, m.created_at, u.role FROM messages m JOIN users u ON m.sender_id=u.id WHERE m.sender_id IN (?,?,?) AND m.receiver_id IN (?,?,?) ORDER BY m.id');
+                            $q->execute([$id1,$id2,$adminId,$id1,$id2,$adminId]);
                             $conv = $q->fetchAll();
                         }
                     }
@@ -350,15 +358,19 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                 <?php endforeach; ?>
                 </div>
                 <?php if($u1 && $u2): ?>
-                <form method="post" class="d-flex">
+                <form method="post" class="d-flex align-items-start" id="adminMsgForm">
                     <input type="hidden" name="section" value="admin_messages">
                     <input type="hidden" name="action" value="send">
                     <input type="hidden" name="u1" value="<?php echo htmlspecialchars($u1); ?>">
                     <input type="hidden" name="u2" value="<?php echo htmlspecialchars($u2); ?>">
-                    <select name="from" class="form-select me-2" style="max-width:150px;">
+                    <select name="from" id="fromSelect" class="form-select me-2" style="max-width:150px;">
                         <option value="<?php echo htmlspecialchars($u1); ?>"><?php echo htmlspecialchars($u1); ?> olarak</option>
                         <option value="<?php echo htmlspecialchars($u2); ?>"><?php echo htmlspecialchars($u2); ?> olarak</option>
                         <option value="<?php echo htmlspecialchars($_SESSION['user']); ?>">Admin olarak</option>
+                    </select>
+                    <select name="to" id="toSelect" class="form-select me-2" style="max-width:150px; display:none;">
+                        <option value="<?php echo htmlspecialchars($u1); ?>"><?php echo htmlspecialchars($u1); ?></option>
+                        <option value="<?php echo htmlspecialchars($u2); ?>"><?php echo htmlspecialchars($u2); ?></option>
                     </select>
                     <input type="text" name="message" class="form-control me-2" required>
                     <button class="btn btn-primary">Gönder</button>
@@ -401,6 +413,15 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                 history.replaceState(null,null,e.target.dataset.bsTarget);
             });
         });
+        const fromSel = document.getElementById('fromSelect');
+        const toSel = document.getElementById('toSelect');
+        function toggleTo(){
+            if(fromSel && toSel){
+                toSel.style.display = fromSel.value === '<?php echo $_SESSION['user']; ?>' ? 'block' : 'none';
+            }
+        }
+        toggleTo();
+        if(fromSel) fromSel.addEventListener('change', toggleTo);
     </script>
 </body>
 </html>
