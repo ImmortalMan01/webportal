@@ -1,8 +1,10 @@
 <?php
-$exams = [
-    ["title" => "Hijyen Sınavı", "date" => "2023-06-01"],
-    ["title" => "Acil Müdahale Sınavı", "date" => "2023-06-15"],
-];
+$file = __DIR__ . '/../data/exams.json';
+$exams = [];
+if (file_exists($file)) {
+    $json = file_get_contents($file);
+    $exams = json_decode($json, true) ?: [];
+}
 ?>
 <h2 class="mb-3">Sınavlar</h2>
 <table class="table table-striped">
