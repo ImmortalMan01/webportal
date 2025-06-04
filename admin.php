@@ -6,6 +6,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
 }
 
 require 'db.php';
+require 'activity.php';
+update_activity($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section = $_POST['section'] ?? '';
@@ -71,8 +73,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare('UPDATE profiles SET full_name=?, department=?, phone=?, birthdate=? WHERE user_id=?');
                 $stmt->execute([$_POST['full_name'], $_POST['department'], $_POST['phone'], $_POST['birthdate'], $_POST['user_id']]);
             }
+        } elseif ($section === 'admin_messages') {
+            if ($action === 'send') {
+                $from = $_POST['from'] ?? '';
+                $u1 = $_POST['u1'] ?? '';
+                $u2 = $_POST['u2'] ?? '';
+                $text = trim($_POST['message'] ?? '');
+                $stmt = $pdo->prepare('SELECT id FROM users WHERE username=?');
+                $stmt->execute([$from]);
+                $sid = $stmt->fetchColumn();
+                $stmt->execute([$from==$u1?$u2:$u1]);
+                $rid = $stmt->fetchColumn();
+                if($sid && $rid && $text!=''){
+                    $pdo->prepare('INSERT INTO messages (sender_id, receiver_id, message) VALUES (?,?,?)')->execute([$sid,$rid,$text]);
+                }
+            }
         }
-        header('Location: admin.php#' . $section);
+        if($section==='admin_messages'){
+            header('Location: admin.php?u1=' . urlencode($u1) . '&u2=' . urlencode($u2) . '#messages');
+        } else {
+            header('Location: admin.php#' . $section);
+        }
         exit;
     }
 }
@@ -116,6 +137,9 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules" type="button" role="tab">Modüller</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab">Mesajlar</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="profiles-tab" data-bs-toggle="tab" data-bs-target="#profiles" type="button" role="tab">Profiller</button>
@@ -275,6 +299,71 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                         </li>
                     <?php endforeach; ?>
                 </ul>
+            </div>
+            <div class="tab-pane fade" id="messages" role="tabpanel">
+                <form method="get" class="row g-2 mb-3">
+                    <input type="hidden" name="section" value="messages">
+                    <div class="col-md-3">
+                        <select name="u1" class="form-select" required>
+                            <option value="">Kullanıcı 1</option>
+                            <?php foreach ($users as $u): ?>
+                                <option value="<?php echo htmlspecialchars($u['username']); ?>" <?php if(isset($_GET['u1']) && $_GET['u1']==$u['username']) echo 'selected'; ?>><?php echo htmlspecialchars($u['username']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="u2" class="form-select" required>
+                            <option value="">Kullanıcı 2</option>
+                            <?php foreach ($users as $u): ?>
+                                <option value="<?php echo htmlspecialchars($u['username']); ?>" <?php if(isset($_GET['u2']) && $_GET['u2']==$u['username']) echo 'selected'; ?>><?php echo htmlspecialchars($u['username']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2"><button class="btn btn-primary w-100">Göster</button></div>
+                </form>
+                <?php
+                    $u1 = $_GET['u1'] ?? '';
+                    $u2 = $_GET['u2'] ?? '';
+                    $conv = [];
+                    if($u1 && $u2){
+                        $id1 = $pdo->prepare('SELECT id FROM users WHERE username=?');
+                        $id1->execute([$u1]);
+                        $id1 = $id1->fetchColumn();
+                        $id2 = $pdo->prepare('SELECT id FROM users WHERE username=?');
+                        $id2->execute([$u2]);
+                        $id2 = $id2->fetchColumn();
+                        if($id1 && $id2){
+                            $q = $pdo->prepare('SELECT m.sender_id, m.message, m.created_at, u.role FROM messages m JOIN users u ON m.sender_id=u.id WHERE (m.sender_id=? AND m.receiver_id=?) OR (m.sender_id=? AND m.receiver_id=?) ORDER BY m.id');
+                            $q->execute([$id1,$id2,$id2,$id1]);
+                            $conv = $q->fetchAll();
+                        }
+                    }
+                ?>
+                <div class="border p-2 mb-3" style="max-height:300px;overflow-y:auto;">
+                <?php foreach($conv as $m): ?>
+                    <div class="d-flex <?php echo $m['sender_id']==$id1? 'justify-content-start':'justify-content-end'; ?>">
+                        <div class="bubble <?php echo $m['sender_id']==$id1? 'theirs':'mine'; ?><?php if($m['role']==='admin') echo ' admin-msg'; ?>">
+                            <div class="text"><?php echo htmlspecialchars($m['message']); ?></div>
+                            <div class="meta small text-muted"><?php echo $m['created_at']; ?></div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                </div>
+                <?php if($u1 && $u2): ?>
+                <form method="post" class="d-flex">
+                    <input type="hidden" name="section" value="admin_messages">
+                    <input type="hidden" name="action" value="send">
+                    <input type="hidden" name="u1" value="<?php echo htmlspecialchars($u1); ?>">
+                    <input type="hidden" name="u2" value="<?php echo htmlspecialchars($u2); ?>">
+                    <select name="from" class="form-select me-2" style="max-width:150px;">
+                        <option value="<?php echo htmlspecialchars($u1); ?>"><?php echo htmlspecialchars($u1); ?> olarak</option>
+                        <option value="<?php echo htmlspecialchars($u2); ?>"><?php echo htmlspecialchars($u2); ?> olarak</option>
+                        <option value="<?php echo htmlspecialchars($_SESSION['user']); ?>">Admin olarak</option>
+                    </select>
+                    <input type="text" name="message" class="form-control me-2" required>
+                    <button class="btn btn-primary">Gönder</button>
+                </form>
+                <?php endif; ?>
             </div>
             <div class="tab-pane fade" id="profiles" role="tabpanel">
                 <table class="table table-sm">

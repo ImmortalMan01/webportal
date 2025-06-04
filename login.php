@@ -11,6 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && password_verify($p, $user['password'])) {
         $_SESSION['user'] = $user['username'];
         $_SESSION['role'] = $user['role'];
+        $up = $pdo->prepare('UPDATE users SET last_active=NOW() WHERE username=?');
+        $up->execute([$user['username']]);
         header('Location: index.php');
         exit;
     } else {

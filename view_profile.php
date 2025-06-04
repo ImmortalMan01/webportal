@@ -5,6 +5,8 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 require 'db.php';
+require 'activity.php';
+update_activity($pdo);
 $user = $_GET['user'] ?? '';
 $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
 $stmt->execute([$user]);

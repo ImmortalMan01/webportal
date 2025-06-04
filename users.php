@@ -5,6 +5,8 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 require 'db.php';
+require 'activity.php';
+update_activity($pdo);
 $users = $pdo->query('SELECT username FROM users ORDER BY username')->fetchAll();
 ?>
 <!DOCTYPE html>
