@@ -1,9 +1,10 @@
 <?php
-$shifts = [
-    ["date" => "2023-05-01", "time" => "08:00 - 16:00"],
-    ["date" => "2023-05-02", "time" => "16:00 - 00:00"],
-    ["date" => "2023-05-03", "time" => "00:00 - 08:00"],
-];
+$file = __DIR__ . '/../data/shifts.json';
+$shifts = [];
+if (file_exists($file)) {
+    $json = file_get_contents($file);
+    $shifts = json_decode($json, true) ?: [];
+}
 ?>
 <h2 class="mb-3">Vardiya Sistemi</h2>
 <table class="table table-striped">

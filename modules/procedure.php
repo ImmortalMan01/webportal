@@ -1,8 +1,10 @@
 <?php
-$procedures = [
-    ["name" => "Sterilizasyon Prosedürü", "file" => "sterilizasyon.pdf"],
-    ["name" => "Hasta Taşıma Prosedürü", "file" => "hasta_tasima.pdf"],
-];
+$file = __DIR__ . '/../data/procedures.json';
+$procedures = [];
+if (file_exists($file)) {
+    $json = file_get_contents($file);
+    $procedures = json_decode($json, true) ?: [];
+}
 ?>
 <h2 class="mb-3">Prosedürler</h2>
 <ul class="list-group">
