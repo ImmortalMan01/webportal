@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../includes/db.php';
 $stmt = $pdo->query('SELECT date, time FROM shifts ORDER BY date');
 $shifts = $stmt->fetchAll();
 ?>

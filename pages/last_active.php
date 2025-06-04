@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require __DIR__ . '/../includes/db.php';
 $user = $_GET['user'] ?? '';
 $stmt = $pdo->prepare('SELECT last_active FROM users WHERE username=?');
 $stmt->execute([$user]);

@@ -4,8 +4,8 @@ if (!isset($_SESSION['user'])) {
     header('Location: login.php');
     exit;
 }
-require 'db.php';
-require 'activity.php';
+require __DIR__ . '/../includes/db.php';
+require __DIR__ . '/../includes/activity.php';
 update_activity($pdo);
 $user = $_GET['user'] ?? '';
 $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
@@ -25,7 +25,7 @@ $profile = $stmt->fetch() ?: ['full_name'=>'','department'=>'','phone'=>'','birt
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
 <div class="container my-4">

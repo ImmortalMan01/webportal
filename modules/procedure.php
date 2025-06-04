@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../includes/db.php';
 $stmt = $pdo->query('SELECT name, file FROM procedures ORDER BY name');
 $procedures = $stmt->fetchAll();
 ?>
