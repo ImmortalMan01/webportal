@@ -16,11 +16,6 @@ if ($targetUser) {
     $stmt->execute([$targetUser]);
     $targetId = $stmt->fetchColumn();
     if (!$targetId) die('Kullanıcı bulunamadı');
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $msg = $_POST['message'] ?? '';
-        $s = $pdo->prepare('INSERT INTO messages (sender_id, receiver_id, message) VALUES (?, ?, ?)');
-        $s->execute([$currentId, $targetId, $msg]);
-    }
     $conv = $pdo->prepare('SELECT id, sender_id, receiver_id, message, created_at, is_read FROM messages WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) ORDER BY id');
     $conv->execute([$currentId, $targetId, $targetId, $currentId]);
     $messages = $conv->fetchAll();
@@ -51,7 +46,7 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
 <div class="container my-4">
     <h2 class="mb-3">Mesajlar</h2>
     <div class="row">
-        <div class="col-md-4">
+        <div id="usersCol" class="col-md-4">
             <h5>Kullanıcılar</h5>
             <ul class="list-group mb-3">
                 <?php foreach ($allUsers as $u): ?>
@@ -63,15 +58,16 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                 <?php endforeach; ?>
             </ul>
         </div>
-        <div class="col-md-8">
+        <div id="chatCol" class="col-md-8">
             <?php if ($targetUser): ?>
-                <div id="chatBox" class="border p-3 mb-3" style="height:300px; overflow-y:auto;">
+                <div id="chatBox" class="border p-3 mb-3">
                     <?php $lastId = 0; foreach ($messages as $m): ?>
                         <?php $lastId = $m['id']; ?>
-                        <div class="mb-2">
-                            <strong><?php echo $m['sender_id']==$currentId ? 'Ben' : htmlspecialchars($targetUser); ?>:</strong>
-                            <?php echo htmlspecialchars($m['message']); ?>
-                            <small class="text-muted float-end"><?php echo $m['created_at']; ?></small>
+                        <div class="d-flex <?php echo $m['sender_id']==$currentId ? 'justify-content-end' : 'justify-content-start'; ?>">
+                            <div class="bubble <?php echo $m['sender_id']==$currentId ? 'mine' : 'theirs'; ?>" data-id="<?php echo $m['id']; ?>">
+                                <div class="text"><?php echo htmlspecialchars($m['message']); ?></div>
+                                <div class="meta"><span class="time"><?php echo $m['created_at']; ?></span> <span class="status"><?php echo $m['is_read'] ? '&#10003;&#10003;' : '&#10003;'; ?></span></div>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -81,48 +77,85 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                 </form>
                 <script>
                 const partner = <?php echo json_encode($targetUser); ?>;
-                let lastId = <?php echo $lastId; ?>;
+                const currentUser = <?php echo json_encode($current); ?>;
+                const currentId = <?php echo $currentId; ?>;
                 const chatBox = document.getElementById('chatBox');
-                const form = document.getElementById('msgForm');
-                form.addEventListener('submit', async e => {
-                    e.preventDefault();
-                    const input = document.getElementById('msgInput');
-                    const text = input.value.trim();
-                    if (!text) return;
-                    const resp = await fetch('send_message.php', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                        body: new URLSearchParams({user: partner, message: text})
-                    });
-                    if (resp.ok) {
-                        const data = await resp.json();
-                        appendMsg('Ben', data.message, data.created_at);
-                        lastId = data.id;
-                        input.value = '';
+                const ws = new WebSocket(`ws://${location.hostname}:8080?user=${encodeURIComponent(currentUser)}`);
+                ws.addEventListener('open', () => {
+                    ws.send(JSON.stringify({type:'history', with: partner}));
+                });
+                ws.addEventListener('message', e => {
+                    const data = JSON.parse(e.data);
+                    if(data.type==='message'){
+                        appendMsg(data.from===currentUser, data.text, data.time, data.id, data.status);
+                        if(data.from!==currentUser){
+                            ws.send(JSON.stringify({type:'seen', id:data.id, to:data.from}));
+                        }
+                    }else if(data.type==='typing'){
+                        showTyping();
+                    }else if(data.type==='seen'){
+                        updateStatus(data.id, 'seen');
+                    }else if(data.type==='history'){
+                        data.messages.forEach(m=>{
+                           appendMsg(m.sender_id==currentId, m.message, m.created_at, m.id, m.is_read? 'seen':'delivered');
+                        });
                         chatBox.scrollTop = chatBox.scrollHeight;
                     }
                 });
 
-                function appendMsg(who, msg, time) {
+                document.getElementById('msgForm').addEventListener('submit', e=>{
+                    e.preventDefault();
+                    const input = document.getElementById('msgInput');
+                    const text = input.value.trim();
+                    if(!text) return;
+                    ws.send(JSON.stringify({type:'message', to: partner, text}));
+                    input.value='';
+                });
+
+                document.getElementById('msgInput').addEventListener('input', ()=>{
+                    ws.send(JSON.stringify({type:'typing', to: partner}));
+                });
+
+                function appendMsg(mine, msg, time, id, status){
                     const div = document.createElement('div');
-                    div.className = 'mb-2';
-                    div.innerHTML = `<strong>${who}:</strong> ${msg} <small class="text-muted float-end">${time}</small>`;
+                    div.className = 'd-flex '+(mine?'justify-content-end':'justify-content-start');
+                    div.innerHTML = `<div class="bubble ${mine?'mine':'theirs'}" data-id="${id}">`+
+                        `<div class="text">${escapeHtml(msg)}</div>`+
+                        `<div class="meta"><span class="time">${time}</span> <span class="status">${statusIcon(status)}</span></div>`+
+                        `</div>`;
                     chatBox.appendChild(div);
+                    chatBox.scrollTop = chatBox.scrollHeight;
                 }
 
-                async function poll() {
-                    const resp = await fetch(`poll_messages.php?user=${encodeURIComponent(partner)}&last=${lastId}`);
-                    if (resp.ok) {
-                        const data = await resp.json();
-                        data.forEach(m => {
-                            appendMsg(m.sender_id == <?php echo $currentId; ?> ? 'Ben' : partner, m.message, m.created_at);
-                            lastId = m.id;
-                        });
-                        if (data.length) chatBox.scrollTop = chatBox.scrollHeight;
-                    }
+                function updateStatus(id, status){
+                    const el = chatBox.querySelector(`[data-id="${id}"] .status`);
+                    if(el) el.innerHTML = statusIcon(status);
                 }
-                setInterval(poll, 5000);
-                chatBox.scrollTop = chatBox.scrollHeight;
+
+                function statusIcon(status){
+                    if(status==='sent') return '&#10003;';
+                    if(status==='delivered') return '&#10003;&#10003;';
+                    if(status==='seen') return '<span style="color:#0d6efd">&#10003;&#10003;</span>';
+                    return '';
+                }
+
+                function escapeHtml(str){
+                    return str.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
+                }
+
+                let typingTimer;
+                function showTyping(){
+                    let el = document.getElementById('typing');
+                    if(!el){
+                        el = document.createElement('div');
+                        el.id='typing';
+                        el.className='small text-muted';
+                        el.textContent='Yazıyor...';
+                        chatBox.appendChild(el);
+                    }
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(()=>{el.remove();},2000);
+                }
                 </script>
             <?php else: ?>
                 <p>Soldaki listeden bir kullanıcı seçiniz.</p>
