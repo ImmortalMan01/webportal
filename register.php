@@ -20,18 +20,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang='tr'>
 <head>
     <meta charset='UTF-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kayıt Ol</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="container">
-        <h2>Kayıt Ol</h2>
-        <?php if ($message) echo "<p>$message</p>"; ?>
+<body class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card p-4 login-card">
+        <h2 class="text-center mb-3">Kayıt Ol</h2>
+        <?php if ($message) echo "<div class='alert alert-info'>$message</div>"; ?>
         <form method="post">
-            <input type="text" name="username" placeholder="Kullanıcı Adı" required>
-            <input type="password" name="password" placeholder="Şifre" required>
-            <button type="submit">Kayıt Ol</button>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="username" placeholder="Kullanıcı Adı" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" name="password" placeholder="Şifre" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Kayıt Ol</button>
         </form>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
