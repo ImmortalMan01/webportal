@@ -96,4 +96,10 @@ Example using PHP's built-in server:
 php -S localhost:8000
 ```
 
+The messaging interface uses a small WebSocket server written in Node.js. Start it in a separate terminal:
+
+```bash
+node ws-server.js
+```
+
 Navigate to `http://localhost:8000` in your browser. Register a user and log in to access the modules. Insert an admin account in the `users` table (for example `admin` / `admin123`).
