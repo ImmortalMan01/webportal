@@ -8,6 +8,7 @@ This is a simple PHP-based web portal designed for corporate healthcare personne
 - **Procedure Documents** (`procedure.php`)
 - **User Login/Registration** (`login.php`, `register.php`)
 - **Admin Panel** (`admin.php`)
+- **User Profiles** (`profile.php`)
 
 ## Usage
 
@@ -48,6 +49,14 @@ CREATE TABLE procedures (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     file VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE profiles (
+    user_id INT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 ```
 

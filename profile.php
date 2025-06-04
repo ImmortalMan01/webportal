@@ -1,0 +1,69 @@
+<?php
+session_start();
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+    exit;
+}
+require 'db.php';
+$message = '';
+$username = $_SESSION['user'];
+$stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
+$stmt->execute([$username]);
+$userId = $stmt->fetchColumn();
+if (!$userId) {
+    die('Kullanıcı bulunamadı');
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $full  = $_POST['full_name'] ?? '';
+    $dept  = $_POST['department'] ?? '';
+    $phone = $_POST['phone'] ?? '';
+    $check = $pdo->prepare('SELECT COUNT(*) FROM profiles WHERE user_id = ?');
+    $check->execute([$userId]);
+    if ($check->fetchColumn()) {
+        $stmt = $pdo->prepare('UPDATE profiles SET full_name = ?, department = ?, phone = ? WHERE user_id = ?');
+        $stmt->execute([$full, $dept, $phone, $userId]);
+    } else {
+        $stmt = $pdo->prepare('INSERT INTO profiles (user_id, full_name, department, phone) VALUES (?, ?, ?, ?)');
+        $stmt->execute([$userId, $full, $dept, $phone]);
+    }
+    $message = 'Profil güncellendi';
+}
+$stmt = $pdo->prepare('SELECT full_name, department, phone FROM profiles WHERE user_id = ?');
+$stmt->execute([$userId]);
+$profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => ''];
+?>
+<!DOCTYPE html>
+<html lang='tr'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profilim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container my-4">
+    <h2 class="mb-3">Profilim</h2>
+    <?php if ($message) echo "<div class='alert alert-success'>$message</div>"; ?>
+    <form method="post" class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Ad Soyad</label>
+            <input type="text" name="full_name" class="form-control" value="<?php echo htmlspecialchars($profile['full_name']); ?>">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Birim</label>
+            <input type="text" name="department" class="form-control" value="<?php echo htmlspecialchars($profile['department']); ?>">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Telefon</label>
+            <input type="text" name="phone" class="form-control" value="<?php echo htmlspecialchars($profile['phone']); ?>">
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary">Kaydet</button>
+            <a href="index.php" class="btn btn-secondary ms-2">Geri</a>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

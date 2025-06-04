@@ -16,6 +16,7 @@ function render_menu() {
 function render_auth() {
     if (isset($_SESSION['user'])) {
         echo "<span class='navbar-text me-2'>Merhaba " . htmlspecialchars($_SESSION['user']) . "</span>";
+        echo "<a class='btn btn-light btn-sm me-2' href='profile.php'>Profil</a>";
         echo "<a class='btn btn-outline-light btn-sm me-2' href='logout.php'>Çıkış</a>";
         if ($_SESSION['role'] == 'admin') {
             echo "<a class='btn btn-light btn-sm' href='admin.php'>Admin Panel</a>";

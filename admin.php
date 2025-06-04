@@ -11,7 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section = $_POST['section'] ?? '';
     $action  = $_POST['action'] ?? '';
     if ($section && $action) {
-        if ($section === 'shifts') {
+        if ($section === 'users') {
+            if ($action === 'add') {
+                $u = $_POST['username'] ?? '';
+                $p = $_POST['password'] ?? '';
+                $r = $_POST['role'] ?? 'user';
+                $check = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ?');
+                $check->execute([$u]);
+                if ($check->fetchColumn() == 0) {
+                    $stmt = $pdo->prepare('INSERT INTO users (username, password, role) VALUES (?, ?, ?)');
+                    $stmt->execute([$u, password_hash($p, PASSWORD_DEFAULT), $r]);
+                }
+            } elseif ($action === 'changerole') {
+                $stmt = $pdo->prepare('UPDATE users SET role = ? WHERE username = ?');
+                $stmt->execute([$_POST['role'], $_POST['username']]);
+            }
+        } elseif ($section === 'shifts') {
             if ($action === 'add') {
                 $stmt = $pdo->prepare('INSERT INTO shifts (date, time) VALUES (?, ?)');
                 $stmt->execute([$_POST['date'], $_POST['time']]);
@@ -87,11 +102,40 @@ $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')
         </ul>
         <div class="tab-content" id="adminTabContent">
             <div class="tab-pane fade show active" id="users" role="tabpanel">
-                <ul class="list-group mb-3">
+                <form method="post" class="row g-2 mb-3">
+                    <input type="hidden" name="section" value="users">
+                    <input type="hidden" name="action" value="add">
+                    <div class="col-md-3"><input type="text" name="username" class="form-control" placeholder="Kullanıcı" required></div>
+                    <div class="col-md-3"><input type="password" name="password" class="form-control" placeholder="Şifre" required></div>
+                    <div class="col-md-3">
+                        <select name="role" class="form-select">
+                            <option value="user">user</option>
+                            <option value="admin">admin</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                </form>
+                <table class="table table-sm table-striped">
+                    <tr><th>Kullanıcı</th><th>Rol</th><th>Değiştir</th></tr>
                     <?php foreach ($users as $info): ?>
-                        <li class="list-group-item"><?php echo htmlspecialchars($info['username']) . ' (' . $info['role'] . ')'; ?></li>
+                        <tr>
+                            <td><?php echo htmlspecialchars($info['username']); ?></td>
+                            <td><?php echo htmlspecialchars($info['role']); ?></td>
+                            <td>
+                                <form method="post" class="d-flex">
+                                    <input type="hidden" name="section" value="users">
+                                    <input type="hidden" name="action" value="changerole">
+                                    <input type="hidden" name="username" value="<?php echo htmlspecialchars($info['username']); ?>">
+                                    <select name="role" class="form-select form-select-sm me-2">
+                                        <option value="user" <?php if ($info['role']=='user') echo 'selected'; ?>>user</option>
+                                        <option value="admin" <?php if ($info['role']=='admin') echo 'selected'; ?>>admin</option>
+                                    </select>
+                                    <button class="btn btn-sm btn-secondary">Kaydet</button>
+                                </form>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
-                </ul>
+                </table>
             </div>
             <div class="tab-pane fade" id="shifts" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
