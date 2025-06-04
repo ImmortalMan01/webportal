@@ -5,6 +5,8 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 require 'db.php';
+require 'activity.php';
+update_activity($pdo);
 $current = $_SESSION['user'];
 $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
 $stmt->execute([$current]);
@@ -16,7 +18,7 @@ if ($targetUser) {
     $stmt->execute([$targetUser]);
     $targetId = $stmt->fetchColumn();
     if (!$targetId) die('Kullanıcı bulunamadı');
-    $conv = $pdo->prepare('SELECT id, sender_id, receiver_id, message, created_at, is_read FROM messages WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) ORDER BY id');
+    $conv = $pdo->prepare('SELECT m.id, m.sender_id, m.receiver_id, m.message, m.created_at, m.is_read, u.role AS sender_role FROM messages m JOIN users u ON m.sender_id=u.id WHERE (m.sender_id = ? AND m.receiver_id = ?) OR (m.sender_id = ? AND m.receiver_id = ?) ORDER BY m.id');
     $conv->execute([$currentId, $targetId, $targetId, $currentId]);
     $messages = $conv->fetchAll();
     $ids = [];
@@ -70,6 +72,11 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                         $pstmt->execute([$tId]);
                         $row = $pstmt->fetch();
                         if($row) $prof = array_merge($prof,$row);
+                        $s = $pdo->prepare('SELECT last_active FROM users WHERE id=?');
+                        $s->execute([$tId]);
+                        $lastSeen = $s->fetchColumn();
+                    } else {
+                        $lastSeen = null;
                     }
                     $fullName = $prof['full_name'] ?: $targetUser;
                     $shortName = mb_substr($fullName,0,10).(mb_strlen($fullName)>10?'…':'');
@@ -79,17 +86,18 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                     <a href="view_profile.php?user=<?php echo urlencode($targetUser); ?>" class="d-flex align-items-center text-decoration-none text-dark">
                         <div class="position-relative me-2">
                             <img src="<?php echo $avatar; ?>" class="rounded-circle" width="40" height="40" alt="avatar">
-                            <span id="onlineDot" class="position-absolute bottom-0 end-0 translate-middle p-1 bg-success border border-light rounded-circle d-none"></span>
+                            <span id="onlineDot" class="position-absolute bg-success border border-light rounded-circle d-none"></span>
                         </div>
                         <span class="full-name fw-bold"><?php echo htmlspecialchars($fullName); ?></span>
                         <span class="short-name fw-bold"><?php echo htmlspecialchars($shortName); ?></span>
                     </a>
+                    <div id="statusText" class="ms-2 small text-muted"></div>
                 </div>
                 <div id="chatBox" class="border p-3 mb-3">
                     <?php $lastId = 0; foreach ($messages as $m): ?>
                         <?php $lastId = $m['id']; ?>
                         <div class="d-flex <?php echo $m['sender_id']==$currentId ? 'justify-content-end' : 'justify-content-start'; ?>">
-                            <div class="bubble <?php echo $m['sender_id']==$currentId ? 'mine' : 'theirs'; ?>" data-id="<?php echo $m['id']; ?>">
+                            <div class="bubble <?php echo $m['sender_id']==$currentId ? 'mine' : 'theirs'; ?><?php if($m['sender_role']==='admin') echo ' admin-msg'; ?>" data-id="<?php echo $m['id']; ?>">
                                 <div class="text"><?php echo htmlspecialchars($m['message']); ?></div>
                                 <div class="meta"><span class="time"><?php echo $m['created_at']; ?></span> <span class="status"><?php echo $m['is_read'] ? '&#10003;&#10003;' : '&#10003;'; ?></span></div>
                             </div>
@@ -104,17 +112,19 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                 const partner = <?php echo json_encode($targetUser); ?>;
                 const currentUser = <?php echo json_encode($current); ?>;
                 const currentId = <?php echo $currentId; ?>;
+                let lastSeen = <?php echo json_encode($lastSeen); ?>;
                 const chatBox = document.getElementById('chatBox');
                 const ws = new WebSocket(`ws://${location.hostname}:8080?user=${encodeURIComponent(currentUser)}`);
                 let onlineUsers = new Set();
                 const onlineDot = document.getElementById('onlineDot');
+                const statusText = document.getElementById('statusText');
                 ws.addEventListener('open', () => {
                     ws.send(JSON.stringify({type:'history', with: partner}));
                 });
                 ws.addEventListener('message', e => {
                     const data = JSON.parse(e.data);
                     if(data.type==='message'){
-                        appendMsg(data.from===currentUser, data.text, data.time, data.id, data.status);
+                        appendMsg(data.from===currentUser, data.text, data.time, data.id, data.status, data.role);
                         if(data.from!==currentUser){
                             ws.send(JSON.stringify({type:'seen', id:data.id, to:data.from}));
                         }
@@ -124,7 +134,7 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                         updateStatus(data.id, 'seen');
                     }else if(data.type==='history'){
                         data.messages.forEach(m=>{
-                           appendMsg(m.sender_id==currentId, m.message, m.created_at, m.id, m.is_read? 'seen':'delivered');
+                           appendMsg(m.sender_id==currentId, m.message, m.created_at, m.id, m.is_read? 'seen':'delivered', m.sender_role);
                         });
                         chatBox.scrollTop = chatBox.scrollHeight;
                     }else if(data.type==='presence'){
@@ -136,6 +146,12 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                         updateOnline();
                     }
                 });
+
+                setInterval(()=>{
+                    fetch('last_active.php?user='+encodeURIComponent(partner))
+                        .then(r=>r.json())
+                        .then(d=>{lastSeen=d.last_active; updateOnline();});
+                },10000);
 
                 document.getElementById('msgForm').addEventListener('submit', e=>{
                     e.preventDefault();
@@ -151,14 +167,22 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                 });
 
                 function updateOnline(){
-                    if(onlineUsers.has(partner)) onlineDot.classList.remove('d-none');
-                    else onlineDot.classList.add('d-none');
+                    if(onlineUsers.has(partner)) {
+                        onlineDot.classList.remove('d-none');
+                        statusText.textContent = 'Çevrim İçi';
+                    } else {
+                        onlineDot.classList.add('d-none');
+                        if(lastSeen) statusText.textContent = 'Son görülme: '+lastSeen;
+                        else statusText.textContent = '';
+                    }
                 }
 
-                function appendMsg(mine, msg, time, id, status){
+                function appendMsg(mine, msg, time, id, status, role){
                     const div = document.createElement('div');
                     div.className = 'd-flex '+(mine?'justify-content-end':'justify-content-start');
-                    div.innerHTML = `<div class="bubble ${mine?'mine':'theirs'}" data-id="${id}">`+
+                    let cls = mine?'mine':'theirs';
+                    if(role==='admin') cls+=' admin-msg';
+                    div.innerHTML = `<div class="bubble ${cls}" data-id="${id}">`+
                         `<div class="text">${escapeHtml(msg)}</div>`+
                         `<div class="meta"><span class="time">${time}</span> <span class="status">${statusIcon(status)}</span></div>`+
                         `</div>`;

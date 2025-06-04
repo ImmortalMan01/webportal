@@ -1,6 +1,8 @@
 <?php
 session_start();
 require 'db.php';
+require 'activity.php';
+update_activity($pdo);
 $mods = $pdo->query('SELECT name, file FROM modules ORDER BY id')->fetchAll();
 $protected = array_column($mods, 'file');
 $module = isset($_GET['module']) ? $_GET['module'] : 'home';

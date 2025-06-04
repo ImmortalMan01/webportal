@@ -5,6 +5,8 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 require 'db.php';
+require 'activity.php';
+update_activity($pdo);
 $currentUser = $_SESSION['user'];
 $partner = $_GET['user'] ?? '';
 $lastId = isset($_GET['last']) ? (int)$_GET['last'] : 0;

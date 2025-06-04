@@ -5,6 +5,8 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 require 'db.php';
+require 'activity.php';
+update_activity($pdo);
 $currentUser = $_SESSION['user'];
 $partner = $_POST['user'] ?? '';
 $message = trim($_POST['message'] ?? '');

@@ -23,6 +23,10 @@ wss.on('connection', async (ws, req) => {
   const params = new URL(req.url, `http://${req.headers.host}`).searchParams;
   const user = params.get('user');
   if(!user){ ws.close(); return; }
+  const [uRow] = await pool.query('SELECT id, role FROM users WHERE username=?', [user]);
+  if(!uRow[0]) { ws.close(); return; }
+  const userId = uRow[0].id;
+  const userRole = uRow[0].role;
   clients.set(user, ws);
   broadcast(JSON.stringify({type:'presence', user, online:true}), ws);
   ws.send(JSON.stringify({type:'presence', users: Array.from(clients.keys())}));
@@ -31,15 +35,14 @@ wss.on('connection', async (ws, req) => {
     try {
       const data = JSON.parse(message.toString());
       if(data.type === 'message') {
-        const [sRow] = await pool.query('SELECT id FROM users WHERE username=?', [user]);
         const [rRow] = await pool.query('SELECT id FROM users WHERE username=?', [data.to]);
-        if(!sRow[0] || !rRow[0]) return;
-        const sId = sRow[0].id;
+        if(!rRow[0]) return;
+        const sId = userId;
         const rId = rRow[0].id;
         const [res] = await pool.query('INSERT INTO messages (sender_id, receiver_id, message) VALUES (?, ?, ?)', [sId, rId, data.text]);
         const [row] = await pool.query('SELECT id, created_at FROM messages WHERE id=?', [res.insertId]);
         const msgRow = row[0];
-        const payload = {type:'message', from:user, id:msgRow.id, text:data.text, time:msgRow.created_at, status:'sent'};
+        const payload = {type:'message', from:user, role:userRole, id:msgRow.id, text:data.text, time:msgRow.created_at, status:'sent'};
         ws.send(JSON.stringify(payload));
         const other = clients.get(data.to);
         if(other){
@@ -57,12 +60,11 @@ wss.on('connection', async (ws, req) => {
           other.send(JSON.stringify({type:'seen', id:data.id, from:user}));
         }
       } else if(data.type === 'history') {
-        const [sRow] = await pool.query('SELECT id FROM users WHERE username=?', [user]);
         const [rRow] = await pool.query('SELECT id FROM users WHERE username=?', [data.with]);
-        if(!sRow[0] || !rRow[0]) return;
-        const sId = sRow[0].id;
+        if(!rRow[0]) return;
+        const sId = userId;
         const rId = rRow[0].id;
-        const [rows] = await pool.query('SELECT id, sender_id, message, created_at, is_read FROM messages WHERE (sender_id=? AND receiver_id=?) OR (sender_id=? AND receiver_id=?) ORDER BY id', [sId, rId, rId, sId]);
+        const [rows] = await pool.query('SELECT m.id, m.sender_id, m.message, m.created_at, m.is_read, u.role AS sender_role FROM messages m JOIN users u ON m.sender_id=u.id WHERE (m.sender_id=? AND m.receiver_id=?) OR (m.sender_id=? AND m.receiver_id=?) ORDER BY m.id', [sId, rId, rId, sId]);
         ws.send(JSON.stringify({type:'history', messages: rows}));
       }
     } catch(err){

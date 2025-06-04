@@ -18,7 +18,8 @@ body {
 .bubble.theirs {background:#f1f3f5; margin-right:auto;}
 .bubble .meta {font-size:0.75rem; color:#6c757d; text-align:right;}
 .bubble .status {margin-left:4px; animation:fadein 0.3s;}
-#onlineDot{width:10px;height:10px;}
+#onlineDot{width:12px;height:12px;bottom:0;right:0;transform:translate(50%,50%);}
+.admin-msg{background:#f8d7da;}
 @media (max-width:576px){
   #chatHeader .full-name{display:none;}
   #chatHeader .short-name{display:inline;}
