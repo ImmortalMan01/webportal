@@ -4,7 +4,9 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
     echo 'Erişim reddedildi';
     exit;
 }
-$users = json_decode(file_get_contents('users.json'), true);
+require 'db.php';
+$stmt = $pdo->query('SELECT username, role FROM users ORDER BY username');
+$users = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang='tr'>
@@ -18,8 +20,8 @@ $users = json_decode(file_get_contents('users.json'), true);
         <h2>Admin Panel</h2>
         <h3>Kullanıcılar</h3>
         <ul>
-            <?php foreach ($users as $name => $info): ?>
-                <li><?php echo htmlspecialchars($name) . ' (' . $info['role'] . ')'; ?></li>
+            <?php foreach ($users as $info): ?>
+                <li><?php echo htmlspecialchars($info['username']) . ' (' . $info['role'] . ')'; ?></li>
             <?php endforeach; ?>
         </ul>
     </div>

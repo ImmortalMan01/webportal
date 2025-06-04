@@ -1,6 +1,6 @@
 # Web Portal for Healthcare Staff
 
-This is a simple PHP-based web portal designed for corporate healthcare personnel. It now supports user accounts in addition to the basic modules.
+This is a simple PHP-based web portal designed for corporate healthcare personnel. User information is stored in a MySQL database rather than `users.json`.
 
 - **Shift Management** (`shift.php`)
 - **Trainings** (`training.php`)
@@ -12,6 +12,18 @@ This is a simple PHP-based web portal designed for corporate healthcare personne
 ## Usage
 
 Serve the project through a PHP-enabled web server. The entry point is `index.php`.
+Create a MySQL database (e.g. `webportal`) with a table named `users`:
+
+```sql
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL
+);
+```
+
+Edit `db.php` if your database credentials differ from the defaults.
 
 The interface includes a minimal style sheet (`style.css`) for a cleaner look.
 
@@ -21,4 +33,4 @@ Example using PHP's built-in server:
 php -S localhost:8000
 ```
 
-Navigate to `http://localhost:8000` in your browser. Register a user and log in to access the modules. The default admin account is `admin` with password `admin123`.
+Navigate to `http://localhost:8000` in your browser. Register a user and log in to access the modules. Insert an admin account in the `users` table (for example `admin` / `admin123`).

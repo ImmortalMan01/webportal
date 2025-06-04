@@ -1,13 +1,16 @@
 <?php
 session_start();
+require 'db.php';
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $users = json_decode(file_get_contents('users.json'), true);
     $u = $_POST['username'] ?? '';
     $p = $_POST['password'] ?? '';
-    if (isset($users[$u]) && password_verify($p, $users[$u]['password'])) {
-        $_SESSION['user'] = $u;
-        $_SESSION['role'] = $users[$u]['role'];
+    $stmt = $pdo->prepare('SELECT username, password, role FROM users WHERE username = ?');
+    $stmt->execute([$u]);
+    $user = $stmt->fetch();
+    if ($user && password_verify($p, $user['password'])) {
+        $_SESSION['user'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
         header('Location: index.php');
         exit;
     } else {

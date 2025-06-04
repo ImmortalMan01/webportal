@@ -1,6 +1,11 @@
 <?php
 session_start();
 $module = isset($_GET['module']) ? $_GET['module'] : 'home';
+$protected = ['shift', 'training', 'exam', 'procedure'];
+if (in_array($module, $protected) && !isset($_SESSION['user'])) {
+    header('Location: login.php');
+    exit;
+}
 function render_menu() {
     echo "<ul>";
     echo "<li><a href='?module=shift'>Vardiya Sistemi</a></li>";
