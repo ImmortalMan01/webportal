@@ -13,24 +13,40 @@ $userId = $stmt->fetchColumn();
 if (!$userId) {
     die('Kullanıcı bulunamadı');
 }
+$upload = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full  = $_POST['full_name'] ?? '';
     $dept  = $_POST['department'] ?? '';
     $phone = $_POST['phone'] ?? '';
+    $birth = $_POST['birthdate'] ?? null;
+    $pic   = $profile['picture'] ?? '';
+
+    if (!empty($_FILES['picture']['name'])) {
+        $dir = 'uploads/';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $ext = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
+        $fname = uniqid() . '.' . $ext;
+        if (move_uploaded_file($_FILES['picture']['tmp_name'], $dir . $fname)) {
+            $pic = $fname;
+        }
+    }
+
     $check = $pdo->prepare('SELECT COUNT(*) FROM profiles WHERE user_id = ?');
     $check->execute([$userId]);
     if ($check->fetchColumn()) {
-        $stmt = $pdo->prepare('UPDATE profiles SET full_name = ?, department = ?, phone = ? WHERE user_id = ?');
-        $stmt->execute([$full, $dept, $phone, $userId]);
+        $stmt = $pdo->prepare('UPDATE profiles SET full_name = ?, department = ?, phone = ?, birthdate = ?, picture = ? WHERE user_id = ?');
+        $stmt->execute([$full, $dept, $phone, $birth, $pic, $userId]);
     } else {
-        $stmt = $pdo->prepare('INSERT INTO profiles (user_id, full_name, department, phone) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$userId, $full, $dept, $phone]);
+        $stmt = $pdo->prepare('INSERT INTO profiles (user_id, full_name, department, phone, birthdate, picture) VALUES (?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$userId, $full, $dept, $phone, $birth, $pic]);
     }
     $message = 'Profil güncellendi';
 }
-$stmt = $pdo->prepare('SELECT full_name, department, phone FROM profiles WHERE user_id = ?');
+$stmt = $pdo->prepare('SELECT full_name, department, phone, birthdate, picture FROM profiles WHERE user_id = ?');
 $stmt->execute([$userId]);
-$profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => ''];
+$profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => '', 'birthdate' => '', 'picture' => ''];
 ?>
 <!DOCTYPE html>
 <html lang='tr'>
@@ -45,7 +61,7 @@ $profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => 
 <div class="container my-4">
     <h2 class="mb-3">Profilim</h2>
     <?php if ($message) echo "<div class='alert alert-success'>$message</div>"; ?>
-    <form method="post" class="row g-3">
+    <form method="post" enctype="multipart/form-data" class="row g-3">
         <div class="col-md-4">
             <label class="form-label">Ad Soyad</label>
             <input type="text" name="full_name" class="form-control" value="<?php echo htmlspecialchars($profile['full_name']); ?>">
@@ -57,6 +73,15 @@ $profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => 
         <div class="col-md-4">
             <label class="form-label">Telefon</label>
             <input type="text" name="phone" class="form-control" value="<?php echo htmlspecialchars($profile['phone']); ?>">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Doğum Tarihi</label>
+            <input type="date" name="birthdate" class="form-control" value="<?php echo htmlspecialchars($profile['birthdate']); ?>">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Profil Resmi</label>
+            <?php if ($profile['picture']) echo "<br><img src='uploads/" . htmlspecialchars($profile['picture']) . "' width='80' class='mb-2'>"; ?>
+            <input type="file" name="picture" class="form-control">
         </div>
         <div class="col-12">
             <button class="btn btn-primary">Kaydet</button>

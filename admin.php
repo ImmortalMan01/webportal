@@ -58,6 +58,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare('DELETE FROM procedures WHERE id = ?');
                 $stmt->execute([$_POST['id']]);
             }
+        } elseif ($section === 'modules') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO modules (name, file) VALUES (?, ?)');
+                $stmt->execute([$_POST['name'], $_POST['file']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM modules WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
+            }
+        } elseif ($section === 'profiles') {
+            if ($action === 'update') {
+                $stmt = $pdo->prepare('UPDATE profiles SET full_name=?, department=?, phone=?, birthdate=? WHERE user_id=?');
+                $stmt->execute([$_POST['full_name'], $_POST['department'], $_POST['phone'], $_POST['birthdate'], $_POST['user_id']]);
+            }
         }
         header('Location: admin.php#' . $section);
         exit;
@@ -70,6 +83,8 @@ $shifts = $pdo->query('SELECT id, date, time FROM shifts ORDER BY date')->fetchA
 $trainings = $pdo->query('SELECT id, title, description FROM trainings ORDER BY id')->fetchAll();
 $exams = $pdo->query('SELECT id, title, date FROM exams ORDER BY date')->fetchAll();
 $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')->fetchAll();
+$modules = $pdo->query('SELECT id, name, file FROM modules ORDER BY id')->fetchAll();
+$profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate FROM profiles')->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang='tr'>
@@ -98,6 +113,12 @@ $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="procedures-tab" data-bs-toggle="tab" data-bs-target="#procedures" type="button" role="tab">Prosedürler</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules" type="button" role="tab">Modüller</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profiles-tab" data-bs-toggle="tab" data-bs-target="#profiles" type="button" role="tab">Profiller</button>
             </li>
         </ul>
         <div class="tab-content" id="adminTabContent">
@@ -232,6 +253,48 @@ $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')
                         </li>
                     <?php endforeach; ?>
                 </ul>
+            </div>
+            <div class="tab-pane fade" id="modules" role="tabpanel">
+                <form method="post" class="row g-2 mb-3">
+                    <input type="hidden" name="section" value="modules">
+                    <input type="hidden" name="action" value="add">
+                    <div class="col-md-4"><input type="text" name="name" class="form-control" placeholder="Başlık" required></div>
+                    <div class="col-md-4"><input type="text" name="file" class="form-control" placeholder="Dosya" required></div>
+                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                </form>
+                <ul class="list-group">
+                    <?php foreach ($modules as $m): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <?php echo htmlspecialchars($m['name']); ?> (<?php echo htmlspecialchars($m['file']); ?>)
+                            <form method="post" class="ms-3">
+                                <input type="hidden" name="section" value="modules">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="<?php echo $m['id']; ?>">
+                                <button class="btn btn-sm btn-danger">Sil</button>
+                            </form>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <div class="tab-pane fade" id="profiles" role="tabpanel">
+                <table class="table table-sm">
+                    <tr><th>Kullanıcı ID</th><th>Ad Soyad</th><th>Birim</th><th>Telefon</th><th>Doğum</th><th></th></tr>
+                    <?php foreach ($profiles as $p): ?>
+                        <tr>
+                            <form method="post" class="d-flex">
+                                <input type="hidden" name="section" value="profiles">
+                                <input type="hidden" name="action" value="update">
+                                <input type="hidden" name="user_id" value="<?php echo $p['user_id']; ?>">
+                                <td class="align-middle"><?php echo $p['user_id']; ?></td>
+                                <td><input type="text" name="full_name" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['full_name']); ?>"></td>
+                                <td><input type="text" name="department" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['department']); ?>"></td>
+                                <td><input type="text" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>"></td>
+                                <td><input type="date" name="birthdate" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['birthdate']); ?>"></td>
+                                <td><button class="btn btn-sm btn-secondary">Kaydet</button></td>
+                            </form>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
             </div>
         </div>
     </div>
