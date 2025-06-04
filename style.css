@@ -10,7 +10,7 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     border: none;
 }
-# Chat styles
+/* Chat styles */
 #chatBox {height:60vh; overflow-y:auto;}
 .bubble {background:#e9ecef; border-radius:12px; padding:6px 10px; margin-bottom:4px; max-width:80%; position:relative;}
 .bubble.mine {background:#d0ebff; margin-left:auto;}
