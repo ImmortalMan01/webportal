@@ -8,6 +8,7 @@ require 'db.php';
 require 'activity.php';
 update_activity($pdo);
 $message = '';
+$passMessage = '';
 $username = $_SESSION['user'];
 $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
 $stmt->execute([$username]);
@@ -20,11 +21,30 @@ $stmt->execute([$userId]);
 $unreadCount = $stmt->fetchColumn();
 $upload = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $full  = $_POST['full_name'] ?? '';
-    $dept  = $_POST['department'] ?? '';
-    $phone = $_POST['phone'] ?? '';
-    $birth = $_POST['birthdate'] ?? null;
-    $pic   = $profile['picture'] ?? '';
+    if(isset($_POST['change_password'])){
+        $current = $_POST['current_password'] ?? '';
+        $new1 = $_POST['new_password'] ?? '';
+        $new2 = $_POST['new_password2'] ?? '';
+        if($new1 !== $new2){
+            $passMessage = 'Yeni şifreler uyuşmuyor';
+        }else{
+            $stmt = $pdo->prepare('SELECT password FROM users WHERE id=?');
+            $stmt->execute([$userId]);
+            $hash = $stmt->fetchColumn();
+            if(!password_verify($current,$hash)){
+                $passMessage = 'Mevcut şifre yanlış';
+            }else{
+                $stmt = $pdo->prepare('UPDATE users SET password=? WHERE id=?');
+                $stmt->execute([password_hash($new1, PASSWORD_DEFAULT), $userId]);
+                $passMessage = 'Şifre güncellendi';
+            }
+        }
+    } else {
+        $full  = $_POST['full_name'] ?? '';
+        $dept  = $_POST['department'] ?? '';
+        $phone = $_POST['phone'] ?? '';
+        $birth = $_POST['birthdate'] ?? null;
+        $pic   = $profile['picture'] ?? '';
 
     if (!empty($_FILES['picture']['name'])) {
         $dir = 'uploads/';
@@ -47,7 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare('INSERT INTO profiles (user_id, full_name, department, phone, birthdate, picture) VALUES (?, ?, ?, ?, ?, ?)');
         $stmt->execute([$userId, $full, $dept, $phone, $birth, $pic]);
     }
-    $message = 'Profil güncellendi';
+        $message = 'Profil güncellendi';
+    }
 }
 $stmt = $pdo->prepare('SELECT full_name, department, phone, birthdate, picture FROM profiles WHERE user_id = ?');
 $stmt->execute([$userId]);
@@ -92,6 +113,27 @@ $profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => 
         <div class="col-12">
             <button class="btn btn-primary">Kaydet</button>
             <a href="index.php" class="btn btn-secondary ms-2">Geri</a>
+        </div>
+    </form>
+    <hr class="my-4">
+    <h4>Şifre Değiştir</h4>
+    <?php if ($passMessage) echo "<div class='alert alert-info'>$passMessage</div>"; ?>
+    <form method="post" class="row g-3">
+        <input type="hidden" name="change_password" value="1">
+        <div class="col-md-4">
+            <label class="form-label">Mevcut Şifre</label>
+            <input type="password" name="current_password" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Yeni Şifre</label>
+            <input type="password" name="new_password" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Yeni Şifre (Tekrar)</label>
+            <input type="password" name="new_password2" class="form-control" required>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-secondary">Değiştir</button>
         </div>
     </form>
 </div>

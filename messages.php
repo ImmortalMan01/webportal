@@ -173,6 +173,7 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                     let cls = mine?'mine':'theirs';
                     if(role==='admin') cls+=' admin-msg';
                     div.innerHTML = `<div class="bubble ${cls}" data-id="${id}">`+
+                        (role==='admin'?`<div class="sender">Admin</div>`:'')+
                         `<div class="text">${escapeHtml(msg)}</div>`+
                         `<div class="meta"><span class="time">${time}</span> <span class="status">${statusIcon(status)}</span></div>`+
                         `</div>`;
