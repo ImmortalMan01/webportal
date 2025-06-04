@@ -1,4 +1,5 @@
 <?php
+session_start();
 $module = isset($_GET['module']) ? $_GET['module'] : 'home';
 function render_menu() {
     echo "<ul>";
@@ -7,6 +8,18 @@ function render_menu() {
     echo "<li><a href='?module=exam'>Sınavlar</a></li>";
     echo "<li><a href='?module=procedure'>Prosedürler</a></li>";
     echo "</ul>";
+}
+
+function render_auth() {
+    if (isset($_SESSION['user'])) {
+        echo "<p>Merhaba " . htmlspecialchars($_SESSION['user']) . " | <a href='logout.php'>Çıkış</a>";
+        if ($_SESSION['role'] == 'admin') {
+            echo " | <a href='admin.php'>Admin Panel</a>";
+        }
+        echo "</p>";
+    } else {
+        echo "<p><a href='login.php'>Giriş Yap</a> | <a href='register.php'>Kayıt Ol</a></p>";
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -22,6 +35,7 @@ function render_menu() {
         <nav>
             <?php render_menu(); ?>
         </nav>
+        <?php render_auth(); ?>
     </header>
     <div class="container">
     <section>
