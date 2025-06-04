@@ -8,6 +8,17 @@ if (in_array($module, $protected) && !isset($_SESSION['user'])) {
     header('Location: login.php');
     exit;
 }
+$unreadCount = 0;
+if (isset($_SESSION['user'])) {
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
+    $stmt->execute([$_SESSION['user']]);
+    $uid = $stmt->fetchColumn();
+    if ($uid) {
+        $q = $pdo->prepare('SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND is_read = 0');
+        $q->execute([$uid]);
+        $unreadCount = $q->fetchColumn();
+    }
+}
 function render_menu($mods) {
     foreach ($mods as $m) {
         echo "<li class='nav-item'><a class='nav-link' href='?module=" . htmlspecialchars($m['file']) . "'>" . htmlspecialchars($m['name']) . "</a></li>";
@@ -17,11 +28,15 @@ function render_menu($mods) {
     }
 }
 
-function render_auth() {
+function render_auth($count) {
     if (isset($_SESSION['user'])) {
         echo "<span class='navbar-text me-2'>Merhaba " . htmlspecialchars($_SESSION['user']) . "</span>";
         echo "<a class='btn btn-light btn-sm me-2' href='profile.php'>Profil</a>";
-        echo "<a class='btn btn-light btn-sm me-2' href='messages.php'>Mesajlar</a>";
+        $msg = 'Mesajlar';
+        if ($count > 0) {
+            $msg .= " <span class='badge bg-danger'>$count</span>";
+        }
+        echo "<a class='btn btn-light btn-sm me-2' href='messages.php'>$msg</a>";
         echo "<a class='btn btn-outline-light btn-sm me-2' href='logout.php'>Çıkış</a>";
         if ($_SESSION['role'] == 'admin') {
             echo "<a class='btn btn-light btn-sm' href='admin.php'>Admin Panel</a>";
@@ -52,7 +67,7 @@ function render_auth() {
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?php render_menu($mods); ?>
                 </ul>
-                <?php render_auth(); ?>
+                <?php render_auth($unreadCount); ?>
             </div>
         </div>
     </nav>

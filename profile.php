@@ -13,6 +13,9 @@ $userId = $stmt->fetchColumn();
 if (!$userId) {
     die('Kullanıcı bulunamadı');
 }
+$stmt = $pdo->prepare('SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND is_read = 0');
+$stmt->execute([$userId]);
+$unreadCount = $stmt->fetchColumn();
 $upload = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full  = $_POST['full_name'] ?? '';
@@ -60,6 +63,7 @@ $profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => 
 <body>
 <div class="container my-4">
     <h2 class="mb-3">Profilim</h2>
+    <?php if ($unreadCount) echo "<div class='alert alert-info'>Okunmamış mesajlar: $unreadCount</div>"; ?>
     <?php if ($message) echo "<div class='alert alert-success'>$message</div>"; ?>
     <form method="post" enctype="multipart/form-data" class="row g-3">
         <div class="col-md-4">
