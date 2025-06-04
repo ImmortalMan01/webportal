@@ -96,7 +96,14 @@ Example using PHP's built-in server:
 php -S localhost:8000
 ```
 
-The messaging interface uses a small WebSocket server written in Node.js. Start it in a separate terminal:
+The messaging interface uses a small WebSocket server written in Node.js.
+Install the dependencies once and start it in a separate terminal:
+
+```bash
+npm install
+```
+
+Then run the WebSocket server:
 
 ```bash
 node ws-server.js
