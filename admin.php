@@ -388,5 +388,19 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const hash = location.hash;
+        if(hash){
+            const trigger = document.querySelector(`#adminTab button[data-bs-target="${hash}"]`);
+            if(trigger){
+                new bootstrap.Tab(trigger).show();
+            }
+        }
+        document.querySelectorAll('#adminTab button[data-bs-toggle="tab"]').forEach(btn=>{
+            btn.addEventListener('shown.bs.tab', e=>{
+                history.replaceState(null,null,e.target.dataset.bsTarget);
+            });
+        });
+    </script>
 </body>
 </html>
