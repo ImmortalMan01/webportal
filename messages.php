@@ -60,6 +60,31 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
         </div>
         <div id="chatCol" class="col-md-8">
             <?php if ($targetUser): ?>
+                <?php
+                    $stmt = $pdo->prepare('SELECT id FROM users WHERE username=?');
+                    $stmt->execute([$targetUser]);
+                    $tId = $stmt->fetchColumn();
+                    $prof = ['full_name'=>$targetUser,'picture'=>''];
+                    if($tId){
+                        $pstmt = $pdo->prepare('SELECT full_name, picture FROM profiles WHERE user_id=?');
+                        $pstmt->execute([$tId]);
+                        $row = $pstmt->fetch();
+                        if($row) $prof = array_merge($prof,$row);
+                    }
+                    $fullName = $prof['full_name'] ?: $targetUser;
+                    $shortName = mb_substr($fullName,0,10).(mb_strlen($fullName)>10?'…':'');
+                    $avatar = $prof['picture'] ? 'uploads/'.htmlspecialchars($prof['picture']) : 'https://via.placeholder.com/40x40?text='.urlencode(mb_substr($fullName,0,1));
+                ?>
+                <div id="chatHeader" class="chat-header d-flex align-items-center p-2 border-bottom">
+                    <a href="view_profile.php?user=<?php echo urlencode($targetUser); ?>" class="d-flex align-items-center text-decoration-none text-dark">
+                        <div class="position-relative me-2">
+                            <img src="<?php echo $avatar; ?>" class="rounded-circle" width="40" height="40" alt="avatar">
+                            <span id="onlineDot" class="position-absolute bottom-0 end-0 translate-middle p-1 bg-success border border-light rounded-circle d-none"></span>
+                        </div>
+                        <span class="full-name fw-bold"><?php echo htmlspecialchars($fullName); ?></span>
+                        <span class="short-name fw-bold"><?php echo htmlspecialchars($shortName); ?></span>
+                    </a>
+                </div>
                 <div id="chatBox" class="border p-3 mb-3">
                     <?php $lastId = 0; foreach ($messages as $m): ?>
                         <?php $lastId = $m['id']; ?>
@@ -81,6 +106,8 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                 const currentId = <?php echo $currentId; ?>;
                 const chatBox = document.getElementById('chatBox');
                 const ws = new WebSocket(`ws://${location.hostname}:8080?user=${encodeURIComponent(currentUser)}`);
+                let onlineUsers = new Set();
+                const onlineDot = document.getElementById('onlineDot');
                 ws.addEventListener('open', () => {
                     ws.send(JSON.stringify({type:'history', with: partner}));
                 });
@@ -100,6 +127,13 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                            appendMsg(m.sender_id==currentId, m.message, m.created_at, m.id, m.is_read? 'seen':'delivered');
                         });
                         chatBox.scrollTop = chatBox.scrollHeight;
+                    }else if(data.type==='presence'){
+                        if(data.users){
+                            onlineUsers = new Set(data.users);
+                        }else{
+                            if(data.online) onlineUsers.add(data.user); else onlineUsers.delete(data.user);
+                        }
+                        updateOnline();
                     }
                 });
 
@@ -115,6 +149,11 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                 document.getElementById('msgInput').addEventListener('input', ()=>{
                     ws.send(JSON.stringify({type:'typing', to: partner}));
                 });
+
+                function updateOnline(){
+                    if(onlineUsers.has(partner)) onlineDot.classList.remove('d-none');
+                    else onlineDot.classList.add('d-none');
+                }
 
                 function appendMsg(mine, msg, time, id, status){
                     const div = document.createElement('div');

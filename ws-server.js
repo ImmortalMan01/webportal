@@ -11,11 +11,21 @@ const pool = mysql.createPool({
 const wss = new WebSocket.Server({ port: 8080 });
 const clients = new Map();
 
+function broadcast(msg, except){
+  for(const [u,client] of clients){
+    if(client!==except && client.readyState===WebSocket.OPEN){
+      client.send(msg);
+    }
+  }
+}
+
 wss.on('connection', async (ws, req) => {
   const params = new URL(req.url, `http://${req.headers.host}`).searchParams;
   const user = params.get('user');
   if(!user){ ws.close(); return; }
   clients.set(user, ws);
+  broadcast(JSON.stringify({type:'presence', user, online:true}), ws);
+  ws.send(JSON.stringify({type:'presence', users: Array.from(clients.keys())}));
 
   ws.on('message', async message => {
     try {
@@ -62,5 +72,6 @@ wss.on('connection', async (ws, req) => {
 
   ws.on('close', () => {
     clients.delete(user);
+    broadcast(JSON.stringify({type:'presence', user, online:false}));
   });
 });
