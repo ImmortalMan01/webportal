@@ -20,6 +20,9 @@ $stmt = $pdo->prepare('SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND i
 $stmt->execute([$userId]);
 $unreadCount = $stmt->fetchColumn();
 $upload = '';
+$stmt = $pdo->prepare('SELECT full_name, department, phone, birthdate, picture FROM profiles WHERE user_id = ?');
+$stmt->execute([$userId]);
+$profile = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['full_name' => '', 'department' => '', 'phone' => '', 'birthdate' => '', 'picture' => ''];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(isset($_POST['change_password'])){
         $current = $_POST['current_password'] ?? '';
