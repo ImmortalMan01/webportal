@@ -93,17 +93,7 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
                     </a>
                     <div id="statusText" class="ms-2 small text-muted"></div>
                 </div>
-                <div id="chatBox" class="border p-3 mb-3">
-                    <?php $lastId = 0; foreach ($messages as $m): ?>
-                        <?php $lastId = $m['id']; ?>
-                        <div class="d-flex <?php echo $m['sender_id']==$currentId ? 'justify-content-end' : 'justify-content-start'; ?>">
-                            <div class="bubble <?php echo $m['sender_id']==$currentId ? 'mine' : 'theirs'; ?><?php if($m['sender_role']==='admin') echo ' admin-msg'; ?>" data-id="<?php echo $m['id']; ?>">
-                                <div class="text"><?php echo htmlspecialchars($m['message']); ?></div>
-                                <div class="meta"><span class="time"><?php echo $m['created_at']; ?></span> <span class="status"><?php echo $m['is_read'] ? '&#10003;&#10003;' : '&#10003;'; ?></span></div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+                <div id="chatBox" class="border p-3 mb-3"></div>
                 <form id="msgForm" class="d-flex">
                     <input type="text" name="message" id="msgInput" class="form-control me-2" placeholder="Mesaj yaz..." autocomplete="off" required>
                     <button class="btn btn-primary">Gönder</button>
