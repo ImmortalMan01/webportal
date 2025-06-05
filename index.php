@@ -10,6 +10,7 @@ if (!isset($_SESSION['user'])) {
 update_activity($pdo);
 $registrations_open = get_setting($pdo, 'registrations_open', '1');
 $hide_register_button = get_setting($pdo, 'hide_register_button', '0');
+$site_name = get_setting($pdo, 'site_name', 'Sağlık Personeli Portalı');
 $mods = $pdo->query('SELECT name, file FROM modules ORDER BY id')->fetchAll();
 $protected = array_column($mods, 'file');
 $module = isset($_GET['module']) ? $_GET['module'] : 'home';
@@ -63,14 +64,14 @@ function render_auth($count, $registrations_open, $hide_register_button) {
 <head>
     <meta charset='UTF-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sağlık Personeli Portalı</title>
+    <title><?php echo htmlspecialchars($site_name); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="index.php">Sağlık Personeli Portalı</a>
+            <a class="navbar-brand" href="index.php"><?php echo htmlspecialchars($site_name); ?></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

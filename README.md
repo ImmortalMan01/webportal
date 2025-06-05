@@ -106,7 +106,8 @@ CREATE TABLE site_pages (
 
 INSERT INTO settings (name, value) VALUES
     ('registrations_open','1'),
-    ('hide_register_button','0');
+    ('hide_register_button','0'),
+    ('site_name','Sağlık Personeli Portalı');
 
 -- Example initial modules
 INSERT INTO modules (name, file) VALUES
