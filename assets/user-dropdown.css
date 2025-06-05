@@ -1,4 +1,5 @@
 .drop-down{display:inline-block;position:relative;}
+.nav-right .drop-down{margin-left:12px;}
 .drop-down__button{background:linear-gradient(to right,#3d6def,#8FADFE);color:#fff;border-radius:4px;line-height:40px;padding:0 18px;cursor:pointer;display:inline-flex;align-items:center;box-shadow:0 4px 6px rgba(0,0,0,0.2);}
 .drop-down__name{font-size:9px;text-transform:uppercase;color:#fff;font-weight:800;letter-spacing:2px;}
 .drop-down__icon{width:18px;height:18px;fill:#fff;margin-left:14px;transition:all .4s;}

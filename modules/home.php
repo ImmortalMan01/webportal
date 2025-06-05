@@ -18,7 +18,21 @@ if($role === 'Normal Personel'):
     <span class="role-pill">Normal Personel</span>
   </div>
   <div class="nav-right">
-    <button id="settingsBtn" aria-label="Ayarlar" role="button"><i class="fa-solid fa-gear"></i></button>
+    <div class="drop-down">
+      <div class="drop-down__button">
+        <span class="drop-down__name">Ayarlar</span>
+        <i class="fa-solid fa-gear drop-down__icon"></i>
+      </div>
+      <div class="drop-down__menu-box">
+        <ul class="drop-down__menu">
+          <li class="drop-down__item"><a href="pages/profile.php">Profil <i class="fa-solid fa-user drop-down__item-icon"></i></a></li>
+          <li class="drop-down__item"><a href="pages/messages.php">Mesajlar <i class="fa-solid fa-envelope drop-down__item-icon"></i></a></li>
+          <?php if($role === 'admin'): ?>
+          <li class="drop-down__item"><a href="pages/admin.php">Admin Paneli <i class="fa-solid fa-toolbox drop-down__item-icon"></i></a></li>
+          <?php endif; ?>
+        </ul>
+      </div>
+    </div>
     <button id="themeToggleGlobal" aria-label="Tema" role="button">🌙</button>
     <a href="pages/logout.php" class="logout-btn" aria-label="Çıkış" role="button"><i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış</a>
   </div>
