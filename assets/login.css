@@ -90,6 +90,14 @@ body {
   box-shadow: none;
   outline: none;
 }
+.login .inputBx .toggle-password {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #fff;
+}
 .login .inputBx input[type="submit"] {
   width: 100%;
   background: #0078ff;
@@ -111,6 +119,10 @@ body {
   color: #fff;
   box-shadow: none;
   outline: none;
+}
+.login .inputBx select option {
+  color: #000;
+  background: #fff;
 }
 
 .login .links {
