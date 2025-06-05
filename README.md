@@ -9,6 +9,7 @@ This is a simple PHP-based web portal designed for corporate healthcare personne
 - **User Login/Registration** (`pages/login.php`, `pages/register.php`)
 - **Admin Panel** (`pages/admin.php`)
 - **User Profiles** (`pages/profile.php`)
+- **Role-based Home Page** with widgets for Doctor, Nurse and Secretary
 
 The main scripts are placed under the `pages/` directory while reusable code
 resides in `includes/`. Static assets such as the stylesheet live in
@@ -115,3 +116,4 @@ node ws-server.js
 ```
 
 Navigate to `http://localhost:8000` in your browser. Register a user and log in to access the modules. Insert an admin account in the `users` table (for example `admin` / `admin123`).
+Additional roles such as `doctor`, `nurse` and `secretary` can also be assigned to users via the admin panel.

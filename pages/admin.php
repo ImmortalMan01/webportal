@@ -161,6 +161,9 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                         <select name="role" class="form-select">
                             <option value="user">user</option>
                             <option value="admin">admin</option>
+                            <option value="doctor">doctor</option>
+                            <option value="nurse">nurse</option>
+                            <option value="secretary">secretary</option>
                         </select>
                     </div>
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
@@ -179,6 +182,9 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                                     <select name="role" class="form-select form-select-sm me-2">
                                         <option value="user" <?php if ($info['role']=='user') echo 'selected'; ?>>user</option>
                                         <option value="admin" <?php if ($info['role']=='admin') echo 'selected'; ?>>admin</option>
+                                        <option value="doctor" <?php if ($info['role']=='doctor') echo 'selected'; ?>>doctor</option>
+                                        <option value="nurse" <?php if ($info['role']=='nurse') echo 'selected'; ?>>nurse</option>
+                                        <option value="secretary" <?php if ($info['role']=='secretary') echo 'selected'; ?>>secretary</option>
                                     </select>
                                     <button class="btn btn-sm btn-secondary">Kaydet</button>
                                 </form>
