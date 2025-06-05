@@ -84,6 +84,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare('UPDATE profiles SET full_name=?, department=?, phone=?, birthdate=? WHERE user_id=?');
                 $stmt->execute([$_POST['full_name'], $_POST['department'], $_POST['phone'], $_POST['birthdate'], $_POST['user_id']]);
             }
+        } elseif ($section === 'settings') {
+            if ($action === 'update') {
+                $reg = isset($_POST['registrations_open']) ? '1' : '0';
+                $hide = isset($_POST['hide_register_button']) ? '1' : '0';
+                $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("registrations_open",?)')->execute([$reg]);
+                $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("hide_register_button",?)')->execute([$hide]);
+            }
         } elseif ($section === 'admin_messages') {
             if ($action === 'send') {
                 $from = $_POST['from'] ?? '';
@@ -123,6 +130,9 @@ $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')
 $modules = $pdo->query('SELECT id, name, file FROM modules ORDER BY id')->fetchAll();
 $experiences = $pdo->query('SELECT e.id, e.user_id, u.username, e.title, e.exp_date FROM experiences e JOIN users u ON e.user_id=u.id ORDER BY e.exp_date DESC')->fetchAll();
 $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate FROM profiles')->fetchAll();
+$settings = $pdo->query('SELECT name,value FROM settings')->fetchAll(PDO::FETCH_KEY_PAIR);
+$registrations_open = $settings['registrations_open'] ?? '1';
+$hide_register_button = $settings['hide_register_button'] ?? '0';
 ?>
 <!DOCTYPE html>
 <html lang='tr'>
@@ -163,6 +173,9 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="profiles-tab" data-bs-toggle="tab" data-bs-target="#profiles" type="button" role="tab">Profiller</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">Ayarlar</button>
             </li>
         </ul>
         <div class="tab-content" id="adminTabContent">
@@ -450,6 +463,21 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                         </tr>
                     <?php endforeach; ?>
                 </table>
+            </div>
+            <div class="tab-pane fade" id="settings" role="tabpanel">
+                <form method="post" class="mb-3">
+                    <input type="hidden" name="section" value="settings">
+                    <input type="hidden" name="action" value="update">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="registrations_open" name="registrations_open" value="1" <?php if($registrations_open=='1') echo 'checked'; ?>>
+                        <label class="form-check-label" for="registrations_open">Kayıtları Aç</label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="hide_register_button" name="hide_register_button" value="1" <?php if($hide_register_button=='1') echo 'checked'; ?>>
+                        <label class="form-check-label" for="hide_register_button">Kayıt Ol butonunu gizle</label>
+                    </div>
+                    <button class="btn btn-primary">Kaydet</button>
+                </form>
             </div>
         </div>
     </div>
