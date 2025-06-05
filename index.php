@@ -3,6 +3,10 @@ session_start();
 require __DIR__ . '/includes/db.php';
 require __DIR__ . '/includes/activity.php';
 require __DIR__ . '/includes/settings.php';
+if (!isset($_SESSION['user'])) {
+    header('Location: landing.php');
+    exit;
+}
 update_activity($pdo);
 $registrations_open = get_setting($pdo, 'registrations_open', '1');
 $hide_register_button = get_setting($pdo, 'hide_register_button', '0');
