@@ -24,7 +24,7 @@ $page = get_page_content($pdo, $slug);
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="mainNav">
+        <div class="collapse navbar-collapse justify-content-end" id="mainNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <?php foreach($pages as $p): ?>
                     <li class="nav-item"><a class="nav-link <?php if($slug==$p['slug']) echo 'active'; ?>" href="landing.php?p=<?php echo htmlspecialchars($p['slug']); ?>"><?php echo htmlspecialchars($p['title']); ?></a></li>
