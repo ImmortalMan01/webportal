@@ -1,6 +1,6 @@
 .drop-down{display:inline-block;position:relative;}
 .nav-right .drop-down{margin-left:12px;}
-.drop-down__button{background:transparent;border:none;color:#fff;padding:4px;cursor:pointer;display:flex;align-items:center;}
+.drop-down__button{background:transparent;border:none;color:inherit;padding:4px;cursor:pointer;display:flex;align-items:center;}
 .drop-down__name{display:none;}
 .drop-down__icon{width:20px;height:20px;transition:transform .3s;}
 .drop-down--active .drop-down__icon{transform:rotate(180deg);}
@@ -13,3 +13,9 @@
 .drop-down__item:last-of-type{border-bottom:0;}
 .drop-down__item:hover{background:#f8f9fa;}
 .drop-down__item a{display:flex;align-items:center;width:100%;text-decoration:none;color:inherit;}
+
+/* Dark theme overrides */
+body.dark .drop-down__menu-box{background:#1f1f1f;border-color:#333;}
+body.dark .drop-down__item{color:#f8f9fa;border-bottom:1px solid #444;}
+body.dark .drop-down__item:hover{background:#333;}
+body.dark .drop-down__item-icon{color:#ddd;}
