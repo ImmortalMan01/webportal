@@ -23,6 +23,9 @@ $upload = '';
 $stmt = $pdo->prepare('SELECT full_name, department, phone, birthdate, picture FROM profiles WHERE user_id = ?');
 $stmt->execute([$userId]);
 $profile = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['full_name' => '', 'department' => '', 'phone' => '', 'birthdate' => '', 'picture' => ''];
+$expStmt = $pdo->prepare('SELECT id, title, exp_date FROM experiences WHERE user_id=? ORDER BY exp_date DESC');
+$expStmt->execute([$userId]);
+$experiences = $expStmt->fetchAll();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(isset($_POST['change_password'])){
         $current = $_POST['current_password'] ?? '';
@@ -42,6 +45,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $passMessage = 'Şifre güncellendi';
             }
         }
+    } elseif(isset($_POST['add_experience'])){
+        $title = trim($_POST['exp_title'] ?? '');
+        $date  = $_POST['exp_date'] ?? null;
+        if($title !== ''){
+            $stmt = $pdo->prepare('INSERT INTO experiences (user_id, title, exp_date) VALUES (?,?,?)');
+            $stmt->execute([$userId,$title,$date]);
+            $message = 'Deneyim eklendi';
+        }
+    } elseif(isset($_POST['delete_experience'])){
+        $id = (int)$_POST['delete_experience'];
+        $stmt = $pdo->prepare('DELETE FROM experiences WHERE id=? AND user_id=?');
+        $stmt->execute([$id,$userId]);
+        $message = 'Deneyim silindi';
     } else {
         $full  = $_POST['full_name'] ?? '';
         $dept  = $_POST['department'] ?? '';
@@ -76,6 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $stmt = $pdo->prepare('SELECT full_name, department, phone, birthdate, picture FROM profiles WHERE user_id = ?');
 $stmt->execute([$userId]);
 $profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => '', 'birthdate' => '', 'picture' => ''];
+$expStmt->execute([$userId]);
+$experiences = $expStmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang='tr'>
@@ -118,6 +136,29 @@ $profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => 
             <a href="../index.php" class="btn btn-secondary ms-2">Geri</a>
         </div>
     </form>
+    <hr class="my-4">
+    <h4>Deneyimler</h4>
+    <form method="post" class="row g-3 mb-3">
+        <input type="hidden" name="add_experience" value="1">
+        <div class="col-md-6"><input type="text" name="exp_title" class="form-control" placeholder="Deneyim" required></div>
+        <div class="col-md-4"><input type="date" name="exp_date" class="form-control"></div>
+        <div class="col-md-2"><button class="btn btn-secondary w-100">Ekle</button></div>
+    </form>
+    <table class="table table-sm">
+        <tr><th>Deneyim</th><th>Tarih</th><th></th></tr>
+        <?php foreach($experiences as $e): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($e['title']); ?></td>
+                <td><?php echo htmlspecialchars($e['exp_date']); ?></td>
+                <td>
+                    <form method="post" class="d-inline">
+                        <input type="hidden" name="delete_experience" value="<?php echo $e['id']; ?>">
+                        <button class="btn btn-sm btn-danger">Sil</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
     <hr class="my-4">
     <h4>Şifre Değiştir</h4>
     <?php if ($passMessage) echo "<div class='alert alert-info'>$passMessage</div>"; ?>

@@ -68,6 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare('DELETE FROM modules WHERE id = ?');
                 $stmt->execute([$_POST['id']]);
             }
+        } elseif ($section === 'experiences') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO experiences (user_id,title,exp_date) VALUES (?,?,?)');
+                $stmt->execute([$_POST['user_id'], $_POST['title'], $_POST['exp_date']]);
+            } elseif ($action === 'update') {
+                $stmt = $pdo->prepare('UPDATE experiences SET title=?, exp_date=? WHERE id=?');
+                $stmt->execute([$_POST['title'], $_POST['exp_date'], $_POST['id']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM experiences WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
+            }
         } elseif ($section === 'profiles') {
             if ($action === 'update') {
                 $stmt = $pdo->prepare('UPDATE profiles SET full_name=?, department=?, phone=?, birthdate=? WHERE user_id=?');
@@ -103,13 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$stmt = $pdo->query('SELECT username, role FROM users ORDER BY username');
+$stmt = $pdo->query('SELECT id, username, role FROM users ORDER BY username');
 $users = $stmt->fetchAll();
 $shifts = $pdo->query('SELECT id, date, time FROM shifts ORDER BY date')->fetchAll();
 $trainings = $pdo->query('SELECT id, title, description FROM trainings ORDER BY id')->fetchAll();
 $exams = $pdo->query('SELECT id, title, date FROM exams ORDER BY date')->fetchAll();
 $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')->fetchAll();
 $modules = $pdo->query('SELECT id, name, file FROM modules ORDER BY id')->fetchAll();
+$experiences = $pdo->query('SELECT e.id, e.user_id, u.username, e.title, e.exp_date FROM experiences e JOIN users u ON e.user_id=u.id ORDER BY e.exp_date DESC')->fetchAll();
 $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate FROM profiles')->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -142,6 +154,9 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules" type="button" role="tab">Modüller</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="experiences-tab" data-bs-toggle="tab" data-bs-target="#experiences" type="button" role="tab">Deneyimler</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab">Mesajlar</button>
@@ -310,6 +325,41 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                         </li>
                     <?php endforeach; ?>
                 </ul>
+            </div>
+            <div class="tab-pane fade" id="experiences" role="tabpanel">
+                <form method="post" class="row g-2 mb-3">
+                    <input type="hidden" name="section" value="experiences">
+                    <input type="hidden" name="action" value="add">
+                    <div class="col-md-3">
+                        <select name="user_id" class="form-select" required>
+                            <option value="">Kullanıcı</option>
+                            <?php foreach($users as $u): ?>
+                                <option value="<?php echo $u['id']; ?>"><?php echo htmlspecialchars($u['username']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-5"><input type="text" name="title" class="form-control" placeholder="Deneyim" required></div>
+                    <div class="col-md-2"><input type="date" name="exp_date" class="form-control"></div>
+                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                </form>
+                <table class="table table-sm table-striped">
+                    <tr><th>Kullanıcı</th><th>Deneyim</th><th>Tarih</th><th></th></tr>
+                    <?php foreach($experiences as $ex): ?>
+                        <tr>
+                            <form method="post" class="d-flex align-items-center">
+                                <input type="hidden" name="section" value="experiences">
+                                <input type="hidden" name="id" value="<?php echo $ex['id']; ?>">
+                                <td class="align-middle"><?php echo htmlspecialchars($ex['username']); ?></td>
+                                <td><input type="text" name="title" class="form-control form-control-sm" value="<?php echo htmlspecialchars($ex['title']); ?>"></td>
+                                <td><input type="date" name="exp_date" class="form-control form-control-sm" value="<?php echo htmlspecialchars($ex['exp_date']); ?>"></td>
+                                <td>
+                                    <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
+                                    <button name="action" value="delete" class="btn btn-sm btn-danger">Sil</button>
+                                </td>
+                            </form>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
             </div>
             <div class="tab-pane fade" id="messages" role="tabpanel">
                 <form method="get" class="row g-2 mb-3">

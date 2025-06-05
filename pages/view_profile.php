@@ -17,6 +17,9 @@ if (!$userId) {
 $stmt = $pdo->prepare('SELECT full_name, department, phone, birthdate, picture FROM profiles WHERE user_id = ?');
 $stmt->execute([$userId]);
 $profile = $stmt->fetch() ?: ['full_name'=>'','department'=>'','phone'=>'','birthdate'=>'','picture'=>''];
+$expStmt = $pdo->prepare('SELECT title, exp_date FROM experiences WHERE user_id=? ORDER BY exp_date DESC');
+$expStmt->execute([$userId]);
+$experiences = $expStmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -53,10 +56,15 @@ $profile = $stmt->fetch() ?: ['full_name'=>'','department'=>'','phone'=>'','birt
       <div class="card-content">
         <div class="card-subtitle">DENEYİM</div>
         <div class="card-timeline">
+          <?php if($experiences): foreach($experiences as $e): ?>
+          <div class="card-item" data-year="<?php echo htmlspecialchars($e['exp_date']); ?>">
+            <div class="card-item-title"><?php echo htmlspecialchars($e['title']); ?></div>
+          </div>
+          <?php endforeach; else: ?>
           <div class="card-item" data-year="-">
             <div class="card-item-title">Bilgi bulunamadı</div>
-            <div class="card-item-desc"></div>
           </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>
