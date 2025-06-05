@@ -41,55 +41,38 @@ if($theme === 'dashboard'):
   </div>
 </nav>
 <div class="dashboard">
+  <?php
+    $modCols = $pdo->query("SHOW COLUMNS FROM modules")->fetchAll(PDO::FETCH_COLUMN);
+    if(!in_array('icon',$modCols)){
+        $pdo->exec("ALTER TABLE modules ADD COLUMN icon VARCHAR(50) DEFAULT ''");
+    }
+    if(!in_array('description',$modCols)){
+        $pdo->exec("ALTER TABLE modules ADD COLUMN description VARCHAR(255) DEFAULT ''");
+    }
+    if(!in_array('color',$modCols)){
+        $pdo->exec("ALTER TABLE modules ADD COLUMN color VARCHAR(20) DEFAULT '#3fa7ff'");
+    }
+    if(!in_array('badge',$modCols)){
+        $pdo->exec("ALTER TABLE modules ADD COLUMN badge VARCHAR(50) DEFAULT ''");
+    }
+    if(!in_array('badge_class',$modCols)){
+        $pdo->exec("ALTER TABLE modules ADD COLUMN badge_class VARCHAR(20) DEFAULT 'badge-blue'");
+    }
+    $moduleRows = $pdo->query('SELECT name,file,icon,description,color,badge,badge_class FROM modules ORDER BY id')->fetchAll();
+  ?>
   <div class="dashboard-grid">
-    <div class="dashboard-card" id="work-list">
-      <i class="fa-solid fa-calendar" style="color:#3fa7ff;font-size:48px;"></i>
-      <h3>ÇALIŞMA LİSTESİ</h3>
-      <p>Vardiyalarınızı ve mesai planınızı anında görün.</p>
-      <span class="status-badge badge-green">Güncel</span>
-    </div>
-    <div class="dashboard-card" id="procedure-read">
-      <i class="fa-solid fa-book" style="color:#0dd4a3;font-size:48px;"></i>
-      <h3>PROSEDÜR OKUMA</h3>
-      <p>Güncel prosedürlere hızla erişin, bilgilenin.</p>
-      <span class="status-badge badge-blue">12 Yeni</span>
-    </div>
-    <div class="dashboard-card" id="active-exams">
-      <i class="fa-solid fa-clipboard-check" style="color:#ff5555;font-size:48px;"></i>
-      <h3>AKTİF SINAVLAR</h3>
-      <p>Sınavlarınızı takip edin, başarınızı ölçün.</p>
-      <span class="status-badge badge-orange">3 Bekleyen</span>
-    </div>
-    <div class="dashboard-card" id="revised-procedures">
-      <i class="fa-solid fa-book" style="color:#3fa7ff;font-size:48px;"></i>
-      <h3>REVİZE PROSEDÜRLER</h3>
-      <p>En son güncellemeleri kaçırmayın, onaylayın.</p>
-      <span class="status-badge badge-blue">5 Yeni</span>
-    </div>
-    <div class="dashboard-card" id="trainings">
-      <i class="fa-solid fa-graduation-cap" style="color:#3fa7ff;font-size:48px;"></i>
-      <h3>EĞİTİMLER</h3>
-      <p>Kariyerinizi geliştirecek eğitimlere katılın.</p>
-      <span class="status-badge badge-blue">8 Aktif</span>
-    </div>
-    <div class="dashboard-card" id="games">
-      <i class="fa-solid fa-gamepad" style="color:#b54bff;font-size:48px;"></i>
-      <h3>OYUNLAR</h3>
-      <p>Öğrenirken eğlenin, bilginizi test edin.</p>
-      <span class="status-badge badge-blue">4 Yeni</span>
-    </div>
-    <div class="dashboard-card" id="podcast">
-      <i class="fa-solid fa-podcast" style="color:#ff9a28;font-size:48px;"></i>
-      <h3>PODCAST</h3>
-      <p>Sağlık ve liderlikte güncel kalın, dinleyin.</p>
-      <span class="status-badge badge-blue">6 Yeni Bölüm</span>
-    </div>
-    <div class="dashboard-card" id="performance">
-      <i class="fa-solid fa-chart-line" style="color:#0dd4a3;font-size:48px;"></i>
-      <h3>PERFORMANS</h3>
-      <p>Hedeflerinizi ve performansınızı takip edin.</p>
-      <span class="status-badge badge-orange">1 Yaklaşıyor</span>
-    </div>
+    <?php foreach($moduleRows as $m): ?>
+      <div class="dashboard-card" data-file="<?php echo htmlspecialchars($m['file']); ?>">
+        <i class="<?php echo htmlspecialchars($m['icon']); ?>" style="color:<?php echo htmlspecialchars($m['color'] ?: '#3fa7ff'); ?>;font-size:48px;"></i>
+        <h3><?php echo htmlspecialchars($m['name']); ?></h3>
+        <?php if(!empty($m['description'])): ?>
+        <p><?php echo htmlspecialchars($m['description']); ?></p>
+        <?php endif; ?>
+        <?php if(!empty($m['badge'])): ?>
+        <span class="status-badge <?php echo htmlspecialchars($m['badge_class']); ?>"><?php echo htmlspecialchars($m['badge']); ?></span>
+        <?php endif; ?>
+      </div>
+    <?php endforeach; ?>
   </div>
   <section class="announcements">
     <h3>Duyurular ve Bilgilendirmeler</h3>
@@ -121,8 +104,9 @@ if($theme === 'dashboard'):
   document.addEventListener('DOMContentLoaded', function(){
     document.querySelectorAll('.dashboard-card').forEach(function(el){
       el.addEventListener('click', function(){
-        if (el.id === 'work-list') {
-          window.location.href = 'index.php?module=shift';
+        var file = el.getAttribute('data-file');
+        if(file){
+          window.location.href = 'index.php?module=' + file;
         }
       });
     });

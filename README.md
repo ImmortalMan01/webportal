@@ -78,7 +78,12 @@ CREATE TABLE experiences (
 CREATE TABLE modules (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    file VARCHAR(50) NOT NULL
+    file VARCHAR(50) NOT NULL,
+    icon VARCHAR(50),
+    description VARCHAR(255),
+    color VARCHAR(20),
+    badge VARCHAR(50),
+    badge_class VARCHAR(20)
 );
 
 CREATE TABLE messages (
@@ -116,11 +121,11 @@ INSERT INTO settings (name, value) VALUES
     ('site_name','Sağlık Personeli Portalı');
 
 -- Example initial modules
-INSERT INTO modules (name, file) VALUES
-    ('Çalışma Listesi','shift'),
-    ('Eğitimler','training'),
-    ('Sınavlar','exam'),
-    ('Prosedürler','procedure');
+INSERT INTO modules (name, file, icon, description, color, badge, badge_class) VALUES
+    ('Çalışma Listesi','shift','fa-solid fa-calendar','Vardiyalarınızı ve mesai planınızı anında görün.','#3fa7ff','Güncel','badge-green'),
+    ('Eğitimler','training','fa-solid fa-graduation-cap','Kariyerinizi geliştirecek eğitimlere katılın.','#3fa7ff','8 Aktif','badge-blue'),
+    ('Sınavlar','exam','fa-solid fa-clipboard-check','Sınavlarınızı takip edin, başarınızı ölçün.','#ff5555','3 Bekleyen','badge-orange'),
+    ('Prosedürler','procedure','fa-solid fa-book','Güncel prosedürlere hızla erişin, bilgilenin.','#0dd4a3','12 Yeni','badge-blue');
 
 -- Example landing pages
 INSERT INTO site_pages (slug, title, content) VALUES
