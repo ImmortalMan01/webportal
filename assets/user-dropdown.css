@@ -4,7 +4,7 @@
 .drop-down__name{font-size:9px;text-transform:uppercase;color:#fff;font-weight:800;letter-spacing:2px;}
 .drop-down__icon{width:18px;height:18px;fill:#fff;margin-left:14px;transition:all .4s;}
 .drop-down--active .drop-down__icon{transform:rotate(180deg);}
-.drop-down__menu-box{position:absolute;left:0;top:100%;width:100%;background:#fff;border-radius:4px;box-shadow:0 3px 6px rgba(0,0,0,0.2);margin-top:5px;visibility:hidden;opacity:0;transition:all .3s;z-index:1000;}
+.drop-down__menu-box{position:absolute;right:0;left:auto;top:100%;min-width:180px;width:max-content;background:#fff;border-radius:4px;box-shadow:0 3px 6px rgba(0,0,0,0.2);margin-top:5px;visibility:hidden;opacity:0;transition:all .3s;z-index:1000;}
 .drop-down--active .drop-down__menu-box{visibility:visible;opacity:1;margin-top:15px;}
 .drop-down__menu{list-style:none;margin:0;padding:0;}
 .drop-down__item{font-size:13px;padding:13px 0;text-align:left;font-weight:500;color:#909dc2;cursor:pointer;position:relative;border-bottom:1px solid #e0e2e9;}
