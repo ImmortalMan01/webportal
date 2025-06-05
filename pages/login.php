@@ -1,6 +1,9 @@
 <?php
 session_start();
 require __DIR__ . '/../includes/db.php';
+require __DIR__ . '/../includes/settings.php';
+$registrations_open = get_setting($pdo, 'registrations_open', '1');
+$hide_register_button = get_setting($pdo, 'hide_register_button', '0');
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $u = $_POST['username'] ?? '';
@@ -49,7 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="links">
                     <a href="#">Şifremi Unuttum</a>
+                    <?php if ($registrations_open || !$hide_register_button): ?>
                     <a href="register.php">Kayıt Ol</a>
+                    <?php endif; ?>
                 </div>
             </form>
         </div>

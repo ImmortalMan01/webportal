@@ -92,6 +92,15 @@ CREATE TABLE messages (
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE settings (
+    name VARCHAR(50) PRIMARY KEY,
+    value VARCHAR(50) NOT NULL
+);
+
+INSERT INTO settings (name, value) VALUES
+    ('registrations_open','1'),
+    ('hide_register_button','0');
+
 -- Example initial modules
 INSERT INTO modules (name, file) VALUES
     ('Vardiya Sistemi','shift'),

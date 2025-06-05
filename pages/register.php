@@ -1,19 +1,26 @@
 <?php
 session_start();
 require __DIR__ . '/../includes/db.php';
+require __DIR__ . '/../includes/settings.php';
+$registrations_open = get_setting($pdo, 'registrations_open', '1');
+$hide_register_button = get_setting($pdo, 'hide_register_button', '0');
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $u = $_POST['username'] ?? '';
-    $p = $_POST['password'] ?? '';
-    $stmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ?');
-    $stmt->execute([$u]);
-    if ($stmt->fetchColumn() > 0) {
-        $message = 'Kullanıcı adı zaten mevcut';
+    if ($registrations_open != '1') {
+        $message = 'Kayıtlar yetkililer tarafından devre dışı bırakıldı.';
     } else {
-        $r = $_POST['role'] ?? 'Normal Personel';
-        $stmt = $pdo->prepare('INSERT INTO users (username, password, role) VALUES (?, ?, ?)');
-        $stmt->execute([$u, password_hash($p, PASSWORD_DEFAULT), $r]);
-        $message = 'Kayıt başarılı. Giriş yapabilirsiniz.';
+        $u = $_POST['username'] ?? '';
+        $p = $_POST['password'] ?? '';
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ?');
+        $stmt->execute([$u]);
+        if ($stmt->fetchColumn() > 0) {
+            $message = 'Kullanıcı adı zaten mevcut';
+        } else {
+            $r = $_POST['role'] ?? 'Normal Personel';
+            $stmt = $pdo->prepare('INSERT INTO users (username, password, role) VALUES (?, ?, ?)');
+            $stmt->execute([$u, password_hash($p, PASSWORD_DEFAULT), $r]);
+            $message = 'Kayıt başarılı. Giriş yapabilirsiniz.';
+        }
     }
 }
 ?>
@@ -29,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="d-flex align-items-center justify-content-center min-vh-100">
     <div class="card p-4 login-card">
         <h2 class="text-center mb-3">Kayıt Ol</h2>
+        <?php if ($registrations_open != '1') echo "<div class='alert alert-warning'>Kayıtlar şu anda kapalı.</div>"; ?>
         <?php if ($message) echo "<div class='alert alert-info'>$message</div>"; ?>
         <form method="post">
             <div class="mb-3">

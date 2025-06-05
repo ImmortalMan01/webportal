@@ -2,7 +2,10 @@
 session_start();
 require __DIR__ . '/includes/db.php';
 require __DIR__ . '/includes/activity.php';
+require __DIR__ . '/includes/settings.php';
 update_activity($pdo);
+$registrations_open = get_setting($pdo, 'registrations_open', '1');
+$hide_register_button = get_setting($pdo, 'hide_register_button', '0');
 $mods = $pdo->query('SELECT name, file FROM modules ORDER BY id')->fetchAll();
 $protected = array_column($mods, 'file');
 $module = isset($_GET['module']) ? $_GET['module'] : 'home';
@@ -30,7 +33,7 @@ function render_menu($mods) {
     }
 }
 
-function render_auth($count) {
+function render_auth($count, $registrations_open, $hide_register_button) {
     if (isset($_SESSION['user'])) {
         echo "<span class='navbar-text me-2'>Merhaba " . htmlspecialchars($_SESSION['user']) . "</span>";
         echo "<a class='btn btn-light btn-sm me-2' href='pages/profile.php'>Profil</a>";
@@ -45,7 +48,9 @@ function render_auth($count) {
         }
     } else {
         echo "<a class='btn btn-light btn-sm me-2' href='pages/login.php'>Giriş Yap</a>";
-        echo "<a class='btn btn-outline-light btn-sm' href='pages/register.php'>Kayıt Ol</a>";
+        if ($registrations_open || !$hide_register_button) {
+            echo "<a class='btn btn-outline-light btn-sm' href='pages/register.php'>Kayıt Ol</a>";
+        }
     }
 }
 ?>
@@ -69,7 +74,7 @@ function render_auth($count) {
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?php render_menu($mods); ?>
                 </ul>
-                <?php render_auth($unreadCount); ?>
+                <?php render_auth($unreadCount, $registrations_open, $hide_register_button); ?>
             </div>
         </div>
     </nav>
