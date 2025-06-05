@@ -56,3 +56,16 @@ body.light .navbar {
 body.dark a {
   color: #86b7fe;
 }
+
+/* Dark theme overrides for Bootstrap modal */
+body.dark .modal-content {
+  background-color: #1e1e1e;
+  color: #f8f9fa;
+}
+body.dark .modal-header,
+body.dark .modal-footer {
+  border-color: #333;
+}
+body.dark .btn-close {
+  filter: invert(1);
+}
