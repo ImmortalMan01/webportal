@@ -26,10 +26,10 @@ if($theme === 'dashboard'):
       </div>
       <div class="drop-down__menu-box">
         <ul class="drop-down__menu">
-          <li class="drop-down__item"><a href="pages/profile.php">Profil <i class="fa-solid fa-user drop-down__item-icon"></i></a></li>
-          <li class="drop-down__item"><a href="pages/messages.php">Mesajlar <i class="fa-solid fa-envelope drop-down__item-icon"></i></a></li>
+          <li class="drop-down__item"><a href="pages/profile.php"><i class="fa-solid fa-user drop-down__item-icon"></i><span class="drop-down__item-text">Profil</span></a></li>
+          <li class="drop-down__item"><a href="pages/messages.php"><i class="fa-solid fa-envelope drop-down__item-icon"></i><span class="drop-down__item-text">Mesajlar</span></a></li>
           <?php if($role === 'admin'): ?>
-          <li class="drop-down__item"><a href="pages/admin.php">Admin Paneli <i class="fa-solid fa-toolbox drop-down__item-icon"></i></a></li>
+          <li class="drop-down__item"><a href="pages/admin.php"><i class="fa-solid fa-toolbox drop-down__item-icon"></i><span class="drop-down__item-text">Admin Paneli</span></a></li>
           <?php endif; ?>
         </ul>
       </div>

@@ -50,12 +50,12 @@ function render_auth($count, $registrations_open, $hide_register_button) {
         echo "  </div>";
         echo "  <div class='drop-down__menu-box'>";
         echo "    <ul class='drop-down__menu'>";
-        echo "      <li class='drop-down__item'><a href='pages/profile.php'>Profil <i class='fa-solid fa-user drop-down__item-icon'></i></a></li>";
+        echo "      <li class='drop-down__item'><a href='pages/profile.php'><i class='fa-solid fa-user drop-down__item-icon'></i><span class='drop-down__item-text'>Profil</span></a></li>";
         $msg = 'Mesajlar';
         if ($count > 0) { $msg .= " <span class=\'badge bg-danger\'>$count</span>"; }
-        echo "      <li class='drop-down__item'><a href='pages/messages.php'>$msg <i class='fa-solid fa-envelope drop-down__item-icon'></i></a></li>";
+        echo "      <li class='drop-down__item'><a href='pages/messages.php'><i class='fa-solid fa-envelope drop-down__item-icon'></i><span class='drop-down__item-text'>$msg</span></a></li>";
         if ($_SESSION['role'] == 'admin') {
-            echo "      <li class='drop-down__item'><a href='pages/admin.php'>Admin Paneli <i class='fa-solid fa-toolbox drop-down__item-icon'></i></a></li>";
+            echo "      <li class='drop-down__item'><a href='pages/admin.php'><i class='fa-solid fa-toolbox drop-down__item-icon'></i><span class='drop-down__item-text'>Admin Paneli</span></a></li>";
         }
         echo "    </ul>";
         echo "  </div>";
