@@ -16,7 +16,7 @@ if($theme === 'dashboard'):
 <nav class="portal-nav">
 <script>document.body.classList.add('home-dashboard');</script>
   <div class="nav-left">
-    <div class="portal-logo">ACIBADEM PORTAL</div>
+    <div class="portal-logo"><?php echo htmlspecialchars($site_name); ?></div>
     <div class="welcome">Hoşgeldiniz, <?php echo htmlspecialchars($full); ?></div>
     <span class="role-pill"><?php echo htmlspecialchars($role); ?></span>
   </div>
