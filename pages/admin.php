@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($action === 'add') {
                 $u = $_POST['username'] ?? '';
                 $p = $_POST['password'] ?? '';
-                $r = $_POST['role'] ?? 'user';
+                $r = $_POST['role'] ?? 'Normal Personel';
                 $check = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ?');
                 $check->execute([$u]);
                 if ($check->fetchColumn() == 0) {
@@ -174,11 +174,10 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                     <div class="col-md-3"><input type="password" name="password" class="form-control" placeholder="Şifre" required></div>
                     <div class="col-md-3">
                         <select name="role" class="form-select">
-                            <option value="user">user</option>
+                            <option value="Normal Personel">Normal Personel</option>
                             <option value="admin">admin</option>
-                            <option value="doctor">doctor</option>
-                            <option value="nurse">nurse</option>
-                            <option value="secretary">secretary</option>
+                            <option value="Sorumlu Hemşire">Sorumlu Hemşire</option>
+                            <option value="Klinik Eğitim Hemşiresi">Klinik Eğitim Hemşiresi</option>
                         </select>
                     </div>
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
@@ -195,11 +194,10 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
                                     <input type="hidden" name="action" value="changerole">
                                     <input type="hidden" name="username" value="<?php echo htmlspecialchars($info['username']); ?>">
                                     <select name="role" class="form-select form-select-sm me-2">
-                                        <option value="user" <?php if ($info['role']=='user') echo 'selected'; ?>>user</option>
+                                        <option value="Normal Personel" <?php if ($info['role']=='Normal Personel') echo 'selected'; ?>>Normal Personel</option>
                                         <option value="admin" <?php if ($info['role']=='admin') echo 'selected'; ?>>admin</option>
-                                        <option value="doctor" <?php if ($info['role']=='doctor') echo 'selected'; ?>>doctor</option>
-                                        <option value="nurse" <?php if ($info['role']=='nurse') echo 'selected'; ?>>nurse</option>
-                                        <option value="secretary" <?php if ($info['role']=='secretary') echo 'selected'; ?>>secretary</option>
+                                        <option value="Sorumlu Hemşire" <?php if ($info['role']=='Sorumlu Hemşire') echo 'selected'; ?>>Sorumlu Hemşire</option>
+                                        <option value="Klinik Eğitim Hemşiresi" <?php if ($info['role']=='Klinik Eğitim Hemşiresi') echo 'selected'; ?>>Klinik Eğitim Hemşiresi</option>
                                     </select>
                                     <button class="btn btn-sm btn-secondary">Kaydet</button>
                                 </form>

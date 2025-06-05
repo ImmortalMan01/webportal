@@ -124,4 +124,4 @@ node ws-server.js
 ```
 
 Navigate to `http://localhost:8000` in your browser. Register a user and log in to access the modules. Insert an admin account in the `users` table (for example `admin` / `admin123`).
-Additional roles such as `doctor`, `nurse` and `secretary` can also be assigned to users via the admin panel.
+Additional roles such as `Normal Personel`, `Sorumlu Hemşire` and `Klinik Eğitim Hemşiresi` can also be assigned to users via the admin panel.
