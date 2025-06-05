@@ -1,0 +1,10 @@
+.drop-down{display:inline-block;position:relative;}
+.drop-down__button{background:linear-gradient(to right,#3d6def,#8FADFE);color:#fff;border-radius:4px;padding:6px 12px;cursor:pointer;display:flex;align-items:center;}
+.drop-down__icon{width:18px;height:18px;fill:#fff;}
+.drop-down__menu-box{position:absolute;left:0;top:100%;width:100%;background:#fff;border-radius:4px;box-shadow:0 3px 6px rgba(0,0,0,0.2);margin-top:5px;visibility:hidden;opacity:0;transition:all .3s;z-index:1000;}
+.drop-down--active .drop-down__menu-box{visibility:visible;opacity:1;margin-top:10px;}
+.drop-down__menu{list-style:none;margin:0;padding:0;}
+.drop-down__item{font-size:13px;padding:8px 12px;border-bottom:1px solid #e0e2e9;color:#909dc2;}
+.drop-down__item:last-of-type{border-bottom:0;}
+.drop-down__item:hover{color:#3d6def;}
+.drop-down__item a{text-decoration:none;color:inherit;display:block;}

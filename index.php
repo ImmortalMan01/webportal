@@ -41,16 +41,21 @@ function render_menu($mods) {
 function render_auth($count, $registrations_open, $hide_register_button) {
     if (isset($_SESSION['user'])) {
         echo "<span class='navbar-text me-2'>Merhaba " . htmlspecialchars($_SESSION['user']) . "</span>";
-        echo "<a class='btn btn-light btn-sm me-2' href='pages/profile.php'>Profil</a>";
+        echo "<div class='drop-down me-2'>";
+        echo "  <div id='dropDown' class='drop-down__button'><i class='fa-solid fa-gear'></i></div>";
+        echo "  <div class='drop-down__menu-box'>";
+        echo "    <ul class='drop-down__menu'>";
+        echo "      <li class='drop-down__item'><a href='pages/profile.php'>Profil</a></li>";
         $msg = 'Mesajlar';
-        if ($count > 0) {
-            $msg .= " <span class='badge bg-danger'>$count</span>";
-        }
-        echo "<a class='btn btn-light btn-sm me-2' href='pages/messages.php'>$msg</a>";
-        echo "<a class='btn btn-outline-light btn-sm me-2' href='pages/logout.php'>Çıkış</a>";
+        if ($count > 0) { $msg .= " <span class=\'badge bg-danger\'>$count</span>"; }
+        echo "      <li class='drop-down__item'><a href='pages/messages.php'>$msg</a></li>";
         if ($_SESSION['role'] == 'admin') {
-            echo "<a class='btn btn-light btn-sm' href='pages/admin.php'>Admin Panel</a>";
+            echo "      <li class='drop-down__item'><a href='pages/admin.php'>Admin Paneli</a></li>";
         }
+        echo "    </ul>";
+        echo "  </div>";
+        echo "</div>";
+        echo "<a class='btn btn-outline-light btn-sm me-2' href='pages/logout.php'>Çıkış</a>";
     } else {
         echo "<a class='btn btn-light btn-sm me-2' href='pages/login.php'>Giriş Yap</a>";
         if ($registrations_open || !$hide_register_button) {
@@ -69,6 +74,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/dashboard.css">
+    <link rel="stylesheet" href="assets/user-dropdown.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -106,5 +112,6 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/theme.js"></script>
+    <script src="assets/user-dropdown.js"></script>
 </body>
 </html>
