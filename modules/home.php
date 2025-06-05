@@ -8,14 +8,15 @@ if(isset($_SESSION['user'])){
     $fn = $stmt->fetchColumn();
     if($fn){ $full = $fn; }
 }
-if($role === 'Normal Personel'):
+$theme = get_role_theme($pdo, $role);
+if($theme === 'dashboard'):
 ?>
 <nav class="portal-nav">
 <script>document.body.classList.add('home-dashboard');</script>
   <div class="nav-left">
     <div class="portal-logo">ACIBADEM PORTAL</div>
     <div class="welcome">Hoşgeldiniz, <?php echo htmlspecialchars($full); ?></div>
-    <span class="role-pill">Normal Personel</span>
+    <span class="role-pill"><?php echo htmlspecialchars($role); ?></span>
   </div>
   <div class="nav-right">
     <div class="drop-down">

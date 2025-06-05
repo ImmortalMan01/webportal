@@ -11,6 +11,8 @@ update_activity($pdo);
 $registrations_open = get_setting($pdo, 'registrations_open', '1');
 $hide_register_button = get_setting($pdo, 'hide_register_button', '0');
 $site_name = get_setting($pdo, 'site_name', 'Sağlık Personeli Portalı');
+$role = $_SESSION['role'] ?? 'guest';
+$theme = get_role_theme($pdo, $role);
 $mods = $pdo->query('SELECT name, file FROM modules ORDER BY id')->fetchAll();
 $protected = array_column($mods, 'file');
 $module = isset($_GET['module']) ? $_GET['module'] : 'home';
@@ -76,7 +78,9 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <?php if($theme === 'dashboard'): ?>
     <link rel="stylesheet" href="assets/dashboard.css">
+    <?php endif; ?>
     <link rel="stylesheet" href="assets/user-dropdown.css">
 </head>
 <body>
