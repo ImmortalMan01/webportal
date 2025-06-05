@@ -10,6 +10,22 @@ require __DIR__ . '/../includes/activity.php';
 require __DIR__ . '/../includes/settings.php';
 update_activity($pdo);
 $pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)");
+$cols = $pdo->query("SHOW COLUMNS FROM modules")->fetchAll(PDO::FETCH_COLUMN);
+if(!in_array('icon',$cols)){
+    $pdo->exec("ALTER TABLE modules ADD COLUMN icon VARCHAR(50) DEFAULT ''");
+}
+if(!in_array('description',$cols)){
+    $pdo->exec("ALTER TABLE modules ADD COLUMN description VARCHAR(255) DEFAULT ''");
+}
+if(!in_array('color',$cols)){
+    $pdo->exec("ALTER TABLE modules ADD COLUMN color VARCHAR(20) DEFAULT '#3fa7ff'");
+}
+if(!in_array('badge',$cols)){
+    $pdo->exec("ALTER TABLE modules ADD COLUMN badge VARCHAR(50) DEFAULT ''");
+}
+if(!in_array('badge_class',$cols)){
+    $pdo->exec("ALTER TABLE modules ADD COLUMN badge_class VARCHAR(20) DEFAULT 'badge-blue'");
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section = $_POST['section'] ?? '';
@@ -64,8 +80,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } elseif ($section === 'modules') {
             if ($action === 'add') {
-                $stmt = $pdo->prepare('INSERT INTO modules (name, file) VALUES (?, ?)');
-                $stmt->execute([$_POST['name'], $_POST['file']]);
+                $stmt = $pdo->prepare('INSERT INTO modules (name, file, icon, description, color, badge, badge_class) VALUES (?,?,?,?,?,?,?)');
+                $stmt->execute([
+                    $_POST['name'] ?? '',
+                    $_POST['file'] ?? '',
+                    $_POST['icon'] ?? '',
+                    $_POST['description'] ?? '',
+                    $_POST['color'] ?? '',
+                    $_POST['badge'] ?? '',
+                    $_POST['badge_class'] ?? ''
+                ]);
             } elseif ($action === 'delete') {
                 $stmt = $pdo->prepare('DELETE FROM modules WHERE id = ?');
                 $stmt->execute([$_POST['id']]);
@@ -160,7 +184,7 @@ $shifts = $pdo->query('SELECT id, date, time FROM shifts ORDER BY date')->fetchA
 $trainings = $pdo->query('SELECT id, title, description FROM trainings ORDER BY id')->fetchAll();
 $exams = $pdo->query('SELECT id, title, date FROM exams ORDER BY date')->fetchAll();
 $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')->fetchAll();
-$modules = $pdo->query('SELECT id, name, file FROM modules ORDER BY id')->fetchAll();
+$modules = $pdo->query('SELECT id, name, file, icon, description, color, badge, badge_class FROM modules ORDER BY id')->fetchAll();
 $site_pages = $pdo->query('SELECT id, slug, title, content FROM site_pages ORDER BY id')->fetchAll();
 $announcements = $pdo->query('SELECT id, content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
 $experiences = $pdo->query('SELECT e.id, e.user_id, u.username, e.title, e.exp_date FROM experiences e JOIN users u ON e.user_id=u.id ORDER BY e.exp_date DESC')->fetchAll();
@@ -366,14 +390,28 @@ foreach($roles as $r){
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="modules">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-4"><input type="text" name="name" class="form-control" placeholder="Başlık" required></div>
-                    <div class="col-md-4"><input type="text" name="file" class="form-control" placeholder="Dosya" required></div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                    <div class="col-md-2"><input type="text" name="name" class="form-control" placeholder="Başlık" required></div>
+                    <div class="col-md-2"><input type="text" name="file" class="form-control" placeholder="Dosya" required></div>
+                    <div class="col-md-2"><input type="text" name="icon" class="form-control" placeholder="Icon class" required></div>
+                    <div class="col-md-2"><input type="text" name="color" class="form-control" placeholder="Renk #" required></div>
+                    <div class="col-md-2"><input type="text" name="badge" class="form-control" placeholder="Badge"></div>
+                    <div class="col-md-2">
+                        <select name="badge_class" class="form-select">
+                            <option value="badge-green">Yeşil</option>
+                            <option value="badge-blue">Mavi</option>
+                            <option value="badge-orange">Turuncu</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mt-2"><input type="text" name="description" class="form-control" placeholder="Açıklama"></div>
+                    <div class="col-12 text-end mt-2"><button class="btn btn-primary">Ekle</button></div>
                 </form>
                 <ul class="list-group">
                     <?php foreach ($modules as $m): ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <?php echo htmlspecialchars($m['name']); ?> (<?php echo htmlspecialchars($m['file']); ?>)
+                            <span>
+                                <strong><?php echo htmlspecialchars($m['name']); ?></strong>
+                                <em>(<?php echo htmlspecialchars($m['file']); ?>)</em>
+                            </span>
                             <form method="post" class="ms-3">
                                 <input type="hidden" name="section" value="modules">
                                 <input type="hidden" name="action" value="delete">
