@@ -6,7 +6,7 @@ $user = $_SESSION['user'] ?? 'Ziyaretçi';
 <?php if(!isset($_SESSION['user'])): ?>
 <p>Portal özelliklerine erişmek için lütfen giriş yapın.</p>
 <?php else: ?>
-<?php if($role === 'doctor'): ?>
+<?php if($role === 'Sorumlu Hemşire'): ?>
 <div class="row g-3">
     <div class="col-md-4">
         <div class="card">
@@ -28,12 +28,12 @@ $user = $_SESSION['user'] ?? 'Ziyaretçi';
         <div class="card">
             <div class="card-header">Duyurular</div>
             <div class="card-body">
-                <p>Doktorlara özel son duyurular.</p>
+                <p>Sorumlu hemşirelere özel son duyurular.</p>
             </div>
         </div>
     </div>
 </div>
-<?php elseif($role === 'nurse'): ?>
+<?php elseif($role === 'Klinik Eğitim Hemşiresi'): ?>
 <div class="row g-3">
     <div class="col-md-4">
         <div class="card">
@@ -55,12 +55,12 @@ $user = $_SESSION['user'] ?? 'Ziyaretçi';
         <div class="card">
             <div class="card-header">Bildirimler</div>
             <div class="card-body">
-                <p>Hemşirelere özel güncellemeler.</p>
+                <p>Klinik eğitim hemşirelerine özel güncellemeler.</p>
             </div>
         </div>
     </div>
 </div>
-<?php elseif($role === 'secretary'): ?>
+<?php elseif($role === 'Normal Personel'): ?>
 <div class="row g-3">
     <div class="col-md-4">
         <div class="card">
@@ -82,7 +82,7 @@ $user = $_SESSION['user'] ?? 'Ziyaretçi';
         <div class="card">
             <div class="card-header">Duyurular</div>
             <div class="card-body">
-                <p>Sekreterlere yönelik bilgilendirmeler.</p>
+                <p>Personellere yönelik bilgilendirmeler.</p>
             </div>
         </div>
     </div>
