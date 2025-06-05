@@ -42,15 +42,18 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     if (isset($_SESSION['user'])) {
         echo "<span class='navbar-text me-2'>Merhaba " . htmlspecialchars($_SESSION['user']) . "</span>";
         echo "<div class='drop-down me-2'>";
-        echo "  <div id='dropDown' class='drop-down__button'><i class='fa-solid fa-gear'></i></div>";
+        echo "  <div id='dropDown' class='drop-down__button'>";
+        echo "    <span class='drop-down__name'>Ayarlar</span>";
+        echo "    <i class='fa-solid fa-gear drop-down__icon'></i>";
+        echo "  </div>";
         echo "  <div class='drop-down__menu-box'>";
         echo "    <ul class='drop-down__menu'>";
-        echo "      <li class='drop-down__item'><a href='pages/profile.php'>Profil</a></li>";
+        echo "      <li class='drop-down__item'><a href='pages/profile.php'>Profil <i class='fa-solid fa-user drop-down__item-icon'></i></a></li>";
         $msg = 'Mesajlar';
         if ($count > 0) { $msg .= " <span class=\'badge bg-danger\'>$count</span>"; }
-        echo "      <li class='drop-down__item'><a href='pages/messages.php'>$msg</a></li>";
+        echo "      <li class='drop-down__item'><a href='pages/messages.php'>$msg <i class='fa-solid fa-envelope drop-down__item-icon'></i></a></li>";
         if ($_SESSION['role'] == 'admin') {
-            echo "      <li class='drop-down__item'><a href='pages/admin.php'>Admin Paneli</a></li>";
+            echo "      <li class='drop-down__item'><a href='pages/admin.php'>Admin Paneli <i class='fa-solid fa-toolbox drop-down__item-icon'></i></a></li>";
         }
         echo "    </ul>";
         echo "  </div>";
