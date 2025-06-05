@@ -2,7 +2,7 @@
 .nav-right .drop-down{margin-left:12px;}
 .drop-down__button{background:transparent;border:none;color:inherit;padding:4px;cursor:pointer;display:flex;align-items:center;}
 .drop-down__name{display:none;}
-.drop-down__icon{width:20px;height:20px;transition:transform .3s;display:block;transform-origin:center;}
+.drop-down__icon{width:20px;height:20px;font-size:20px;line-height:20px;transition:transform .3s;display:block;transform-origin:center;text-align:center;}
 .drop-down--active .drop-down__icon{transform:rotate(180deg);}
 .drop-down__menu-box{position:absolute;right:0;left:auto;top:100%;min-width:160px;width:max-content;background:#fff;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.05);margin-top:5px;border:1px solid #eee;visibility:hidden;opacity:0;transition:all .2s;z-index:1000;}
 .drop-down--active .drop-down__menu-box{visibility:visible;opacity:1;margin-top:10px;}
