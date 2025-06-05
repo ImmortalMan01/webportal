@@ -79,4 +79,20 @@ body.home-dashboard::before{
 .announcements ul::-webkit-scrollbar-thumb{background:#0dd4a3;border-radius:3px;}
 .home-dashboard nav.navbar{display:none;}
 .home-dashboard section.card{background:transparent;border:none;box-shadow:none;padding:0;}
-.home-dashboard.light{filter:invert(1) hue-rotate(180deg);}
+.home-dashboard.light{
+  background:#f8f9fa;
+  color:#212529;
+}
+.home-dashboard.light .portal-nav{
+  background:rgba(255,255,255,0.8);
+  color:#212529;
+}
+.home-dashboard.light .dashboard-card{
+  background:#fff;
+  border:1px solid rgba(0,0,0,0.1);
+  color:#212529;
+}
+.home-dashboard.light .announcement-item{border-bottom:1px solid rgba(0,0,0,0.1);}
+.home-dashboard.light .announcement-item .date{color:#6c757d;}
+.home-dashboard.light .nav-right button,.home-dashboard.light .nav-right a{color:#212529;}
+.home-dashboard.light .nav-right a.logout-btn{background:#dc3545;color:#fff;}
