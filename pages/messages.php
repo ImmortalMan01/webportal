@@ -33,7 +33,14 @@ if ($targetUser) {
         $stmt->execute($ids);
     }
 }
-$allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->quote($current) . ' ORDER BY username')->fetchAll();
+$userStmt = $pdo->prepare('SELECT u.username, COUNT(m.id) AS unread
+    FROM users u
+    LEFT JOIN messages m ON m.sender_id = u.id AND m.receiver_id = ? AND m.is_read = 0
+    WHERE u.id <> ?
+    GROUP BY u.id, u.username
+    ORDER BY u.username');
+$userStmt->execute([$currentId, $currentId]);
+$allUsers = $userStmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -52,10 +59,13 @@ $allUsers = $pdo->query('SELECT username FROM users WHERE username <> ' . $pdo->
             <h5>Kullanıcılar</h5>
             <ul class="list-group mb-3">
                 <?php foreach ($allUsers as $u): ?>
-                    <li class="list-group-item<?php if ($targetUser==$u['username']) echo ' active'; ?>">
+                    <li class="list-group-item d-flex justify-content-between align-items-center<?php if ($targetUser==$u['username']) echo ' active'; ?>">
                         <a href="messages.php?user=<?php echo urlencode($u['username']); ?>" class="text-decoration-none<?php if ($targetUser==$u['username']) echo ' text-light'; ?>">
                             <?php echo htmlspecialchars($u['username']); ?>
                         </a>
+                        <?php if ($u['unread'] > 0): ?>
+                            <span class="badge bg-danger rounded-pill ms-2"><?php echo $u['unread']; ?></span>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
