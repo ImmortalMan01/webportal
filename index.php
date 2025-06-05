@@ -32,6 +32,7 @@ if (isset($_SESSION['user'])) {
     }
 }
 function render_menu($mods) {
+    echo "<li class='nav-item'><a class='nav-link' href='index.php'>Ana Sayfa</a></li>";
     foreach ($mods as $m) {
         echo "<li class='nav-item'><a class='nav-link' href='?module=" . htmlspecialchars($m['file']) . "'>" . htmlspecialchars($m['name']) . "</a></li>";
     }
@@ -90,7 +91,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="mainNav">
+            <div class="collapse navbar-collapse justify-content-end" id="mainNav">
                 <?php if($theme !== 'dashboard'): ?>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?php render_menu($mods); ?>
