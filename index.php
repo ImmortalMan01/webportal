@@ -76,7 +76,9 @@ function render_auth($count) {
     <div class="container my-4">
     <section class="card p-4">
         <?php
-        if (in_array($module, $protected)) {
+        if ($module === 'home') {
+            include 'modules/home.php';
+        } elseif (in_array($module, $protected)) {
             $path = 'modules/' . $module . '.php';
             if (file_exists($path)) {
                 include $path;
@@ -84,7 +86,7 @@ function render_auth($count) {
                 echo '<p>Modül bulunamadı.</p>';
             }
         } else {
-            echo "<p>Hoş geldiniz! Modüllerden birini seçiniz.</p>";
+            echo '<p>Modül bulunamadı.</p>';
         }
         ?>
     </section>

@@ -10,8 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->fetchColumn() > 0) {
         $message = 'Kullanıcı adı zaten mevcut';
     } else {
+        $r = $_POST['role'] ?? 'user';
         $stmt = $pdo->prepare('INSERT INTO users (username, password, role) VALUES (?, ?, ?)');
-        $stmt->execute([$u, password_hash($p, PASSWORD_DEFAULT), 'user']);
+        $stmt->execute([$u, password_hash($p, PASSWORD_DEFAULT), $r]);
         $message = 'Kayıt başarılı. Giriş yapabilirsiniz.';
     }
 }
@@ -35,6 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="mb-3">
                 <input type="password" class="form-control" name="password" placeholder="Şifre" required>
+            </div>
+            <div class="mb-3">
+                <select name="role" class="form-select">
+                    <option value="user">user</option>
+                    <option value="doctor">doctor</option>
+                    <option value="nurse">nurse</option>
+                    <option value="secretary">secretary</option>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary w-100">Kayıt Ol</button>
         </form>
