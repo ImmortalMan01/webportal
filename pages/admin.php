@@ -113,10 +113,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $reg = isset($_POST['registrations_open']) ? '1' : '0';
                 $hide = isset($_POST['hide_register_button']) ? '1' : '0';
                 $name = trim($_POST['site_name'] ?? '');
+                $srv  = trim($_POST['server_name'] ?? '');
                 $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("registrations_open",?)')->execute([$reg]);
                 $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("hide_register_button",?)')->execute([$hide]);
                 if($name !== ''){
                     $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("site_name",?)')->execute([$name]);
+                }
+                if($srv !== ''){
+                    $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("server_name",?)')->execute([$srv]);
                 }
                 if(!empty($_POST['role_theme']) && is_array($_POST['role_theme'])){
                     foreach($_POST['role_theme'] as $rName => $theme){
@@ -169,6 +173,7 @@ $settings = $pdo->query('SELECT name,value FROM settings')->fetchAll(PDO::FETCH_
 $registrations_open = $settings['registrations_open'] ?? '1';
 $hide_register_button = $settings['hide_register_button'] ?? '0';
 $site_name = $settings['site_name'] ?? 'Sağlık Personeli Portalı';
+$server_name = $settings['server_name'] ?? ($_SERVER['SERVER_NAME'] ?? 'SUNUCU');
 $roles = $pdo->query('SELECT DISTINCT role FROM users ORDER BY role')->fetchAll(PDO::FETCH_COLUMN);
 $role_themes = [];
 foreach($roles as $r){
@@ -568,6 +573,10 @@ foreach($roles as $r){
                     <div class="mb-3">
                         <label for="site_name" class="form-label">Web Site Adı</label>
                         <input type="text" class="form-control" id="site_name" name="site_name" value="<?php echo htmlspecialchars($site_name); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="server_name" class="form-label">Sunucu Adı</label>
+                        <input type="text" class="form-control" id="server_name" name="server_name" value="<?php echo htmlspecialchars($server_name); ?>">
                     </div>
                     <div class="form-check form-switch mb-2">
                         <input class="form-check-input" type="checkbox" id="registrations_open" name="registrations_open" value="1" <?php if($registrations_open=='1') echo 'checked'; ?>>

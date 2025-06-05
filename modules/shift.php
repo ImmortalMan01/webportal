@@ -1,5 +1,7 @@
 <?php
-$server = $_SERVER['SERVER_NAME'] ?? 'SUNUCU';
+// Displayed server name can be customized from the admin panel via the
+// `server_name` setting. Fallback to the current HTTP server name if not set.
+$server = get_setting($pdo, 'server_name', $_SERVER['SERVER_NAME'] ?? 'SUNUCU');
 ?>
 <script>document.body.classList.add('worklist-page');</script>
 <link rel="stylesheet" href="assets/worklist.css">
