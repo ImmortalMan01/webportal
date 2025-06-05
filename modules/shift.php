@@ -2,12 +2,21 @@
 // Display the site name configured in the admin panel if available.
 // Fallback to the server hostname when the setting is not defined.
 $server = $site_name ?? ($_SERVER['SERVER_NAME'] ?? 'SUNUCU');
+
+// Uppercase function aware of Turkish characters
+function tr_upper(string $text): string {
+    $map = [
+        'i' => 'İ', 'ı' => 'I', 'ğ' => 'Ğ',
+        'ü' => 'Ü', 'ş' => 'Ş', 'ö' => 'Ö', 'ç' => 'Ç'
+    ];
+    return strtoupper(strtr($text, $map));
+}
 ?>
 <script>document.body.classList.add('worklist-page');</script>
 <link rel="stylesheet" href="assets/worklist.css">
 <div id="wls-app">
   <header class="wl-header">
-    <div class="left"><?php echo strtoupper($server); ?> | ÇALIŞMA LİSTESİ & İSTEKLER</div>
+    <div class="left"><?php echo tr_upper($server); ?> | ÇALIŞMA LİSTESİ & İSTEKLER</div>
     <div class="right"><a class="home-link" href="index.php">Ana Sayfa</a></div>
   </header>
   <div class="wl-container">
