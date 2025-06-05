@@ -99,8 +99,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($action === 'update') {
                 $reg = isset($_POST['registrations_open']) ? '1' : '0';
                 $hide = isset($_POST['hide_register_button']) ? '1' : '0';
+                $name = trim($_POST['site_name'] ?? '');
                 $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("registrations_open",?)')->execute([$reg]);
                 $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("hide_register_button",?)')->execute([$hide]);
+                if($name !== ''){
+                    $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("site_name",?)')->execute([$name]);
+                }
             }
         } elseif ($section === 'admin_messages') {
             if ($action === 'send') {
@@ -145,6 +149,7 @@ $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate
 $settings = $pdo->query('SELECT name,value FROM settings')->fetchAll(PDO::FETCH_KEY_PAIR);
 $registrations_open = $settings['registrations_open'] ?? '1';
 $hide_register_button = $settings['hide_register_button'] ?? '0';
+$site_name = $settings['site_name'] ?? 'Sağlık Personeli Portalı';
 ?>
 <!DOCTYPE html>
 <html lang='tr'>
@@ -511,6 +516,10 @@ $hide_register_button = $settings['hide_register_button'] ?? '0';
                 <form method="post" class="mb-3">
                     <input type="hidden" name="section" value="settings">
                     <input type="hidden" name="action" value="update">
+                    <div class="mb-3">
+                        <label for="site_name" class="form-label">Web Site Adı</label>
+                        <input type="text" class="form-control" id="site_name" name="site_name" value="<?php echo htmlspecialchars($site_name); ?>">
+                    </div>
                     <div class="form-check form-switch mb-2">
                         <input class="form-check-input" type="checkbox" id="registrations_open" name="registrations_open" value="1" <?php if($registrations_open=='1') echo 'checked'; ?>>
                         <label class="form-check-label" for="registrations_open">Kayıtları Aç</label>
