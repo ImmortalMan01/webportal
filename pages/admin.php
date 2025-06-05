@@ -88,6 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($action === 'delete') {
                 $stmt = $pdo->prepare('DELETE FROM announcements WHERE id = ?');
                 $stmt->execute([$_POST['id']]);
+            } elseif ($action === 'update') {
+                $stmt = $pdo->prepare('UPDATE announcements SET content = ? WHERE id = ?');
+                $stmt->execute([$_POST['content'], $_POST['id']]);
             }
         } elseif ($section === 'experiences') {
             if ($action === 'add') {
@@ -418,17 +421,15 @@ foreach($roles as $r){
                 </form>
                 <ul class="list-group">
                     <?php foreach($announcements as $an): ?>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><?php echo htmlspecialchars($an['content']); ?></span>
-                            <div>
-                                <small class="text-muted me-3"><?php echo $an['publish_date']; ?></small>
-                                <form method="post" class="d-inline">
-                                    <input type="hidden" name="section" value="announcements">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="id" value="<?php echo $an['id']; ?>">
-                                    <button class="btn btn-sm btn-danger">Sil</button>
-                                </form>
-                            </div>
+                        <li class="list-group-item">
+                            <form method="post" class="d-flex flex-wrap align-items-center">
+                                <input type="hidden" name="section" value="announcements">
+                                <input type="hidden" name="id" value="<?php echo $an['id']; ?>">
+                                <input type="text" name="content" class="form-control form-control-sm flex-grow-1 me-2 mb-2" value="<?php echo htmlspecialchars($an['content']); ?>">
+                                <small class="text-muted me-2 mb-2"><?php echo $an['publish_date']; ?></small>
+                                <button name="action" value="update" class="btn btn-sm btn-secondary me-1 mb-2">Kaydet</button>
+                                <button name="action" value="delete" class="btn btn-sm btn-danger mb-2">Sil</button>
+                            </form>
                         </li>
                     <?php endforeach; ?>
                 </ul>
