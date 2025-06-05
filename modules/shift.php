@@ -1,5 +1,7 @@
 <?php
-$server = $_SERVER['SERVER_NAME'] ?? 'SUNUCU';
+// Display the site name configured in the admin panel if available.
+// Fallback to the server hostname when the setting is not defined.
+$server = $site_name ?? ($_SERVER['SERVER_NAME'] ?? 'SUNUCU');
 ?>
 <script>document.body.classList.add('worklist-page');</script>
 <link rel="stylesheet" href="assets/worklist.css">
