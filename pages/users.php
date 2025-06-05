@@ -30,7 +30,7 @@ $users = $pdo->query('SELECT username FROM users ORDER BY username')->fetchAll()
             </li>
         <?php endforeach; ?>
     </ul>
-    <a href="index.php" class="btn btn-secondary mt-3">Geri</a>
+    <a href="../index.php" class="btn btn-secondary mt-3">Geri</a>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
