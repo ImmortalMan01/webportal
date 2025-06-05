@@ -120,7 +120,11 @@ if($theme === 'dashboard'):
 <script>
   document.addEventListener('DOMContentLoaded', function(){
     document.querySelectorAll('.dashboard-card').forEach(function(el){
-      el.addEventListener('click',function(){console.log(el.id);});
+      el.addEventListener('click', function(){
+        if (el.id === 'work-list') {
+          window.location.href = 'index.php?module=shift';
+        }
+      });
     });
     var annModalEl = document.getElementById('announcementModal');
     if (annModalEl) {

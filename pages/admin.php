@@ -192,7 +192,7 @@ foreach($roles as $r){
                 <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">Kullanıcılar</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="shifts-tab" data-bs-toggle="tab" data-bs-target="#shifts" type="button" role="tab">Vardiyalar</button>
+                <button class="nav-link" id="shifts-tab" data-bs-toggle="tab" data-bs-target="#shifts" type="button" role="tab">Çalışma Listesi</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="trainings-tab" data-bs-toggle="tab" data-bs-target="#trainings" type="button" role="tab">Eğitimler</button>
