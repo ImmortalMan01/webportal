@@ -9,6 +9,7 @@ require __DIR__ . '/../includes/db.php';
 require __DIR__ . '/../includes/activity.php';
 require __DIR__ . '/../includes/settings.php';
 update_activity($pdo);
+$pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATE NOT NULL DEFAULT CURRENT_DATE)");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section = $_POST['section'] ?? '';
@@ -78,6 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$_POST['title'], $_POST['slug'], $_POST['content'], $_POST['id']]);
             } elseif ($action === 'delete') {
                 $stmt = $pdo->prepare('DELETE FROM site_pages WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
+            }
+        } elseif ($section === 'announcements') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO announcements (content) VALUES (?)');
+                $stmt->execute([$_POST['content']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM announcements WHERE id = ?');
                 $stmt->execute([$_POST['id']]);
             }
         } elseif ($section === 'experiences') {
@@ -150,6 +159,7 @@ $exams = $pdo->query('SELECT id, title, date FROM exams ORDER BY date')->fetchAl
 $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')->fetchAll();
 $modules = $pdo->query('SELECT id, name, file FROM modules ORDER BY id')->fetchAll();
 $site_pages = $pdo->query('SELECT id, slug, title, content FROM site_pages ORDER BY id')->fetchAll();
+$announcements = $pdo->query('SELECT id, content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
 $experiences = $pdo->query('SELECT e.id, e.user_id, u.username, e.title, e.exp_date FROM experiences e JOIN users u ON e.user_id=u.id ORDER BY e.exp_date DESC')->fetchAll();
 $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate FROM profiles')->fetchAll();
 $settings = $pdo->query('SELECT name,value FROM settings')->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -195,6 +205,9 @@ foreach($roles as $r){
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pages-tab" data-bs-toggle="tab" data-bs-target="#pages" type="button" role="tab">Sayfalar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="announcements-tab" data-bs-toggle="tab" data-bs-target="#announcements" type="button" role="tab">Duyurular</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="experiences-tab" data-bs-toggle="tab" data-bs-target="#experiences" type="button" role="tab">Deneyimler</button>
@@ -395,6 +408,30 @@ foreach($roles as $r){
                         </tr>
                     <?php endforeach; ?>
                 </table>
+            </div>
+            <div class="tab-pane fade" id="announcements" role="tabpanel">
+                <form method="post" class="row g-2 mb-3">
+                    <input type="hidden" name="section" value="announcements">
+                    <input type="hidden" name="action" value="add">
+                    <div class="col-md-10"><input type="text" name="content" class="form-control" placeholder="Duyuru" required></div>
+                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                </form>
+                <ul class="list-group">
+                    <?php foreach($announcements as $an): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><?php echo htmlspecialchars($an['content']); ?></span>
+                            <div>
+                                <small class="text-muted me-3"><?php echo $an['publish_date']; ?></small>
+                                <form method="post" class="d-inline">
+                                    <input type="hidden" name="section" value="announcements">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<?php echo $an['id']; ?>">
+                                    <button class="btn btn-sm btn-danger">Sil</button>
+                                </form>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
             <div class="tab-pane fade" id="experiences" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
