@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['role'] = $user['role'];
         $up = $pdo->prepare('UPDATE users SET last_active=NOW() WHERE username=?');
         $up->execute([$user['username']]);
-        header('Location: index.php');
+        header('Location: ../index.php');
         exit;
     } else {
         $error = 'Hatalı kullanıcı adı veya şifre';

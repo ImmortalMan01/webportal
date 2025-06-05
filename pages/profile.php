@@ -115,7 +115,7 @@ $profile = $stmt->fetch() ?: ['full_name' => '', 'department' => '', 'phone' => 
         </div>
         <div class="col-12">
             <button class="btn btn-primary">Kaydet</button>
-            <a href="index.php" class="btn btn-secondary ms-2">Geri</a>
+            <a href="../index.php" class="btn btn-secondary ms-2">Geri</a>
         </div>
     </form>
     <hr class="my-4">
