@@ -69,3 +69,13 @@ body.dark .modal-footer {
 body.dark .btn-close {
   filter: invert(1);
 }
+
+/* Admin announcements fixes */
+#announcements .list-group-item {
+  flex-wrap: wrap;
+}
+#announcements .list-group-item input[type="text"],
+#announcements .list-group-item span {
+  flex: 1 1 100%;
+  word-break: break-word;
+}
