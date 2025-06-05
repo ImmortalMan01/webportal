@@ -2,7 +2,7 @@
 
 This is a simple PHP-based web portal designed for corporate healthcare personnel. User information is stored in a MySQL database rather than `users.json`.
 
-- **Shift Management** (`shift.php`)
+- **Çalışma Listesi** (`shift.php`)
 - **Trainings** (`training.php`)
 - **Exams** (`exam.php`)
 - **Procedure Documents** (`procedure.php`)
@@ -117,7 +117,7 @@ INSERT INTO settings (name, value) VALUES
 
 -- Example initial modules
 INSERT INTO modules (name, file) VALUES
-    ('Vardiya Sistemi','shift'),
+    ('Çalışma Listesi','shift'),
     ('Eğitimler','training'),
     ('Sınavlar','exam'),
     ('Prosedürler','procedure');
