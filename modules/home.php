@@ -118,22 +118,23 @@ if($theme === 'dashboard'):
   </div>
 </div>
 <script>
-  document.querySelectorAll('.dashboard-card').forEach(function(el){
-    el.addEventListener('click',function(){console.log(el.id);});
-  });
-  var annModalEl = document.getElementById('announcementModal');
-  var annModal;
-  if (annModalEl) {
-    annModal = new bootstrap.Modal(annModalEl);
-    document.querySelectorAll('.announcement-item').forEach(function(item){
-      item.addEventListener('click',function(){
-        document.querySelector('#announcementModal .modal-body').innerText = this.getAttribute('data-content');
-        var date = this.getAttribute('data-date');
-        document.querySelector('#announcementModal .modal-title').innerText = 'Duyuru - ' + date;
-        annModal.show();
-      });
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.dashboard-card').forEach(function(el){
+      el.addEventListener('click',function(){console.log(el.id);});
     });
-  }
+    var annModalEl = document.getElementById('announcementModal');
+    if (annModalEl) {
+      var annModal = new bootstrap.Modal(annModalEl);
+      document.querySelectorAll('.announcement-item').forEach(function(item){
+        item.addEventListener('click',function(){
+          document.querySelector('#announcementModal .modal-body').innerText = this.getAttribute('data-content');
+          var date = this.getAttribute('data-date');
+          document.querySelector('#announcementModal .modal-title').innerText = 'Duyuru - ' + date;
+          annModal.show();
+        });
+      });
+    }
+  });
 </script>
 <?php
 else:

@@ -69,7 +69,7 @@ body.home-dashboard::before{
 .badge-orange{background:linear-gradient(90deg,#ff9a28,#ff7a00);}
 .announcements{max-width:1000px;margin:24px auto;padding:24px;}
 .announcements h3{font-size:20px;margin-bottom:16px;color:#fff;}
-.announcement-item{border-bottom:1px solid rgba(255,255,255,0.1);padding:8px 0;}
+.announcement-item{border-bottom:1px solid rgba(255,255,255,0.1);padding:8px 0;cursor:pointer;}
 .announcement-item:last-child{border-bottom:none;}
 .announcement-item .title{font-weight:700;font-size:16px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 .announcement-item .date{font-size:12px;color:#9fa6b2;}
