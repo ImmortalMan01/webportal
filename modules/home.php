@@ -95,18 +95,45 @@ if($theme === 'dashboard'):
     <h3>Duyurular ve Bilgilendirmeler</h3>
     <ul>
       <?php foreach($announcements as $a): ?>
-        <li class="announcement-item">
+        <li class="announcement-item" data-content="<?php echo htmlspecialchars($a['content'], ENT_QUOTES); ?>" data-date="<?php echo $a['publish_date']; ?>">
           <span class="title"><?php echo htmlspecialchars($a['content']); ?></span>
           <div class="date"><?php echo $a['publish_date']; ?></div>
         </li>
       <?php endforeach; ?>
     </ul>
   </section>
+  <div class="modal fade" id="announcementModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Duyuru</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
   document.querySelectorAll('.dashboard-card').forEach(function(el){
     el.addEventListener('click',function(){console.log(el.id);});
   });
+  var annModalEl = document.getElementById('announcementModal');
+  var annModal;
+  if (annModalEl) {
+    annModal = new bootstrap.Modal(annModalEl);
+    document.querySelectorAll('.announcement-item').forEach(function(item){
+      item.addEventListener('click',function(){
+        document.querySelector('#announcementModal .modal-body').innerText = this.getAttribute('data-content');
+        var date = this.getAttribute('data-date');
+        document.querySelector('#announcementModal .modal-title').innerText = 'Duyuru - ' + date;
+        annModal.show();
+      });
+    });
+  }
 </script>
 <?php
 else:
