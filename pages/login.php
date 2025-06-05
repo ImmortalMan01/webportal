@@ -27,21 +27,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Giriş Yap</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/login.css">
 </head>
-<body class="d-flex align-items-center justify-content-center min-vh-100">
-    <div class="card p-4 login-card">
-        <h2 class="text-center mb-3">Giriş Yap</h2>
-        <?php if ($error) echo "<div class='alert alert-danger'>$error</div>"; ?>
-        <form method="post">
-            <div class="mb-3">
-                <input type="text" class="form-control" name="username" placeholder="Kullanıcı Adı" required>
-            </div>
-            <div class="mb-3">
-                <input type="password" class="form-control" name="password" placeholder="Şifre" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
-        </form>
+<body>
+    <div class="ring">
+        <i style="--clr:#00ff0a;"></i>
+        <i style="--clr:#ff0057;"></i>
+        <i style="--clr:#fffd44;"></i>
+        <div class="login">
+            <h2>Giriş Yap</h2>
+            <?php if ($error) echo "<div class='alert alert-danger'>$error</div>"; ?>
+            <form method="post">
+                <div class="inputBx">
+                    <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                </div>
+                <div class="inputBx">
+                    <input type="password" name="password" placeholder="Şifre" required>
+                </div>
+                <div class="inputBx">
+                    <input type="submit" value="Giriş Yap">
+                </div>
+                <div class="links">
+                    <a href="#">Şifremi Unuttum</a>
+                    <a href="register.php">Kayıt Ol</a>
+                </div>
+            </form>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
