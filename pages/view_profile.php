@@ -57,8 +57,13 @@ $experiences = $expStmt->fetchAll();
         <div class="card-subtitle">DENEYİM</div>
         <div class="card-timeline">
           <?php if($experiences): foreach($experiences as $e): ?>
-          <div class="card-item" data-year="<?php echo htmlspecialchars($e['exp_date']); ?>">
-            <div class="card-item-title"><?php echo htmlspecialchars($e['title']); ?></div>
+          <?php $year = $e['exp_date'] ? date('Y', strtotime($e['exp_date'])) : '-'; ?>
+          <?php $fulldate = $e['exp_date'] ? date('d.m.Y', strtotime($e['exp_date'])) : '-'; ?>
+          <div class="card-item" data-year="<?php echo htmlspecialchars($year); ?>">
+            <div class="card-item-title">
+              <?php echo htmlspecialchars($e['title']); ?>
+              <span class="card-item-date"><?php echo htmlspecialchars($fulldate); ?></span>
+            </div>
           </div>
           <?php endforeach; else: ?>
           <div class="card-item" data-year="-">
