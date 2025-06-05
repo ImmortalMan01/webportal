@@ -68,6 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare('DELETE FROM modules WHERE id = ?');
                 $stmt->execute([$_POST['id']]);
             }
+        } elseif ($section === 'pages') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO site_pages (title, slug, content) VALUES (?,?,?)');
+                $stmt->execute([$_POST['title'], $_POST['slug'], $_POST['content']]);
+            } elseif ($action === 'update') {
+                $stmt = $pdo->prepare('UPDATE site_pages SET title=?, slug=?, content=? WHERE id=?');
+                $stmt->execute([$_POST['title'], $_POST['slug'], $_POST['content'], $_POST['id']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM site_pages WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
+            }
         } elseif ($section === 'experiences') {
             if ($action === 'add') {
                 $stmt = $pdo->prepare('INSERT INTO experiences (user_id,title,exp_date) VALUES (?,?,?)');
@@ -128,6 +139,7 @@ $trainings = $pdo->query('SELECT id, title, description FROM trainings ORDER BY 
 $exams = $pdo->query('SELECT id, title, date FROM exams ORDER BY date')->fetchAll();
 $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')->fetchAll();
 $modules = $pdo->query('SELECT id, name, file FROM modules ORDER BY id')->fetchAll();
+$site_pages = $pdo->query('SELECT id, slug, title, content FROM site_pages ORDER BY id')->fetchAll();
 $experiences = $pdo->query('SELECT e.id, e.user_id, u.username, e.title, e.exp_date FROM experiences e JOIN users u ON e.user_id=u.id ORDER BY e.exp_date DESC')->fetchAll();
 $profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate FROM profiles')->fetchAll();
 $settings = $pdo->query('SELECT name,value FROM settings')->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -164,6 +176,9 @@ $hide_register_button = $settings['hide_register_button'] ?? '0';
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules" type="button" role="tab">Modüller</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pages-tab" data-bs-toggle="tab" data-bs-target="#pages" type="button" role="tab">Sayfalar</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="experiences-tab" data-bs-toggle="tab" data-bs-target="#experiences" type="button" role="tab">Deneyimler</button>
@@ -336,6 +351,34 @@ $hide_register_button = $settings['hide_register_button'] ?? '0';
                         </li>
                     <?php endforeach; ?>
                 </ul>
+            </div>
+            <div class="tab-pane fade" id="pages" role="tabpanel">
+                <form method="post" class="row g-2 mb-3">
+                    <input type="hidden" name="section" value="pages">
+                    <input type="hidden" name="action" value="add">
+                    <div class="col-md-3"><input type="text" name="title" class="form-control" placeholder="Başlık" required></div>
+                    <div class="col-md-3"><input type="text" name="slug" class="form-control" placeholder="slug" required></div>
+                    <div class="col-md-4"><input type="text" name="content" class="form-control" placeholder="İçerik" required></div>
+                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                </form>
+                <table class="table table-sm table-striped">
+                    <tr><th>Başlık</th><th>Slug</th><th>İçerik</th><th></th></tr>
+                    <?php foreach($site_pages as $pg): ?>
+                        <tr>
+                            <form method="post" class="d-flex">
+                                <input type="hidden" name="section" value="pages">
+                                <input type="hidden" name="id" value="<?php echo $pg['id']; ?>">
+                                <td><input type="text" name="title" class="form-control form-control-sm" value="<?php echo htmlspecialchars($pg['title']); ?>"></td>
+                                <td><input type="text" name="slug" class="form-control form-control-sm" value="<?php echo htmlspecialchars($pg['slug']); ?>"></td>
+                                <td><textarea name="content" class="form-control form-control-sm" rows="1"><?php echo htmlspecialchars($pg['content']); ?></textarea></td>
+                                <td>
+                                    <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
+                                    <button name="action" value="delete" class="btn btn-sm btn-danger">Sil</button>
+                                </td>
+                            </form>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
             </div>
             <div class="tab-pane fade" id="experiences" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">

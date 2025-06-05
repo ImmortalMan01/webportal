@@ -97,6 +97,13 @@ CREATE TABLE settings (
     value VARCHAR(50) NOT NULL
 );
 
+CREATE TABLE site_pages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL
+);
+
 INSERT INTO settings (name, value) VALUES
     ('registrations_open','1'),
     ('hide_register_button','0');
@@ -107,6 +114,12 @@ INSERT INTO modules (name, file) VALUES
     ('Eğitimler','training'),
     ('Sınavlar','exam'),
     ('Prosedürler','procedure');
+
+-- Example landing pages
+INSERT INTO site_pages (slug, title, content) VALUES
+    ('home','Ana Sayfa','<h2>Hoş geldiniz</h2>'),
+    ('hakkimizda','Hakkımızda','<p>Hakkımızda içerik</p>'),
+    ('biz-kimiz','Biz Kimiz','<p>Biz Kimiz içerik</p>');
 ```
 
 Edit `includes/db.php` if your database credentials differ from the defaults.
