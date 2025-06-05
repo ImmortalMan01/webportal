@@ -34,8 +34,27 @@ body.worklist-page section.card {
   backdrop-filter: blur(6px);
   box-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
-.wl-header .left { font-weight: 700; font-size: 18px; }
-.wl-header .home-link { color: #3fa7ff; text-decoration: none; font-weight: 500; }
+.wl-header .left {
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.wl-header .wl-nav {
+  display: flex;
+}
+.wl-header .wl-nav .nav-link {
+  color: #3fa7ff;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 12px;
+}
+.wl-header .home-link {
+  color: #3fa7ff;
+  text-decoration: none;
+  font-weight: 500;
+}
 
 .wl-container { display: flex; flex: 1; overflow: hidden; }
 
