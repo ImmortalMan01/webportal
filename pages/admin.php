@@ -504,6 +504,21 @@ $hide_register_button = $settings['hide_register_button'] ?? '0';
         }
         toggleTo();
         if(fromSel) fromSel.addEventListener('change', toggleTo);
+
+        const regOpenChk = document.getElementById('registrations_open');
+        const hideRegBtnChk = document.getElementById('hide_register_button');
+        function toggleHideOption(){
+            if(regOpenChk && hideRegBtnChk){
+                if(regOpenChk.checked){
+                    hideRegBtnChk.checked = false;
+                    hideRegBtnChk.disabled = true;
+                }else{
+                    hideRegBtnChk.disabled = false;
+                }
+            }
+        }
+        toggleHideOption();
+        if(regOpenChk) regOpenChk.addEventListener('change', toggleHideOption);
     </script>
 </body>
 </html>

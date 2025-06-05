@@ -5,6 +5,7 @@ require __DIR__ . '/../includes/settings.php';
 $registrations_open = get_setting($pdo, 'registrations_open', '1');
 $hide_register_button = get_setting($pdo, 'hide_register_button', '0');
 $error = '';
+$success = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $u = $_POST['username'] ?? '';
     $p = $_POST['password'] ?? '';
@@ -16,8 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['role'] = $user['role'];
         $up = $pdo->prepare('UPDATE users SET last_active=NOW() WHERE username=?');
         $up->execute([$user['username']]);
-        header('Location: ../index.php');
-        exit;
+        $success = true;
     } else {
         $error = 'Hatalı kullanıcı adı veya şifre';
     }
@@ -52,13 +52,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="links">
                     <a href="#">Şifremi Unuttum</a>
-                    <?php if ($registrations_open || !$hide_register_button): ?>
+                    <?php if ($registrations_open == '1' && $hide_register_button != '1'): ?>
                     <a href="register.php">Kayıt Ol</a>
                     <?php endif; ?>
                 </div>
             </form>
         </div>
     </div>
+    <?php if ($success): ?>
+    <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+        <div id="loginToast" class="toast align-items-center text-bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">Giriş başarılı, yönlendiriliyor.</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const toastEl = document.getElementById('loginToast');
+        const toast = new bootstrap.Toast(toastEl, {delay: 3000});
+        toast.show();
+        setTimeout(()=>{ window.location = '../index.php'; }, 3000);
+    </script>
+    <?php endif; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
