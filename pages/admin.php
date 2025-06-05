@@ -7,6 +7,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
 
 require __DIR__ . '/../includes/db.php';
 require __DIR__ . '/../includes/activity.php';
+require __DIR__ . '/../includes/settings.php';
 update_activity($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -105,6 +106,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if($name !== ''){
                     $pdo->prepare('REPLACE INTO settings (name,value) VALUES ("site_name",?)')->execute([$name]);
                 }
+                if(!empty($_POST['role_theme']) && is_array($_POST['role_theme'])){
+                    foreach($_POST['role_theme'] as $rName => $theme){
+                        set_role_theme($pdo, $rName, $theme);
+                    }
+                }
             }
         } elseif ($section === 'admin_messages') {
             if ($action === 'send') {
@@ -150,6 +156,11 @@ $settings = $pdo->query('SELECT name,value FROM settings')->fetchAll(PDO::FETCH_
 $registrations_open = $settings['registrations_open'] ?? '1';
 $hide_register_button = $settings['hide_register_button'] ?? '0';
 $site_name = $settings['site_name'] ?? 'Sağlık Personeli Portalı';
+$roles = $pdo->query('SELECT DISTINCT role FROM users ORDER BY role')->fetchAll(PDO::FETCH_COLUMN);
+$role_themes = [];
+foreach($roles as $r){
+    $role_themes[$r] = get_role_theme($pdo, $r);
+}
 ?>
 <!DOCTYPE html>
 <html lang='tr'>
@@ -528,6 +539,16 @@ $site_name = $settings['site_name'] ?? 'Sağlık Personeli Portalı';
                         <input class="form-check-input" type="checkbox" id="hide_register_button" name="hide_register_button" value="1" <?php if($hide_register_button=='1') echo 'checked'; ?>>
                         <label class="form-check-label" for="hide_register_button">Kayıt Ol butonunu gizle</label>
                     </div>
+                    <h5 class="mt-4">Rol Temaları</h5>
+                    <?php foreach($roles as $r): ?>
+                    <div class="mb-2">
+                        <label class="form-label"><?php echo htmlspecialchars($r); ?></label>
+                        <select name="role_theme[<?php echo htmlspecialchars($r); ?>]" class="form-select">
+                            <option value="classic" <?php if(($role_themes[$r] ?? 'classic')==='classic') echo 'selected'; ?>>Klasik</option>
+                            <option value="dashboard" <?php if(($role_themes[$r] ?? 'classic')==='dashboard') echo 'selected'; ?>>Dashboard</option>
+                        </select>
+                    </div>
+                    <?php endforeach; ?>
                     <button class="btn btn-primary">Kaydet</button>
                 </form>
             </div>
