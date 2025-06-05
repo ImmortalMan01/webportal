@@ -92,6 +92,12 @@ CREATE TABLE messages (
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE announcements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT NOT NULL,
+    publish_date DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
 CREATE TABLE settings (
     name VARCHAR(50) PRIMARY KEY,
     value VARCHAR(50) NOT NULL

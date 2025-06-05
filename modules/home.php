@@ -10,6 +10,8 @@ if(isset($_SESSION['user'])){
 }
 $theme = get_role_theme($pdo, $role);
 if($theme === 'dashboard'):
+    $pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATE NOT NULL DEFAULT CURRENT_DATE)");
+    $announcements = $pdo->query('SELECT content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
 ?>
 <nav class="portal-nav">
 <script>document.body.classList.add('home-dashboard');</script>
@@ -92,8 +94,12 @@ if($theme === 'dashboard'):
   <section class="announcements">
     <h3>Duyurular ve Bilgilendirmeler</h3>
     <ul>
-      <li class="announcement-item"><span class="title">Örnek duyuru metni buraya gelecek ve altmış karakteri geçmesi durumunda...</span><div class="date">2024-01-01</div></li>
-      <li class="announcement-item"><span class="title">İkinci duyuru metni için bir örnek içerik yer alır...</span><div class="date">2024-01-02</div></li>
+      <?php foreach($announcements as $a): ?>
+        <li class="announcement-item">
+          <span class="title"><?php echo htmlspecialchars($a['content']); ?></span>
+          <div class="date"><?php echo $a['publish_date']; ?></div>
+        </li>
+      <?php endforeach; ?>
     </ul>
   </section>
 </div>
