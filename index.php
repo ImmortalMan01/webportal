@@ -82,6 +82,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <?php render_menu($mods); ?>
                 </ul>
                 <?php render_auth($unreadCount, $registrations_open, $hide_register_button); ?>
+                <button id="themeToggleGlobal" class="btn btn-outline-light btn-sm ms-2" type="button">🌙</button>
             </div>
         </div>
     </nav>
@@ -104,5 +105,6 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     </section>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/theme.js"></script>
 </body>
 </html>

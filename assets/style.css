@@ -33,3 +33,26 @@ body {
   #usersCol{display:none;}
   #chatCol{flex:0 0 100%; max-width:100%;}
 }
+
+/* Theme styles */
+body.light {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+body.dark {
+  background-color: #121212;
+  color: #f8f9fa;
+}
+body.dark .card {
+  background-color: #1e1e1e;
+  color: inherit;
+}
+body.dark .navbar {
+  background-color: #1f1f1f !important;
+}
+body.light .navbar {
+  background-color: #0d6efd !important;
+}
+body.dark a {
+  color: #86b7fe;
+}

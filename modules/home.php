@@ -19,7 +19,7 @@ if($role === 'Normal Personel'):
   </div>
   <div class="nav-right">
     <button id="settingsBtn" aria-label="Ayarlar" role="button"><i class="fa-solid fa-gear"></i></button>
-    <button id="themeToggle" aria-label="Tema" role="button">🌙</button>
+    <button id="themeToggleGlobal" aria-label="Tema" role="button">🌙</button>
     <a href="pages/logout.php" class="logout-btn" aria-label="Çıkış" role="button"><i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış</a>
   </div>
 </nav>
@@ -83,19 +83,9 @@ if($role === 'Normal Personel'):
   </section>
 </div>
 <script>
-  document.querySelectorAll('.dashboard-card').forEach(function(el){el.addEventListener('click',function(){console.log(el.id);});});
-  const btn=document.getElementById('themeToggle');
-  if(btn){
-    const st=localStorage.getItem('theme')||'dark';
-    if(st==='light') document.body.classList.add('light');
-    btn.textContent=st==='light'?'☀️':'🌙';
-    btn.addEventListener('click',function(){
-      document.body.classList.toggle('light');
-      const now=document.body.classList.contains('light')?'light':'dark';
-      btn.textContent=now==='light'?'☀️':'🌙';
-      localStorage.setItem('theme',now);
-    });
-  }
+  document.querySelectorAll('.dashboard-card').forEach(function(el){
+    el.addEventListener('click',function(){console.log(el.id);});
+  });
 </script>
 <?php
 else:
