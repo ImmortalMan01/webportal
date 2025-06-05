@@ -6,9 +6,13 @@ This is a simple PHP-based web portal designed for corporate healthcare personne
 - **Trainings** (`training.php`)
 - **Exams** (`exam.php`)
 - **Procedure Documents** (`procedure.php`)
-- **User Login/Registration** (`login.php`, `register.php`)
-- **Admin Panel** (`admin.php`)
-- **User Profiles** (`profile.php`)
+- **User Login/Registration** (`pages/login.php`, `pages/register.php`)
+- **Admin Panel** (`pages/admin.php`)
+- **User Profiles** (`pages/profile.php`)
+
+The main scripts are placed under the `pages/` directory while reusable code
+resides in `includes/`. Static assets such as the stylesheet live in
+`assets/`.
 
 ## Usage
 
@@ -87,9 +91,9 @@ INSERT INTO modules (name, file) VALUES
     ('Prosedürler','procedure');
 ```
 
-Edit `db.php` if your database credentials differ from the defaults.
+Edit `includes/db.php` if your database credentials differ from the defaults.
 
-The interface includes a minimal style sheet (`style.css`) for a cleaner look.
+The interface includes a minimal style sheet (`assets/style.css`) for a cleaner look.
 
 Example using PHP's built-in server:
 

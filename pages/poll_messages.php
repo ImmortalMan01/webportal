@@ -4,8 +4,8 @@ if (!isset($_SESSION['user'])) {
     http_response_code(403);
     exit;
 }
-require 'db.php';
-require 'activity.php';
+require __DIR__ . '/../includes/db.php';
+require __DIR__ . '/../includes/activity.php';
 update_activity($pdo);
 $currentUser = $_SESSION['user'];
 $partner = $_GET['user'] ?? '';
