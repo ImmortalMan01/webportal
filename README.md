@@ -95,7 +95,7 @@ CREATE TABLE messages (
 CREATE TABLE announcements (
     id INT AUTO_INCREMENT PRIMARY KEY,
     content TEXT NOT NULL,
-    publish_date DATE NOT NULL DEFAULT CURRENT_DATE
+    publish_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE settings (
