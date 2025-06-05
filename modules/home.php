@@ -10,7 +10,7 @@ if(isset($_SESSION['user'])){
 }
 $theme = get_role_theme($pdo, $role);
 if($theme === 'dashboard'):
-    $pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATE NOT NULL DEFAULT CURRENT_DATE)");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)");
     $announcements = $pdo->query('SELECT content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
 ?>
 <nav class="portal-nav">

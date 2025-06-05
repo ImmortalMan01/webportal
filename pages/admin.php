@@ -9,7 +9,7 @@ require __DIR__ . '/../includes/db.php';
 require __DIR__ . '/../includes/activity.php';
 require __DIR__ . '/../includes/settings.php';
 update_activity($pdo);
-$pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATE NOT NULL DEFAULT CURRENT_DATE)");
+$pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section = $_POST['section'] ?? '';
