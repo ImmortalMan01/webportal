@@ -84,6 +84,9 @@ body.dark .bubble .meta {
 body.dark .bubble .status {
   color: #f8f9fa;
 }
+body.dark .bubble.mine .status span {
+  color: #fff !important;
+}
 body.dark .list-group-item {
   background-color: #1e1e1e;
   color: #f8f9fa;
