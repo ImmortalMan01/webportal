@@ -2,6 +2,7 @@
 session_start();
 require __DIR__ . '/../includes/db.php';
 require __DIR__ . '/../includes/settings.php';
+require __DIR__ . '/../includes/roles.php';
 $registrations_open = get_setting($pdo, 'registrations_open', '1');
 $hide_register_button = get_setting($pdo, 'hide_register_button', '0');
 $message = '';
@@ -53,9 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="inputBx">
                     <select name="role">
-                        <option value="Normal Personel">Normal Personel</option>
-                        <option value="Sorumlu Hemşire">Sorumlu Hemşire</option>
-                        <option value="Klinik Eğitim Hemşiresi">Klinik Eğitim Hemşiresi</option>
+                        <?php foreach (default_roles() as $r): ?>
+                        <option value="<?php echo htmlspecialchars($r); ?>"><?php echo htmlspecialchars($r); ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="inputBx">
