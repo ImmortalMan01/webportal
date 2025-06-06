@@ -53,7 +53,10 @@ $allUsers = $userStmt->fetchAll();
 </head>
 <body>
 <div class="container my-4">
-    <h2 class="mb-3">Mesajlar</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Mesajlar</h2>
+        <button id="themeToggleGlobal" class="btn btn-outline-secondary btn-sm" type="button">🌙</button>
+    </div>
     <div class="row">
         <div id="usersCol" class="col-md-4">
             <h5>Kullanıcılar</h5>
