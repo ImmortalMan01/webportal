@@ -58,7 +58,10 @@ if($theme === 'dashboard'):
     if(!in_array('badge_class',$modCols)){
         $pdo->exec("ALTER TABLE modules ADD COLUMN badge_class VARCHAR(20) DEFAULT 'badge-blue'");
     }
-    $moduleRows = $pdo->query('SELECT name,file,icon,description,color,badge,badge_class FROM modules ORDER BY id')->fetchAll();
+    if(!in_array('enabled',$modCols)){
+        $pdo->exec("ALTER TABLE modules ADD COLUMN enabled TINYINT(1) NOT NULL DEFAULT 1");
+    }
+    $moduleRows = $pdo->query('SELECT name,file,icon,description,color,badge,badge_class FROM modules WHERE enabled=1 ORDER BY id')->fetchAll();
   ?>
   <div class="dashboard-grid">
     <?php foreach($moduleRows as $m): ?>

@@ -26,6 +26,9 @@ if(!in_array('badge',$cols)){
 if(!in_array('badge_class',$cols)){
     $pdo->exec("ALTER TABLE modules ADD COLUMN badge_class VARCHAR(20) DEFAULT 'badge-blue'");
 }
+if(!in_array('enabled',$cols)){
+    $pdo->exec("ALTER TABLE modules ADD COLUMN enabled TINYINT(1) NOT NULL DEFAULT 1");
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section = $_POST['section'] ?? '';
@@ -80,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } elseif ($section === 'modules') {
             if ($action === 'add') {
-                $stmt = $pdo->prepare('INSERT INTO modules (name, file, icon, description, color, badge, badge_class) VALUES (?,?,?,?,?,?,?)');
+                $stmt = $pdo->prepare('INSERT INTO modules (name, file, icon, description, color, badge, badge_class, enabled) VALUES (?,?,?,?,?,?,?,?)');
                 $stmt->execute([
                     $_POST['name'] ?? '',
                     $_POST['file'] ?? '',
@@ -88,7 +91,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_POST['description'] ?? '',
                     $_POST['color'] ?? '',
                     $_POST['badge'] ?? '',
-                    $_POST['badge_class'] ?? ''
+                    $_POST['badge_class'] ?? '',
+                    isset($_POST['enabled']) ? 1 : 0
+                ]);
+            } elseif ($action === 'update') {
+                $stmt = $pdo->prepare('UPDATE modules SET name=?, file=?, icon=?, description=?, color=?, badge=?, badge_class=?, enabled=? WHERE id=?');
+                $stmt->execute([
+                    $_POST['name'] ?? '',
+                    $_POST['file'] ?? '',
+                    $_POST['icon'] ?? '',
+                    $_POST['description'] ?? '',
+                    $_POST['color'] ?? '',
+                    $_POST['badge'] ?? '',
+                    $_POST['badge_class'] ?? '',
+                    isset($_POST['enabled']) ? 1 : 0,
+                    $_POST['id']
                 ]);
             } elseif ($action === 'delete') {
                 $stmt = $pdo->prepare('DELETE FROM modules WHERE id = ?');
@@ -184,7 +201,7 @@ $shifts = $pdo->query('SELECT id, date, time FROM shifts ORDER BY date')->fetchA
 $trainings = $pdo->query('SELECT id, title, description FROM trainings ORDER BY id')->fetchAll();
 $exams = $pdo->query('SELECT id, title, date FROM exams ORDER BY date')->fetchAll();
 $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')->fetchAll();
-$modules = $pdo->query('SELECT id, name, file, icon, description, color, badge, badge_class FROM modules ORDER BY id')->fetchAll();
+$modules = $pdo->query('SELECT id, name, file, icon, description, color, badge, badge_class, enabled FROM modules ORDER BY id')->fetchAll();
 $site_pages = $pdo->query('SELECT id, slug, title, content FROM site_pages ORDER BY id')->fetchAll();
 $announcements = $pdo->query('SELECT id, content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
 $experiences = $pdo->query('SELECT e.id, e.user_id, u.username, e.title, e.exp_date FROM experiences e JOIN users u ON e.user_id=u.id ORDER BY e.exp_date DESC')->fetchAll();
@@ -392,9 +409,9 @@ foreach($roles as $r){
                     <input type="hidden" name="action" value="add">
                     <div class="col-md-2"><input type="text" name="name" class="form-control" placeholder="Başlık" required></div>
                     <div class="col-md-2"><input type="text" name="file" class="form-control" placeholder="Dosya" required></div>
-                    <div class="col-md-2"><input type="text" name="icon" class="form-control" placeholder="Icon class" required></div>
-                    <div class="col-md-2"><input type="text" name="color" class="form-control" placeholder="Renk #" required></div>
-                    <div class="col-md-2"><input type="text" name="badge" class="form-control" placeholder="Badge"></div>
+                    <div class="col-md-2"><input type="text" name="icon" class="form-control" placeholder="Icon class"></div>
+                    <div class="col-md-1"><input type="text" name="color" class="form-control" placeholder="Renk #"></div>
+                    <div class="col-md-1"><input type="text" name="badge" class="form-control" placeholder="Badge"></div>
                     <div class="col-md-2">
                         <select name="badge_class" class="form-select">
                             <option value="badge-green">Yeşil</option>
@@ -402,25 +419,44 @@ foreach($roles as $r){
                             <option value="badge-orange">Turuncu</option>
                         </select>
                     </div>
+                    <div class="col-md-1 d-flex align-items-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="enabled" id="modEnabledAdd" checked>
+                            <label class="form-check-label" for="modEnabledAdd">Göster</label>
+                        </div>
+                    </div>
                     <div class="col-12 mt-2"><input type="text" name="description" class="form-control" placeholder="Açıklama"></div>
                     <div class="col-12 text-end mt-2"><button class="btn btn-primary">Ekle</button></div>
                 </form>
-                <ul class="list-group">
+                <table class="table table-sm table-striped">
+                    <tr><th>Başlık</th><th>Dosya</th><th>Icon</th><th>Renk</th><th>Badge</th><th>Sınıf</th><th>Açıklama</th><th>Göster</th><th></th></tr>
                     <?php foreach ($modules as $m): ?>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>
-                                <strong><?php echo htmlspecialchars($m['name']); ?></strong>
-                                <em>(<?php echo htmlspecialchars($m['file']); ?>)</em>
-                            </span>
-                            <form method="post" class="ms-3">
+                        <tr>
+                            <form method="post" class="d-flex flex-wrap align-items-center">
                                 <input type="hidden" name="section" value="modules">
-                                <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?php echo $m['id']; ?>">
-                                <button class="btn btn-sm btn-danger">Sil</button>
+                                <td><input type="text" name="name" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['name']); ?>"></td>
+                                <td><input type="text" name="file" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['file']); ?>"></td>
+                                <td><input type="text" name="icon" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['icon']); ?>"></td>
+                                <td><input type="text" name="color" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['color']); ?>"></td>
+                                <td><input type="text" name="badge" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['badge']); ?>"></td>
+                                <td>
+                                    <select name="badge_class" class="form-select form-select-sm">
+                                        <option value="badge-green" <?php if($m['badge_class']=='badge-green') echo 'selected'; ?>>Yeşil</option>
+                                        <option value="badge-blue" <?php if($m['badge_class']=='badge-blue') echo 'selected'; ?>>Mavi</option>
+                                        <option value="badge-orange" <?php if($m['badge_class']=='badge-orange') echo 'selected'; ?>>Turuncu</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" name="description" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['description']); ?>"></td>
+                                <td class="text-center"><input type="checkbox" class="form-check-input" name="enabled" value="1" <?php echo $m['enabled']? 'checked':''; ?>></td>
+                                <td>
+                                    <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
+                                    <button name="action" value="delete" class="btn btn-sm btn-danger">Sil</button>
+                                </td>
                             </form>
-                        </li>
+                        </tr>
                     <?php endforeach; ?>
-                </ul>
+                </table>
             </div>
             <div class="tab-pane fade" id="pages" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
