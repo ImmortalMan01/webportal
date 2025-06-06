@@ -15,12 +15,6 @@ function tr_upper(string $text): string {
 <script>document.body.classList.add('worklist-page');</script>
 <link rel="stylesheet" href="assets/worklist.css">
 <div id="wls-app">
-  <header class="wl-header">
-    <div class="left">
-      <span class="site-name"><?php echo tr_upper($server); ?> | ÇALIŞMA LİSTESİ & İSTEKLER</span>
-    </div>
-    <div class="right"><a class="home-link" href="#">İstekte Bulun</a></div>
-  </header>
   <div class="wl-container">
     <aside class="wl-sidebar">
       <ul>
