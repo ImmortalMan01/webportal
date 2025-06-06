@@ -18,10 +18,6 @@ function tr_upper(string $text): string {
   <header class="wl-header">
     <div class="left">
       <span class="site-name"><?php echo tr_upper($server); ?> | ÇALIŞMA LİSTESİ & İSTEKLER</span>
-      <nav class="wl-nav">
-        <a href="index.php" class="nav-link">Ana Sayfa</a>
-        <a href="pages/users.php" class="nav-link">Kullanıcılar</a>
-      </nav>
     </div>
     <div class="right"><a class="home-link" href="#">İstekte Bulun</a></div>
   </header>
