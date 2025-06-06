@@ -8,6 +8,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
 require __DIR__ . '/../includes/db.php';
 require __DIR__ . '/../includes/activity.php';
 require __DIR__ . '/../includes/settings.php';
+require __DIR__ . '/../includes/roles.php';
 update_activity($pdo);
 $pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)");
 $cols = $pdo->query("SHOW COLUMNS FROM modules")->fetchAll(PDO::FETCH_COLUMN);
@@ -234,7 +235,7 @@ $settings = $pdo->query('SELECT name,value FROM settings')->fetchAll(PDO::FETCH_
 $registrations_open = $settings['registrations_open'] ?? '1';
 $hide_register_button = $settings['hide_register_button'] ?? '0';
 $site_name = $settings['site_name'] ?? 'Sağlık Personeli Portalı';
-$roles = $pdo->query('SELECT DISTINCT role FROM users ORDER BY role')->fetchAll(PDO::FETCH_COLUMN);
+$roles = get_all_roles($pdo);
 $role_themes = [];
 foreach($roles as $r){
     $role_themes[$r] = get_role_theme($pdo, $r);
@@ -299,10 +300,9 @@ foreach($roles as $r){
                     <div class="col-md-3"><input type="password" name="password" class="form-control" placeholder="Şifre" required></div>
                     <div class="col-md-3">
                         <select name="role" class="form-select">
-                            <option value="Normal Personel">Normal Personel</option>
-                            <option value="admin">admin</option>
-                            <option value="Sorumlu Hemşire">Sorumlu Hemşire</option>
-                            <option value="Klinik Eğitim Hemşiresi">Klinik Eğitim Hemşiresi</option>
+                            <?php foreach (default_roles() as $r): ?>
+                            <option value="<?php echo htmlspecialchars($r); ?>"><?php echo htmlspecialchars($r); ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
@@ -319,10 +319,9 @@ foreach($roles as $r){
                                     <input type="hidden" name="action" value="changerole">
                                     <input type="hidden" name="username" value="<?php echo htmlspecialchars($info['username']); ?>">
                                     <select name="role" class="form-select form-select-sm me-2">
-                                        <option value="Normal Personel" <?php if ($info['role']=='Normal Personel') echo 'selected'; ?>>Normal Personel</option>
-                                        <option value="admin" <?php if ($info['role']=='admin') echo 'selected'; ?>>admin</option>
-                                        <option value="Sorumlu Hemşire" <?php if ($info['role']=='Sorumlu Hemşire') echo 'selected'; ?>>Sorumlu Hemşire</option>
-                                        <option value="Klinik Eğitim Hemşiresi" <?php if ($info['role']=='Klinik Eğitim Hemşiresi') echo 'selected'; ?>>Klinik Eğitim Hemşiresi</option>
+                                        <?php foreach (default_roles() as $r): ?>
+                                        <option value="<?php echo htmlspecialchars($r); ?>" <?php if ($info['role']==$r) echo 'selected'; ?>><?php echo htmlspecialchars($r); ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                     <button class="btn btn-sm btn-secondary">Kaydet</button>
                                 </form>
