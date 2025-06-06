@@ -79,3 +79,8 @@ body.dark .btn-close {
   flex: 1 1 100%;
   word-break: break-word;
 }
+
+/* Module header */
+.module-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.module-header h2{margin:0;font-size:1.5rem;}
+.module-nav .nav-link{padding:0.25rem 0.75rem;}

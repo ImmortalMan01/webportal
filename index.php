@@ -29,9 +29,11 @@ $mods = array_filter($allMods, fn($m)=>$m['enabled']);
 $protected = array_column($allMods, 'file');
 $module = isset($_GET['module']) ? $_GET['module'] : 'home';
 
-$stmt = $pdo->prepare('SELECT id FROM modules WHERE file=?');
+$stmt = $pdo->prepare('SELECT id,name FROM modules WHERE file=?');
 $stmt->execute([$module]);
-$currentModuleId = $stmt->fetchColumn();
+$moduleInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+$currentModuleId = $moduleInfo['id'] ?? null;
+$moduleTitle = $moduleInfo['name'] ?? '';
 $moduleNav = [];
 if($currentModuleId){
     $ns = $pdo->prepare('SELECT label,url FROM module_nav_links WHERE module_id=? ORDER BY id');
@@ -53,17 +55,24 @@ if (isset($_SESSION['user'])) {
         $unreadCount = $q->fetchColumn();
     }
 }
-function render_menu($mods, $extra = []) {
+function render_menu($mods) {
     echo "<li class='nav-item'><a class='nav-link' href='index.php'>Ana Sayfa</a></li>";
     foreach ($mods as $m) {
         echo "<li class='nav-item'><a class='nav-link' href='?module=" . htmlspecialchars($m['file']) . "'>" . htmlspecialchars($m['name']) . "</a></li>";
     }
-    foreach ($extra as $e) {
-        echo "<li class='nav-item'><a class='nav-link' href='" . htmlspecialchars($e['url']) . "'>" . htmlspecialchars($e['label']) . "</a></li>";
-    }
     if (isset($_SESSION['user'])) {
         echo "<li class='nav-item'><a class='nav-link' href='pages/users.php'>Kullanıcılar</a></li>";
     }
+}
+
+function render_module_nav(array $links){
+    if(empty($links)) return;
+    echo "<nav class='module-nav'>";
+    echo "<ul class='nav'>";
+    foreach($links as $l){
+        echo "<li class='nav-item'><a class='nav-link' href='".htmlspecialchars($l['url'])."'>".htmlspecialchars($l['label'])."</a></li>";
+    }
+    echo "</ul></nav>";
 }
 
 function render_auth($count, $registrations_open, $hide_register_button) {
@@ -118,7 +127,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <?php render_menu($mods, $moduleNav); ?>
+                    <?php render_menu($mods); ?>
                 </ul>
                 <?php render_auth($unreadCount, $registrations_open, $hide_register_button); ?>
                 <button id="themeToggleGlobal" class="btn btn-outline-light btn-sm ms-2" type="button">🌙</button>
@@ -127,6 +136,12 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     </nav>
     <div class="container my-4">
     <section class="card p-4">
+        <?php if ($module !== 'home'): ?>
+        <div class="module-header">
+            <h2 class="module-title"><?php echo htmlspecialchars($moduleTitle); ?></h2>
+            <?php render_module_nav($moduleNav); ?>
+        </div>
+        <?php endif; ?>
         <?php
         if ($module === 'home') {
             include 'modules/home.php';
