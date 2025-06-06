@@ -10,6 +10,7 @@ require __DIR__ . '/../includes/activity.php';
 require __DIR__ . '/../includes/settings.php';
 update_activity($pdo);
 $pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)");
+$pdo->exec("CREATE TABLE IF NOT EXISTS nav_links (id INT AUTO_INCREMENT PRIMARY KEY, label VARCHAR(100) NOT NULL, url VARCHAR(255) NOT NULL)");
 $cols = $pdo->query("SHOW COLUMNS FROM modules")->fetchAll(PDO::FETCH_COLUMN);
 if(!in_array('icon',$cols)){
     $pdo->exec("ALTER TABLE modules ADD COLUMN icon VARCHAR(50) DEFAULT ''");
@@ -111,6 +112,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare('DELETE FROM modules WHERE id = ?');
                 $stmt->execute([$_POST['id']]);
             }
+        } elseif ($section === 'navlinks') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO nav_links (label, url) VALUES (?,?)');
+                $stmt->execute([$_POST['label'], $_POST['url']]);
+            } elseif ($action === 'update') {
+                $stmt = $pdo->prepare('UPDATE nav_links SET label=?, url=? WHERE id=?');
+                $stmt->execute([$_POST['label'], $_POST['url'], $_POST['id']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM nav_links WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
+            }
         } elseif ($section === 'pages') {
             if ($action === 'add') {
                 $stmt = $pdo->prepare('INSERT INTO site_pages (title, slug, content) VALUES (?,?,?)');
@@ -202,6 +214,7 @@ $trainings = $pdo->query('SELECT id, title, description FROM trainings ORDER BY 
 $exams = $pdo->query('SELECT id, title, date FROM exams ORDER BY date')->fetchAll();
 $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')->fetchAll();
 $modules = $pdo->query('SELECT id, name, file, icon, description, color, badge, badge_class, enabled FROM modules ORDER BY id')->fetchAll();
+$nav_links = $pdo->query('SELECT id, label, url FROM nav_links ORDER BY id')->fetchAll();
 $site_pages = $pdo->query('SELECT id, slug, title, content FROM site_pages ORDER BY id')->fetchAll();
 $announcements = $pdo->query('SELECT id, content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
 $experiences = $pdo->query('SELECT e.id, e.user_id, u.username, e.title, e.exp_date FROM experiences e JOIN users u ON e.user_id=u.id ORDER BY e.exp_date DESC')->fetchAll();
@@ -246,6 +259,9 @@ foreach($roles as $r){
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules" type="button" role="tab">Modüller</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="navlinks-tab" data-bs-toggle="tab" data-bs-target="#navlinks" type="button" role="tab">Menü Linkleri</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pages-tab" data-bs-toggle="tab" data-bs-target="#pages" type="button" role="tab">Sayfalar</button>
@@ -449,6 +465,32 @@ foreach($roles as $r){
                                 </td>
                                 <td><input type="text" name="description" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['description']); ?>"></td>
                                 <td class="text-center"><input type="checkbox" class="form-check-input" name="enabled" value="1" <?php echo $m['enabled']? 'checked':''; ?>></td>
+                                <td>
+                                    <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
+                                    <button name="action" value="delete" class="btn btn-sm btn-danger">Sil</button>
+                                </td>
+                            </form>
+                        </tr>
+                <?php endforeach; ?>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="navlinks" role="tabpanel">
+                <form method="post" class="row g-2 mb-3">
+                    <input type="hidden" name="section" value="navlinks">
+                    <input type="hidden" name="action" value="add">
+                    <div class="col-md-4"><input type="text" name="label" class="form-control" placeholder="Başlık" required></div>
+                    <div class="col-md-4"><input type="text" name="url" class="form-control" placeholder="URL" required></div>
+                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                </form>
+                <table class="table table-sm table-striped">
+                    <tr><th>Başlık</th><th>URL</th><th></th></tr>
+                    <?php foreach($nav_links as $link): ?>
+                        <tr>
+                            <form method="post" class="d-flex">
+                                <input type="hidden" name="section" value="navlinks">
+                                <input type="hidden" name="id" value="<?php echo $link['id']; ?>">
+                                <td><input type="text" name="label" class="form-control form-control-sm" value="<?php echo htmlspecialchars($link['label']); ?>"></td>
+                                <td><input type="text" name="url" class="form-control form-control-sm" value="<?php echo htmlspecialchars($link['url']); ?>"></td>
                                 <td>
                                     <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
                                     <button name="action" value="delete" class="btn btn-sm btn-danger">Sil</button>

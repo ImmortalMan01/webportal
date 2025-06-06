@@ -17,7 +17,9 @@ $modCols = $pdo->query("SHOW COLUMNS FROM modules")->fetchAll(PDO::FETCH_COLUMN)
 if(!in_array('enabled',$modCols)){
     $pdo->exec("ALTER TABLE modules ADD COLUMN enabled TINYINT(1) NOT NULL DEFAULT 1");
 }
+$pdo->exec("CREATE TABLE IF NOT EXISTS nav_links (id INT AUTO_INCREMENT PRIMARY KEY, label VARCHAR(100) NOT NULL, url VARCHAR(255) NOT NULL)");
 $allMods = $pdo->query('SELECT name, file, enabled FROM modules ORDER BY id')->fetchAll();
+$navLinks = $pdo->query('SELECT label, url FROM nav_links ORDER BY id')->fetchAll();
 $mods = array_filter($allMods, fn($m)=>$m['enabled']);
 $protected = array_column($allMods, 'file');
 $module = isset($_GET['module']) ? $_GET['module'] : 'home';
@@ -36,10 +38,13 @@ if (isset($_SESSION['user'])) {
         $unreadCount = $q->fetchColumn();
     }
 }
-function render_menu($mods) {
+function render_menu($mods, $links = []) {
     echo "<li class='nav-item'><a class='nav-link' href='index.php'>Ana Sayfa</a></li>";
     foreach ($mods as $m) {
         echo "<li class='nav-item'><a class='nav-link' href='?module=" . htmlspecialchars($m['file']) . "'>" . htmlspecialchars($m['name']) . "</a></li>";
+    }
+    foreach ($links as $l) {
+        echo "<li class='nav-item'><a class='nav-link' href='" . htmlspecialchars($l['url']) . "'>" . htmlspecialchars($l['label']) . "</a></li>";
     }
     if (isset($_SESSION['user'])) {
         echo "<li class='nav-item'><a class='nav-link' href='pages/users.php'>Kullanıcılar</a></li>";
@@ -99,7 +104,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
             <div class="collapse navbar-collapse justify-content-end" id="mainNav">
                 <?php if($theme !== 'dashboard'): ?>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <?php render_menu($mods); ?>
+                    <?php render_menu($mods, $navLinks); ?>
                 </ul>
                 <?php endif; ?>
                 <?php render_auth($unreadCount, $registrations_open, $hide_register_button); ?>

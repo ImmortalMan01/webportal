@@ -9,7 +9,7 @@ body.worklist-page {
   min-height: 100vh;
 }
 
-body.worklist-page .container,
+body.worklist-page .container.my-4,
 body.worklist-page section.card {
   max-width: none;
   padding: 0;

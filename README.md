@@ -116,6 +116,12 @@ CREATE TABLE site_pages (
     content TEXT NOT NULL
 );
 
+CREATE TABLE nav_links (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    label VARCHAR(100) NOT NULL,
+    url VARCHAR(255) NOT NULL
+);
+
 INSERT INTO settings (name, value) VALUES
     ('registrations_open','1'),
     ('hide_register_button','0'),
@@ -133,6 +139,10 @@ INSERT INTO site_pages (slug, title, content) VALUES
     ('home','Ana Sayfa','<h2>Hoş geldiniz</h2>'),
     ('hakkimizda','Hakkımızda','<p>Hakkımızda içerik</p>'),
     ('biz-kimiz','Biz Kimiz','<p>Biz Kimiz içerik</p>');
+
+-- Example navigation links
+INSERT INTO nav_links (label, url) VALUES
+    ('Dökümanlar','docs/manual.pdf');
 ```
 
 Edit `includes/db.php` if your database credentials differ from the defaults.
