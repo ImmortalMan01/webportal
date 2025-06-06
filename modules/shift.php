@@ -24,7 +24,7 @@ function tr_upper(string $text): string {
         <li data-view="requests"><i class="fa-solid fa-list"></i><span>İsteklerim</span></li>
         <li data-view="stats"><i class="fa-solid fa-chart-column"></i><span>Vardiya İstatistikleri</span></li>
       </ul>
-      <div class="sidebar-footer">Modül v2.5</div>
+      <div class="sidebar-footer"><?php echo htmlspecialchars($server); ?></div>
     </aside>
     <main class="wl-main">
       <div id="weekly" class="wl-view active"><div class="wl-card">Haftalık Liste Henüz Uygulanmadı.</div></div>
