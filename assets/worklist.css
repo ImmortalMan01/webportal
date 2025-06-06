@@ -41,15 +41,6 @@ body.worklist-page section.card {
   align-items: center;
   gap: 12px;
 }
-.wl-header .wl-nav {
-  display: flex;
-}
-.wl-header .wl-nav .nav-link {
-  color: #3fa7ff;
-  text-decoration: none;
-  font-weight: 500;
-  margin-left: 12px;
-}
 .wl-header .home-link {
   color: #3fa7ff;
   text-decoration: none;

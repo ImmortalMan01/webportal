@@ -87,7 +87,17 @@ function render_auth($count, $registrations_open, $hide_register_button) {
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
+            <?php if($module === 'shift'): ?>
+            <div class="d-flex align-items-center gap-3">
+                <a class="navbar-brand" href="index.php"><?php echo htmlspecialchars($site_name); ?></a>
+                <div class="d-none d-md-flex">
+                    <a href="index.php" class="nav-link text-white">Ana Sayfa</a>
+                    <a href="pages/users.php" class="nav-link text-white ms-2">Kullanıcılar</a>
+                </div>
+            </div>
+            <?php else: ?>
             <a class="navbar-brand" href="index.php"><?php echo htmlspecialchars($site_name); ?></a>
+            <?php endif; ?>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
