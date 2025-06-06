@@ -117,11 +117,9 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="mainNav">
-                <?php if($theme !== 'dashboard'): ?>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <?php render_menu($mods, $moduleNav); ?>
                 </ul>
-                <?php endif; ?>
                 <?php render_auth($unreadCount, $registrations_open, $hide_register_button); ?>
                 <button id="themeToggleGlobal" class="btn btn-outline-light btn-sm ms-2" type="button">🌙</button>
             </div>
