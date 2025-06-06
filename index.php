@@ -17,10 +17,27 @@ $modCols = $pdo->query("SHOW COLUMNS FROM modules")->fetchAll(PDO::FETCH_COLUMN)
 if(!in_array('enabled',$modCols)){
     $pdo->exec("ALTER TABLE modules ADD COLUMN enabled TINYINT(1) NOT NULL DEFAULT 1");
 }
+$pdo->exec("CREATE TABLE IF NOT EXISTS module_nav_links (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    module_id INT NOT NULL,
+    label VARCHAR(100) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE
+)");
 $allMods = $pdo->query('SELECT name, file, enabled FROM modules ORDER BY id')->fetchAll();
 $mods = array_filter($allMods, fn($m)=>$m['enabled']);
 $protected = array_column($allMods, 'file');
 $module = isset($_GET['module']) ? $_GET['module'] : 'home';
+
+$stmt = $pdo->prepare('SELECT id FROM modules WHERE file=?');
+$stmt->execute([$module]);
+$currentModuleId = $stmt->fetchColumn();
+$moduleNav = [];
+if($currentModuleId){
+    $ns = $pdo->prepare('SELECT label,url FROM module_nav_links WHERE module_id=? ORDER BY id');
+    $ns->execute([$currentModuleId]);
+    $moduleNav = $ns->fetchAll();
+}
 if (in_array($module, $protected) && !isset($_SESSION['user'])) {
     header('Location: pages/login.php');
     exit;
@@ -36,10 +53,13 @@ if (isset($_SESSION['user'])) {
         $unreadCount = $q->fetchColumn();
     }
 }
-function render_menu($mods) {
+function render_menu($mods, $extra = []) {
     echo "<li class='nav-item'><a class='nav-link' href='index.php'>Ana Sayfa</a></li>";
     foreach ($mods as $m) {
         echo "<li class='nav-item'><a class='nav-link' href='?module=" . htmlspecialchars($m['file']) . "'>" . htmlspecialchars($m['name']) . "</a></li>";
+    }
+    foreach ($extra as $e) {
+        echo "<li class='nav-item'><a class='nav-link' href='" . htmlspecialchars($e['url']) . "'>" . htmlspecialchars($e['label']) . "</a></li>";
     }
     if (isset($_SESSION['user'])) {
         echo "<li class='nav-item'><a class='nav-link' href='pages/users.php'>Kullanıcılar</a></li>";
@@ -99,7 +119,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
             <div class="collapse navbar-collapse justify-content-end" id="mainNav">
                 <?php if($theme !== 'dashboard'): ?>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <?php render_menu($mods); ?>
+                    <?php render_menu($mods, $moduleNav); ?>
                 </ul>
                 <?php endif; ?>
                 <?php render_auth($unreadCount, $registrations_open, $hide_register_button); ?>

@@ -29,6 +29,13 @@ if(!in_array('badge_class',$cols)){
 if(!in_array('enabled',$cols)){
     $pdo->exec("ALTER TABLE modules ADD COLUMN enabled TINYINT(1) NOT NULL DEFAULT 1");
 }
+$pdo->exec("CREATE TABLE IF NOT EXISTS module_nav_links (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    module_id INT NOT NULL,
+    label VARCHAR(100) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE
+)");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section = $_POST['section'] ?? '';
@@ -111,6 +118,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare('DELETE FROM modules WHERE id = ?');
                 $stmt->execute([$_POST['id']]);
             }
+        } elseif ($section === 'nav_links') {
+            if ($action === 'add') {
+                $stmt = $pdo->prepare('INSERT INTO module_nav_links (module_id,label,url) VALUES (?,?,?)');
+                $stmt->execute([$_POST['module_id'], $_POST['label'], $_POST['url']]);
+            } elseif ($action === 'update') {
+                $stmt = $pdo->prepare('UPDATE module_nav_links SET label=?, url=? WHERE id=?');
+                $stmt->execute([$_POST['label'], $_POST['url'], $_POST['id']]);
+            } elseif ($action === 'delete') {
+                $stmt = $pdo->prepare('DELETE FROM module_nav_links WHERE id = ?');
+                $stmt->execute([$_POST['id']]);
+            }
         } elseif ($section === 'pages') {
             if ($action === 'add') {
                 $stmt = $pdo->prepare('INSERT INTO site_pages (title, slug, content) VALUES (?,?,?)');
@@ -189,7 +207,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if($section==='admin_messages'){
             header('Location: admin.php?u1=' . urlencode($u1) . '&u2=' . urlencode($u2) . '#messages');
         } else {
-            header('Location: admin.php#' . $section);
+            $anchor = $section==='nav_links' ? 'modules' : $section;
+            header('Location: admin.php#' . $anchor);
         }
         exit;
     }
@@ -202,6 +221,11 @@ $trainings = $pdo->query('SELECT id, title, description FROM trainings ORDER BY 
 $exams = $pdo->query('SELECT id, title, date FROM exams ORDER BY date')->fetchAll();
 $procedures = $pdo->query('SELECT id, name, file FROM procedures ORDER BY name')->fetchAll();
 $modules = $pdo->query('SELECT id, name, file, icon, description, color, badge, badge_class, enabled FROM modules ORDER BY id')->fetchAll();
+$nav_links_raw = $pdo->query('SELECT id, module_id, label, url FROM module_nav_links ORDER BY id')->fetchAll();
+$module_navs = [];
+foreach($nav_links_raw as $nl){
+    $module_navs[$nl['module_id']][] = $nl;
+}
 $site_pages = $pdo->query('SELECT id, slug, title, content FROM site_pages ORDER BY id')->fetchAll();
 $announcements = $pdo->query('SELECT id, content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
 $experiences = $pdo->query('SELECT e.id, e.user_id, u.username, e.title, e.exp_date FROM experiences e JOIN users u ON e.user_id=u.id ORDER BY e.exp_date DESC')->fetchAll();
@@ -451,12 +475,52 @@ foreach($roles as $r){
                                 <td class="text-center"><input type="checkbox" class="form-check-input" name="enabled" value="1" <?php echo $m['enabled']? 'checked':''; ?>></td>
                                 <td>
                                     <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
-                                    <button name="action" value="delete" class="btn btn-sm btn-danger">Sil</button>
+                                    <button name="action" value="delete" class="btn btn-sm btn-danger me-1">Sil</button>
+                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#navModal<?php echo $m['id']; ?>">Başlıklar</button>
                                 </td>
                             </form>
                         </tr>
                     <?php endforeach; ?>
                 </table>
+                <?php foreach($modules as $m): ?>
+                <div class="modal fade" id="navModal<?php echo $m['id']; ?>" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title"><?php echo htmlspecialchars($m['name']); ?> Başlıkları</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" class="row g-2 mb-3">
+                                    <input type="hidden" name="section" value="nav_links">
+                                    <input type="hidden" name="action" value="add">
+                                    <input type="hidden" name="module_id" value="<?php echo $m['id']; ?>">
+                                    <div class="col-5"><input type="text" name="label" class="form-control form-control-sm" placeholder="Etiket"></div>
+                                    <div class="col-5"><input type="text" name="url" class="form-control form-control-sm" placeholder="URL"></div>
+                                    <div class="col-2"><button class="btn btn-sm btn-primary w-100">Ekle</button></div>
+                                </form>
+                                <table class="table table-sm">
+                                    <tr><th>Etiket</th><th>URL</th><th></th></tr>
+                                    <?php foreach($module_navs[$m['id']] ?? [] as $ln): ?>
+                                    <tr>
+                                        <form method="post" class="d-flex flex-wrap align-items-center">
+                                            <input type="hidden" name="section" value="nav_links">
+                                            <input type="hidden" name="id" value="<?php echo $ln['id']; ?>">
+                                            <td><input type="text" name="label" class="form-control form-control-sm" value="<?php echo htmlspecialchars($ln['label']); ?>"></td>
+                                            <td><input type="text" name="url" class="form-control form-control-sm" value="<?php echo htmlspecialchars($ln['url']); ?>"></td>
+                                            <td>
+                                                <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
+                                                <button name="action" value="delete" class="btn btn-sm btn-danger">Sil</button>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
             <div class="tab-pane fade" id="pages" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
