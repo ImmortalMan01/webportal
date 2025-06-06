@@ -56,6 +56,9 @@ body.light .navbar {
 body.dark a {
   color: #86b7fe;
 }
+body.dark .text-muted {
+  color: #adb5bd !important;
+}
 
 /* Dark theme adjustments for messaging */
 body.dark .text-dark {
