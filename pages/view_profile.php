@@ -32,7 +32,7 @@ $experiences = $expStmt->fetchAll();
 </head>
 <body>
 <?php
-    $avatar = $profile['picture'] ? '../uploads/' . $profile['picture'] : 'https://via.placeholder.com/150';
+    $avatar = $profile['picture'] ? '../uploads/' . $profile['picture'] : '../assets/profil.png';
     $cover = $profile['picture'] ? $avatar : 'https://images.unsplash.com/photo-1549068106-b024baf5062d?auto=format&fit=crop&w=934&q=80';
 ?>
 <div class="card" data-state="#about">

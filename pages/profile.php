@@ -128,7 +128,7 @@ $experiences = $expStmt->fetchAll();
         </div>
         <div class="col-md-4">
             <label class="form-label">Profil Resmi</label>
-            <?php if ($profile['picture']) echo "<br><img src='uploads/" . htmlspecialchars($profile['picture']) . "' width='80' class='mb-2'>"; ?>
+            <br><img src="<?php echo $profile['picture'] ? 'uploads/' . htmlspecialchars($profile['picture']) : '../assets/profil.png'; ?>" width="80" class="mb-2">
             <input type="file" name="picture" class="form-control">
         </div>
         <div class="col-12">

@@ -90,7 +90,7 @@ $allUsers = $userStmt->fetchAll();
                     }
                     $fullName = $prof['full_name'] ?: $targetUser;
                     $shortName = mb_substr($fullName,0,10).(mb_strlen($fullName)>10?'…':'');
-                    $avatar = $prof['picture'] ? 'uploads/'.htmlspecialchars($prof['picture']) : 'https://via.placeholder.com/40x40?text='.urlencode(mb_substr($fullName,0,1));
+                    $avatar = $prof['picture'] ? 'uploads/'.htmlspecialchars($prof['picture']) : '../assets/profil.png';
                 ?>
                 <div id="chatHeader" class="chat-header d-flex align-items-center p-2 border-bottom">
                     <a href="view_profile.php?user=<?php echo urlencode($targetUser); ?>" class="d-flex align-items-center text-decoration-none">
