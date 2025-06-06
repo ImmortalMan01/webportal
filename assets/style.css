@@ -57,6 +57,36 @@ body.dark a {
   color: #86b7fe;
 }
 
+/* Dark theme adjustments for messaging */
+body.dark .text-dark {
+  color: #f8f9fa !important;
+}
+body.dark .chat-header {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+body.dark #chatBox {
+  background-color: #1e1e1e;
+}
+body.dark .bubble {
+  background-color: #343a40;
+  color: #fff;
+}
+body.dark .bubble.mine {
+  background-color: #0d6efd;
+}
+body.dark .bubble .meta {
+  color: #adb5bd;
+}
+body.dark .list-group-item {
+  background-color: #1e1e1e;
+  color: #f8f9fa;
+}
+body.dark .list-group-item.active {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
 /* Dark theme overrides for Bootstrap modal */
 body.dark .modal-content {
   background-color: #1e1e1e;

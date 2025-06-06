@@ -93,7 +93,7 @@ $allUsers = $userStmt->fetchAll();
                     $avatar = $prof['picture'] ? 'uploads/'.htmlspecialchars($prof['picture']) : 'https://via.placeholder.com/40x40?text='.urlencode(mb_substr($fullName,0,1));
                 ?>
                 <div id="chatHeader" class="chat-header d-flex align-items-center p-2 border-bottom">
-                    <a href="view_profile.php?user=<?php echo urlencode($targetUser); ?>" class="d-flex align-items-center text-decoration-none text-dark">
+                    <a href="view_profile.php?user=<?php echo urlencode($targetUser); ?>" class="d-flex align-items-center text-decoration-none">
                         <div class="position-relative me-2">
                             <img src="<?php echo $avatar; ?>" class="rounded-circle" width="40" height="40" alt="avatar">
                             <span id="onlineDot" class="position-absolute bg-success border border-light rounded-circle d-none"></span>
