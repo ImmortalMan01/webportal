@@ -53,16 +53,20 @@ if (isset($_SESSION['user'])) {
         $unreadCount = $q->fetchColumn();
     }
 }
-function render_menu($mods, $extra = []) {
+function render_menu($mods) {
     echo "<li class='nav-item'><a class='nav-link' href='index.php'>Ana Sayfa</a></li>";
     foreach ($mods as $m) {
         echo "<li class='nav-item'><a class='nav-link' href='?module=" . htmlspecialchars($m['file']) . "'>" . htmlspecialchars($m['name']) . "</a></li>";
     }
-    foreach ($extra as $e) {
-        echo "<li class='nav-item'><a class='nav-link' href='" . htmlspecialchars($e['url']) . "'>" . htmlspecialchars($e['label']) . "</a></li>";
-    }
     if (isset($_SESSION['user'])) {
         echo "<li class='nav-item'><a class='nav-link' href='pages/users.php'>Kullanıcılar</a></li>";
+    }
+}
+
+function render_module_menu($links){
+    echo "<li class='nav-item'><a class='nav-link' href='index.php'>Ana Sayfa</a></li>";
+    foreach($links as $e){
+        echo "<li class='nav-item'><a class='nav-link' href='" . htmlspecialchars($e['url']) . "'>" . htmlspecialchars($e['label']) . "</a></li>";
     }
 }
 
@@ -118,7 +122,11 @@ function render_auth($count, $registrations_open, $hide_register_button) {
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <?php render_menu($mods, $moduleNav); ?>
+                    <?php if($module === 'home'){
+                        render_menu($mods);
+                    } else {
+                        render_module_menu($moduleNav);
+                    } ?>
                 </ul>
                 <?php render_auth($unreadCount, $registrations_open, $hide_register_button); ?>
                 <button id="themeToggleGlobal" class="btn btn-outline-light btn-sm ms-2" type="button">🌙</button>
