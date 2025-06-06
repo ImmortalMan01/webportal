@@ -118,3 +118,70 @@ body.worklist-page section.card {
 .request-item .note { font-style:italic; margin-top:4px; opacity:0.8; }
 .request-item .actions { text-align:right; margin-top:4px; }
 .request-item i { cursor:pointer; margin-left:8px; }
+
+/* Light Mode Overrides */
+body.worklist-page.light {
+  background:#f8f9fa;
+  color:#212529;
+}
+body.worklist-page.light .wl-header {
+  background:rgba(255,255,255,0.8);
+  color:#212529;
+}
+body.worklist-page.light .wl-sidebar {
+  background:#fff;
+  color:#212529;
+}
+body.worklist-page.light .wl-sidebar li {
+  color:#212529;
+}
+body.worklist-page.light .wl-sidebar li.active {
+  background:rgba(0,0,0,0.05);
+  border-left-color:#0d6efd;
+}
+body.worklist-page.light .wl-sidebar li:hover {
+  background:rgba(0,0,0,0.1);
+}
+body.worklist-page.light .wl-card {
+  background:#fff;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  color:#212529;
+}
+body.worklist-page.light .wl-calendar button {
+  color:#212529;
+}
+body.worklist-page.light .wl-calendar button:hover {
+  background:rgba(0,0,0,0.05);
+}
+body.worklist-page.light .wl-calendar td {
+  background:#fff;
+  border:1px inset #dee2e6;
+  color:#212529;
+}
+body.worklist-page.light .wl-calendar td:hover {
+  outline:1px solid rgba(13,110,253,0.3);
+}
+body.worklist-page.light .wl-modal-card {
+  background:#fff;
+  color:#212529;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+body.worklist-page.light .wl-modal-card textarea {
+  background:#fff;
+  border:1px solid #ced4da;
+  color:#212529;
+}
+body.worklist-page.light #wls-drawer {
+  background:#fff;
+  color:#212529;
+}
+body.worklist-page.light #wls-drawer .header {
+  background:#f8f9fa;
+  color:#212529;
+}
+body.worklist-page.light .request-item {
+  background:#f8f9fa;
+  color:#212529;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+}
+
