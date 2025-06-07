@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare('UPDATE users SET password=? WHERE id=?');
                 $stmt->execute([password_hash($new1, PASSWORD_DEFAULT), $userId]);
                 $passMessage = 'Şifre güncellendi';
+                log_activity($pdo, 'profile_password_change');
             }
         }
     } elseif(isset($_POST['add_experience'])){
@@ -52,12 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare('INSERT INTO experiences (user_id, title, exp_date) VALUES (?,?,?)');
             $stmt->execute([$userId,$title,$date]);
             $message = 'Deneyim eklendi';
+            log_activity($pdo, 'profile_add_experience', $title);
         }
     } elseif(isset($_POST['delete_experience'])){
         $id = (int)$_POST['delete_experience'];
         $stmt = $pdo->prepare('DELETE FROM experiences WHERE id=? AND user_id=?');
         $stmt->execute([$id,$userId]);
         $message = 'Deneyim silindi';
+        log_activity($pdo, 'profile_delete_experience', (string)$id);
     } else {
         $full  = $_POST['full_name'] ?? '';
         $dept  = $_POST['department'] ?? '';
@@ -87,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$userId, $full, $dept, $phone, $birth, $pic]);
     }
         $message = 'Profil güncellendi';
+        log_activity($pdo, 'profile_update');
     }
 }
 $stmt = $pdo->prepare('SELECT full_name, department, phone, birthdate, picture FROM profiles WHERE user_id = ?');

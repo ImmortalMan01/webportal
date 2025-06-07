@@ -124,6 +124,15 @@ CREATE TABLE site_pages (
     content TEXT NOT NULL
 );
 
+CREATE TABLE activity_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    details TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 INSERT INTO settings (name, value) VALUES
     ('registrations_open','1'),
     ('hide_register_button','0'),

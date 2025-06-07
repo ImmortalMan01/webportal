@@ -205,6 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
+        log_activity($pdo, 'admin_' . $section . '_' . $action);
         if($section==='admin_messages'){
             header('Location: admin.php?u1=' . urlencode($u1) . '&u2=' . urlencode($u2) . '#messages');
         } else {
