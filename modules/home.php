@@ -33,6 +33,8 @@ if($theme === 'dashboard'):
           <?php if($role === 'admin'): ?>
           <li class="drop-down__item"><a href="pages/admin.php"><i class="fa-solid fa-toolbox drop-down__item-icon"></i><span class="drop-down__item-text">Admin Paneli</span></a></li>
           <?php endif; ?>
+          <li class="drop-down__item mobile-only"><button id="themeToggleGlobal" class="menu-btn" aria-label="Tema"><i class="fa-solid fa-moon drop-down__item-icon"></i><span class="drop-down__item-text">Tema</span></button></li>
+          <li class="drop-down__item mobile-only"><a href="pages/logout.php"><i class="fa-solid fa-arrow-right-from-bracket drop-down__item-icon"></i><span class="drop-down__item-text">Çıkış</span></a></li>
         </ul>
       </div>
     </div>
