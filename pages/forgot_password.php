@@ -2,6 +2,7 @@
 session_start();
 require __DIR__ . '/../includes/db.php';
 require __DIR__ . '/../includes/password_reset.php';
+require __DIR__ . '/../includes/mailer.php';
 
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,8 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user) {
             $token = create_reset_token($pdo, $user['id']);
             $link = sprintf('http://%s%s?token=%s', $_SERVER['HTTP_HOST'], dirname($_SERVER['PHP_SELF']) . '/reset_password.php', $token);
-            // assume username is an email
-            @mail($user['username'], 'Password Reset', "Şifre sıfırlama bağlantınız: $link");
+            send_mail($pdo, $user['username'], 'Password Reset', "Şifre sıfırlama bağlantınız: $link");
         }
         $message = 'Eğer hesap mevcutsa, e-posta ile bir bağlantı gönderildi.';
     }
