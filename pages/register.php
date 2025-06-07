@@ -11,15 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = 'Kayıtlar yetkililer tarafından devre dışı bırakıldı.';
     } else {
         $u = $_POST['username'] ?? '';
+        $e = $_POST['email'] ?? '';
         $p = $_POST['password'] ?? '';
-        $stmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ?');
-        $stmt->execute([$u]);
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ? OR email = ?');
+        $stmt->execute([$u, $e]);
         if ($stmt->fetchColumn() > 0) {
-            $message = 'Kullanıcı adı zaten mevcut';
+            $message = 'Kullanıcı adı veya e-posta zaten mevcut';
         } else {
             $r = $_POST['role'] ?? 'Normal Personel';
-            $stmt = $pdo->prepare('INSERT INTO users (username, password, role) VALUES (?, ?, ?)');
-            $stmt->execute([$u, password_hash($p, PASSWORD_DEFAULT), $r]);
+            $stmt = $pdo->prepare('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)');
+            $stmt->execute([$u, $e, password_hash($p, PASSWORD_DEFAULT), $r]);
             $message = 'Kayıt başarılı. Giriş yapabilirsiniz.';
         }
     }
@@ -47,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="post">
                 <div class="inputBx">
                     <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                </div>
+                <div class="inputBx">
+                    <input type="email" name="email" placeholder="E-posta" required>
                 </div>
                 <div class="inputBx">
                     <input type="password" name="password" placeholder="Şifre" required>

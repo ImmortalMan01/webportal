@@ -24,6 +24,7 @@ Create a MySQL database (e.g. `webportal`) with a table named `users`:
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL,
     last_active TIMESTAMP NULL DEFAULT NULL
