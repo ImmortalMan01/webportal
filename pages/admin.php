@@ -166,8 +166,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } elseif ($section === 'profiles') {
             if ($action === 'update') {
+                $uid  = $_POST['user_id'];
+                $full = $_POST['full_name'] ?? '';
+                $dept = $_POST['department'] ?? '';
+                $phone = $_POST['phone'] ?? '';
+                $birth = $_POST['birthdate'] ?? null;
                 $stmt = $pdo->prepare('UPDATE profiles SET full_name=?, department=?, phone=?, birthdate=? WHERE user_id=?');
-                $stmt->execute([$_POST['full_name'], $_POST['department'], $_POST['phone'], $_POST['birthdate'], $_POST['user_id']]);
+                $stmt->execute([$full, $dept, $phone, $birth, $uid]);
+                if(isset($_POST['email'])){
+                    $stmt = $pdo->prepare('UPDATE users SET email=? WHERE id=?');
+                    $stmt->execute([$_POST['email'], $uid]);
+                }
+                if(!empty($_FILES['picture']['name'])){
+                    $dir = 'uploads/';
+                    if(!is_dir($dir)) mkdir($dir, 0777, true);
+                    $ext = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
+                    $fname = uniqid().'.'.$ext;
+                    if(move_uploaded_file($_FILES['picture']['tmp_name'], $dir.$fname)){
+                        $stmt = $pdo->prepare('UPDATE profiles SET picture=? WHERE user_id=?');
+                        $stmt->execute([$fname, $uid]);
+                    }
+                }
             }
         } elseif ($section === 'settings') {
             if ($action === 'update') {
@@ -239,7 +258,7 @@ foreach($nav_links_raw as $nl){
 $site_pages = $pdo->query('SELECT id, slug, title, content FROM site_pages ORDER BY id')->fetchAll();
 $announcements = $pdo->query('SELECT id, content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
 $experiences = $pdo->query('SELECT e.id, e.user_id, u.username, e.title, e.exp_date FROM experiences e JOIN users u ON e.user_id=u.id ORDER BY e.exp_date DESC')->fetchAll();
-$profiles = $pdo->query('SELECT user_id, full_name, department, phone, birthdate FROM profiles')->fetchAll();
+$profiles = $pdo->query('SELECT p.user_id, p.full_name, p.department, p.phone, p.birthdate, p.picture, u.email FROM profiles p JOIN users u ON p.user_id=u.id ORDER BY p.user_id')->fetchAll();
 $settings = $pdo->query('SELECT name,value FROM settings')->fetchAll(PDO::FETCH_KEY_PAIR);
 $registrations_open = $settings['registrations_open'] ?? '1';
 $hide_register_button = $settings['hide_register_button'] ?? '0';
@@ -677,7 +696,7 @@ foreach($roles as $r){
             </div>
             <div class="tab-pane fade" id="profiles" role="tabpanel">
                 <table class="table table-sm">
-                    <tr><th>Kullanıcı ID</th><th>Ad Soyad</th><th>Birim</th><th>Telefon</th><th>Doğum</th><th></th></tr>
+                    <tr><th>Kullanıcı ID</th><th>Ad Soyad</th><th>Birim</th><th>Telefon</th><th>Doğum</th><th></th><th></th></tr>
                     <?php foreach ($profiles as $p): ?>
                         <tr>
                             <form method="post" class="d-flex">
@@ -689,11 +708,61 @@ foreach($roles as $r){
                                 <td><input type="text" name="department" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['department']); ?>"></td>
                                 <td><input type="text" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>"></td>
                                 <td><input type="date" name="birthdate" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['birthdate']); ?>"></td>
-                                <td><button class="btn btn-sm btn-secondary">Kaydet</button></td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">Kaydet</button>
+                                    <button type="button" class="btn btn-sm btn-info ms-1" data-bs-toggle="modal" data-bs-target="#profileModal<?php echo $p['user_id']; ?>">Detaylar</button>
+                                </td>
                             </form>
                         </tr>
                     <?php endforeach; ?>
                 </table>
+<?php foreach($profiles as $p): ?>
+<div class="modal fade" id="profileModal<?php echo $p['user_id']; ?>" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Profil Detayları</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" class="row g-2">
+                    <input type="hidden" name="section" value="profiles">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="user_id" value="<?php echo $p['user_id']; ?>">
+                    <div class="col-md-6">
+                        <label class="form-label">Ad Soyad</label>
+                        <input type="text" name="full_name" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['full_name']); ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">E-posta</label>
+                        <input type="email" name="email" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['email']); ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Birim</label>
+                        <input type="text" name="department" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['department']); ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Telefon</label>
+                        <input type="text" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Doğum</label>
+                        <input type="date" name="birthdate" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['birthdate']); ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Profil Resmi</label><br>
+                        <img src="<?php echo $p['picture'] ? 'uploads/' . htmlspecialchars($p['picture']) : '../assets/profil.png'; ?>" width="80" class="mb-2">
+                        <input type="file" name="picture" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-12 text-end">
+                        <button class="btn btn-primary">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endforeach; ?>
             </div>
             <div class="tab-pane fade" id="settings" role="tabpanel">
                 <form method="post" class="mb-3">
