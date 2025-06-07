@@ -136,7 +136,15 @@ CREATE TABLE activity_log (
 INSERT INTO settings (name, value) VALUES
     ('registrations_open','1'),
     ('hide_register_button','0'),
-    ('site_name','Sağlık Personeli Portalı');
+    ('site_name','Sağlık Personeli Portalı'),
+    -- SMTP defaults
+    ('smtp_host',''),
+    ('smtp_port',''),
+    ('smtp_user',''),
+    ('smtp_pass',''),
+    ('smtp_secure',''),
+    ('smtp_from',''),
+    ('smtp_from_name','');
 
 -- Example initial modules
 INSERT INTO modules (name, file, icon, description, color, badge, badge_class, enabled) VALUES
@@ -177,3 +185,5 @@ node ws-server.js
 
 Navigate to `http://localhost:8000` in your browser. Register a user and log in to access the modules. Insert an admin account in the `users` table (for example `admin` / `admin123`).
 Additional roles such as `Normal Personel`, `Sorumlu Hemşire` and `Klinik Eğitim Hemşiresi` can also be assigned to users via the admin panel.
+
+The "Şifremi Unuttum" feature uses SMTP to send reset links. Configure your mail server details under **Ayarlar** in the admin panel.

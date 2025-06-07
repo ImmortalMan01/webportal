@@ -183,6 +183,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         set_role_theme($pdo, $rName, $theme);
                     }
                 }
+                // SMTP settings
+                $smtpFields = ['smtp_host','smtp_port','smtp_user','smtp_pass','smtp_secure','smtp_from','smtp_from_name'];
+                foreach($smtpFields as $f){
+                    if(isset($_POST[$f])){
+                        $pdo->prepare('REPLACE INTO settings (name,value) VALUES (?,?)')->execute([$f, trim($_POST[$f])]);
+                    }
+                }
             }
         } elseif ($section === 'admin_messages') {
             if ($action === 'send') {
@@ -236,6 +243,13 @@ $settings = $pdo->query('SELECT name,value FROM settings')->fetchAll(PDO::FETCH_
 $registrations_open = $settings['registrations_open'] ?? '1';
 $hide_register_button = $settings['hide_register_button'] ?? '0';
 $site_name = $settings['site_name'] ?? 'Sağlık Personeli Portalı';
+$smtp_host = $settings['smtp_host'] ?? '';
+$smtp_port = $settings['smtp_port'] ?? '';
+$smtp_user = $settings['smtp_user'] ?? '';
+$smtp_pass = $settings['smtp_pass'] ?? '';
+$smtp_secure = $settings['smtp_secure'] ?? '';
+$smtp_from = $settings['smtp_from'] ?? '';
+$smtp_from_name = $settings['smtp_from_name'] ?? '';
 $roles = get_all_roles($pdo);
 $role_themes = [];
 foreach($roles as $r){
@@ -704,6 +718,39 @@ foreach($roles as $r){
                         </select>
                     </div>
                     <?php endforeach; ?>
+                    <h5 class="mt-4">SMTP Ayarları</h5>
+                    <div class="mb-2">
+                        <label class="form-label" for="smtp_host">Sunucu</label>
+                        <input type="text" class="form-control" id="smtp_host" name="smtp_host" value="<?php echo htmlspecialchars($smtp_host); ?>">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="smtp_port">Port</label>
+                        <input type="text" class="form-control" id="smtp_port" name="smtp_port" value="<?php echo htmlspecialchars($smtp_port); ?>">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="smtp_user">Kullanıcı</label>
+                        <input type="text" class="form-control" id="smtp_user" name="smtp_user" value="<?php echo htmlspecialchars($smtp_user); ?>">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="smtp_pass">Şifre</label>
+                        <input type="password" class="form-control" id="smtp_pass" name="smtp_pass" value="<?php echo htmlspecialchars($smtp_pass); ?>">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="smtp_secure">Güvenlik</label>
+                        <select class="form-select" id="smtp_secure" name="smtp_secure">
+                            <option value="" <?php if($smtp_secure=='') echo 'selected'; ?>>Yok</option>
+                            <option value="ssl" <?php if($smtp_secure=='ssl') echo 'selected'; ?>>SSL</option>
+                            <option value="tls" <?php if($smtp_secure=='tls') echo 'selected'; ?>>TLS</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label" for="smtp_from">Gönderen E-posta</label>
+                        <input type="text" class="form-control" id="smtp_from" name="smtp_from" value="<?php echo htmlspecialchars($smtp_from); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="smtp_from_name">Gönderen Adı</label>
+                        <input type="text" class="form-control" id="smtp_from_name" name="smtp_from_name" value="<?php echo htmlspecialchars($smtp_from_name); ?>">
+                    </div>
                     <button class="btn btn-primary">Kaydet</button>
                 </form>
             </div>
