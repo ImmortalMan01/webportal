@@ -249,48 +249,27 @@ foreach($roles as $r){
     <title>Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    <div class="container my-4">
+<body class="admin-layout">
+    <nav class="admin-sidebar nav flex-column" id="adminTab" role="tablist">
+        <a class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" href="#users" role="tab">Kullanıcılar</a>
+        <a class="nav-link" id="shifts-tab" data-bs-toggle="tab" data-bs-target="#shifts" href="#shifts" role="tab">Çalışma Listesi</a>
+        <a class="nav-link" id="trainings-tab" data-bs-toggle="tab" data-bs-target="#trainings" href="#trainings" role="tab">Eğitimler</a>
+        <a class="nav-link" id="exams-tab" data-bs-toggle="tab" data-bs-target="#exams" href="#exams" role="tab">Sınavlar</a>
+        <a class="nav-link" id="procedures-tab" data-bs-toggle="tab" data-bs-target="#procedures" href="#procedures" role="tab">Prosedürler</a>
+        <a class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules" href="#modules" role="tab">Modüller</a>
+        <a class="nav-link" id="pages-tab" data-bs-toggle="tab" data-bs-target="#pages" href="#pages" role="tab">Sayfalar</a>
+        <a class="nav-link" id="announcements-tab" data-bs-toggle="tab" data-bs-target="#announcements" href="#announcements" role="tab">Duyurular</a>
+        <a class="nav-link" id="experiences-tab" data-bs-toggle="tab" data-bs-target="#experiences" href="#experiences" role="tab">Deneyimler</a>
+        <a class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" href="#messages" role="tab">Mesajlar</a>
+        <a class="nav-link" id="profiles-tab" data-bs-toggle="tab" data-bs-target="#profiles" href="#profiles" role="tab">Profiller</a>
+        <a class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" href="#settings" role="tab">Ayarlar</a>
+    </nav>
+    <main class="admin-content">
         <h2 class="mb-4">Admin Panel</h2>
-        <ul class="nav nav-tabs mb-3" id="adminTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">Kullanıcılar</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="shifts-tab" data-bs-toggle="tab" data-bs-target="#shifts" type="button" role="tab">Çalışma Listesi</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="trainings-tab" data-bs-toggle="tab" data-bs-target="#trainings" type="button" role="tab">Eğitimler</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="exams-tab" data-bs-toggle="tab" data-bs-target="#exams" type="button" role="tab">Sınavlar</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="procedures-tab" data-bs-toggle="tab" data-bs-target="#procedures" type="button" role="tab">Prosedürler</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules" type="button" role="tab">Modüller</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pages-tab" data-bs-toggle="tab" data-bs-target="#pages" type="button" role="tab">Sayfalar</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="announcements-tab" data-bs-toggle="tab" data-bs-target="#announcements" type="button" role="tab">Duyurular</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="experiences-tab" data-bs-toggle="tab" data-bs-target="#experiences" type="button" role="tab">Deneyimler</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab">Mesajlar</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profiles-tab" data-bs-toggle="tab" data-bs-target="#profiles" type="button" role="tab">Profiller</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">Ayarlar</button>
-            </li>
-        </ul>
+
         <div class="tab-content" id="adminTabContent">
             <div class="tab-pane fade show active" id="users" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -728,19 +707,19 @@ foreach($roles as $r){
                 </form>
             </div>
         </div>
-    </div>
+    </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/theme.js"></script>
     <script>
         const hash = location.hash;
         if(hash){
-            const trigger = document.querySelector(`#adminTab button[data-bs-target="${hash}"]`);
+            const trigger = document.querySelector(`#adminTab [data-bs-target="${hash}"]`);
             if(trigger){
                 new bootstrap.Tab(trigger).show();
             }
         }
-        document.querySelectorAll('#adminTab button[data-bs-toggle="tab"]').forEach(btn=>{
-            btn.addEventListener('shown.bs.tab', e=>{
+        document.querySelectorAll('#adminTab [data-bs-toggle="tab"]').forEach(link=>{
+            link.addEventListener('shown.bs.tab', e=>{
                 history.replaceState(null,null,e.target.dataset.bsTarget);
             });
         });
