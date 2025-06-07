@@ -8,13 +8,13 @@ $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $identifier = trim($_POST['identifier'] ?? '');
     if ($identifier !== '') {
-        $stmt = $pdo->prepare('SELECT id, username FROM users WHERE username = ?');
-        $stmt->execute([$identifier]);
+        $stmt = $pdo->prepare('SELECT id, email FROM users WHERE username = ? OR email = ?');
+        $stmt->execute([$identifier, $identifier]);
         $user = $stmt->fetch();
         if ($user) {
             $token = create_reset_token($pdo, $user['id']);
             $link = sprintf('http://%s%s?token=%s', $_SERVER['HTTP_HOST'], dirname($_SERVER['PHP_SELF']) . '/reset_password.php', $token);
-            send_mail($pdo, $user['username'], 'Password Reset', "Şifre sıfırlama bağlantınız: $link");
+            send_mail($pdo, $user['email'], 'Password Reset', "Şifre sıfırlama bağlantınız: $link");
         }
         $message = 'Eğer hesap mevcutsa, e-posta ile bir bağlantı gönderildi.';
     }

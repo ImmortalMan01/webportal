@@ -10,9 +10,11 @@ update_activity($pdo);
 $message = '';
 $passMessage = '';
 $username = $_SESSION['user'];
-$stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
+$stmt = $pdo->prepare('SELECT id, email FROM users WHERE username = ?');
 $stmt->execute([$username]);
-$userId = $stmt->fetchColumn();
+$userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+$userId = $userRow['id'] ?? null;
+$email = $userRow['email'] ?? '';
 if (!$userId) {
     die('Kullanıcı bulunamadı');
 }
@@ -62,10 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = 'Deneyim silindi';
         log_activity($pdo, 'profile_delete_experience', (string)$id);
     } else {
-        $full  = $_POST['full_name'] ?? '';
-        $dept  = $_POST['department'] ?? '';
-        $phone = $_POST['phone'] ?? '';
-        $birth = $_POST['birthdate'] ?? null;
+        $full   = $_POST['full_name'] ?? '';
+        $dept   = $_POST['department'] ?? '';
+        $phone  = $_POST['phone'] ?? '';
+        $birth  = $_POST['birthdate'] ?? null;
+        $newEmail = $_POST['email'] ?? $email;
         $pic   = $profile['picture'] ?? '';
 
     if (!empty($_FILES['picture']['name'])) {
@@ -88,6 +91,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $stmt = $pdo->prepare('INSERT INTO profiles (user_id, full_name, department, phone, birthdate, picture) VALUES (?, ?, ?, ?, ?, ?)');
         $stmt->execute([$userId, $full, $dept, $phone, $birth, $pic]);
+    }
+    $dup = $pdo->prepare('SELECT COUNT(*) FROM users WHERE email=? AND id!=?');
+    $dup->execute([$newEmail, $userId]);
+    if($dup->fetchColumn()==0){
+        $pdo->prepare('UPDATE users SET email=? WHERE id=?')->execute([$newEmail, $userId]);
+        $email = $newEmail;
+    } else {
+        $message = 'E-posta zaten kullanılıyor';
     }
         $message = 'Profil güncellendi';
         log_activity($pdo, 'profile_update');
@@ -125,6 +136,10 @@ $experiences = $expStmt->fetchAll();
         <div class="col-md-4">
             <label class="form-label">Telefon</label>
             <input type="text" name="phone" class="form-control" value="<?php echo htmlspecialchars($profile['phone']); ?>">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">E-posta</label>
+            <input type="email" name="email" class="form-control" value="<?php echo htmlspecialchars($email); ?>">
         </div>
         <div class="col-md-4">
             <label class="form-label">Doğum Tarihi</label>

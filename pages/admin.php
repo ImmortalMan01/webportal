@@ -45,13 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($section === 'users') {
             if ($action === 'add') {
                 $u = $_POST['username'] ?? '';
+                $e = $_POST['email'] ?? '';
                 $p = $_POST['password'] ?? '';
                 $r = $_POST['role'] ?? 'Normal Personel';
-                $check = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ?');
-                $check->execute([$u]);
+                $check = $pdo->prepare('SELECT COUNT(*) FROM users WHERE username = ? OR email = ?');
+                $check->execute([$u, $e]);
                 if ($check->fetchColumn() == 0) {
-                    $stmt = $pdo->prepare('INSERT INTO users (username, password, role) VALUES (?, ?, ?)');
-                    $stmt->execute([$u, password_hash($p, PASSWORD_DEFAULT), $r]);
+                    $stmt = $pdo->prepare('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)');
+                    $stmt->execute([$u, $e, password_hash($p, PASSWORD_DEFAULT), $r]);
                 }
             } elseif ($action === 'changerole') {
                 $stmt = $pdo->prepare('UPDATE users SET role = ? WHERE username = ?');
@@ -223,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$stmt = $pdo->query('SELECT id, username, role FROM users ORDER BY username');
+$stmt = $pdo->query('SELECT id, username, email, role FROM users ORDER BY username');
 $users = $stmt->fetchAll();
 $shifts = $pdo->query('SELECT id, date, time FROM shifts ORDER BY date')->fetchAll();
 $trainings = $pdo->query('SELECT id, title, description FROM trainings ORDER BY id')->fetchAll();
@@ -290,8 +291,9 @@ foreach($roles as $r){
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="users">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-3"><input type="text" name="username" class="form-control" placeholder="Kullanıcı" required></div>
-                    <div class="col-md-3"><input type="password" name="password" class="form-control" placeholder="Şifre" required></div>
+                    <div class="col-md-2"><input type="text" name="username" class="form-control" placeholder="Kullanıcı" required></div>
+                    <div class="col-md-3"><input type="email" name="email" class="form-control" placeholder="E-posta" required></div>
+                    <div class="col-md-2"><input type="password" name="password" class="form-control" placeholder="Şifre" required></div>
                     <div class="col-md-3">
                         <select name="role" class="form-select">
                             <?php foreach (default_roles() as $r): ?>
@@ -302,10 +304,11 @@ foreach($roles as $r){
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <table class="table table-sm table-striped">
-                    <tr><th>Kullanıcı</th><th>Rol</th><th>Değiştir</th></tr>
+                    <tr><th>Kullanıcı</th><th>E-posta</th><th>Rol</th><th>Değiştir</th></tr>
                     <?php foreach ($users as $info): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($info['username']); ?></td>
+                            <td><?php echo htmlspecialchars($info['email']); ?></td>
                             <td><?php echo htmlspecialchars($info['role']); ?></td>
                             <td>
                                 <form method="post" class="d-flex">

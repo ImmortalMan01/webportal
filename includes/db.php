@@ -13,6 +13,11 @@ $options = [
 ];
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
+    // ensure email column exists for backward compatibility
+    $c = $pdo->query("SHOW COLUMNS FROM users LIKE 'email'")->fetch();
+    if (!$c) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN email VARCHAR(100) UNIQUE NOT NULL DEFAULT ''");
+    }
 } catch (PDOException $e) {
     die('Veritabanı bağlantı hatası: ' . $e->getMessage());
 }
