@@ -4,15 +4,20 @@
 }
 body.admin-layout{
   font-family:'Inter',sans-serif;
+  min-height:100vh;
+}
+body.admin-layout.dark{
   color:#fff;
   background:linear-gradient(180deg,#0e1b2b,#142438);
-  min-height:100vh;
+}
+body.admin-layout.light{
+  color:#212529;
+  background:#f8f9fa;
 }
 .admin-sidebar{
   position:fixed;
   top:56px;left:0;bottom:0;
   width:220px;
-  background:rgba(14,27,43,0.9);
   backdrop-filter:blur(6px);
   padding:1rem;
   overflow-y:auto;
@@ -20,8 +25,17 @@ body.admin-layout{
   flex-direction:column;
   z-index:1000;
 }
-.admin-sidebar .nav-link{
+body.dark .admin-sidebar{
+  background:rgba(14,27,43,0.9);
   color:#fff;
+}
+body.light .admin-sidebar{
+  background:#ffffff;
+  color:#212529;
+  border-right:1px solid #dee2e6;
+}
+.admin-sidebar .nav-link{
+  color:inherit;
   padding:.5rem 1rem;
   border-radius:.25rem;
   display:flex;
