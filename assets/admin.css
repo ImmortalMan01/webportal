@@ -10,7 +10,7 @@ body.admin-layout{
 }
 .admin-sidebar{
   position:fixed;
-  top:0;left:0;bottom:0;
+  top:56px;left:0;bottom:0;
   width:220px;
   background:rgba(14,27,43,0.9);
   backdrop-filter:blur(6px);
@@ -41,6 +41,7 @@ body.admin-layout{
 }
 .admin-content{
   margin-left:220px;
+  margin-top:56px;
   padding:1rem;
 }
 @media(max-width:768px){
@@ -56,5 +57,6 @@ body.admin-layout{
   }
   .admin-content{
     margin-left:0;
+    margin-top:0;
   }
 }

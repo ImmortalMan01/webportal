@@ -275,6 +275,47 @@ $role_themes = [];
 foreach($roles as $r){
     $role_themes[$r] = get_role_theme($pdo, $r);
 }
+
+$unreadCount = 0;
+if (isset($_SESSION['user'])) {
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
+    $stmt->execute([$_SESSION['user']]);
+    $uid = $stmt->fetchColumn();
+    if ($uid) {
+        $q = $pdo->prepare('SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND is_read = 0');
+        $q->execute([$uid]);
+        $unreadCount = $q->fetchColumn();
+    }
+}
+
+function render_auth($count, $registrations_open, $hide_register_button) {
+    if (isset($_SESSION['user'])) {
+        echo "<span class='navbar-text me-2'>Merhaba " . htmlspecialchars($_SESSION['user']) . "</span>";
+        echo "<div class='drop-down me-2'>";
+        echo "  <div id='dropDown' class='drop-down__button'>";
+        echo "    <span class='drop-down__name'>Ayarlar</span>";
+        echo "    <i class='fa-solid fa-gear drop-down__icon'></i>";
+        echo "  </div>";
+        echo "  <div class='drop-down__menu-box'>";
+        echo "    <ul class='drop-down__menu'>";
+        echo "      <li class='drop-down__item'><a href='profile.php'><i class='fa-solid fa-user drop-down__item-icon'></i><span class='drop-down__item-text'>Profil</span></a></li>";
+        $msg = 'Mesajlar';
+        if ($count > 0) { $msg .= " <span class=\'badge bg-danger\'>$count</span>"; }
+        echo "      <li class='drop-down__item'><a href='messages.php'><i class='fa-solid fa-envelope drop-down__item-icon'></i><span class='drop-down__item-text'>$msg</span></a></li>";
+        if ($_SESSION['role'] == 'admin') {
+            echo "      <li class='drop-down__item'><a href='admin.php'><i class='fa-solid fa-toolbox drop-down__item-icon'></i><span class='drop-down__item-text'>Admin Paneli</span></a></li>";
+        }
+        echo "    </ul>";
+        echo "  </div>";
+        echo "</div>";
+        echo "<a class='btn btn-outline-light btn-sm me-2' href='logout.php'>Çıkış</a>";
+    } else {
+        echo "<a class='btn btn-light btn-sm me-2' href='login.php'>Giriş Yap</a>";
+        if ($registrations_open || !$hide_register_button) {
+            echo "<a class='btn btn-outline-light btn-sm' href='register.php'>Kayıt Ol</a>";
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang='tr'>
@@ -286,8 +327,24 @@ foreach($roles as $r){
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="../assets/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/user-dropdown.css">
 </head>
 <body class="admin-layout">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../index.php"><?php echo htmlspecialchars($site_name); ?></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="../index.php">Ana Sayfa</a></li>
+                </ul>
+                <?php render_auth($unreadCount, $registrations_open, $hide_register_button); ?>
+                <button id="themeToggleGlobal" class="btn btn-outline-light btn-sm ms-2" type="button">🌙</button>
+            </div>
+        </div>
+    </nav>
     <nav class="admin-sidebar nav flex-column" id="adminTab" role="tablist">
         <a class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" href="#users" role="tab">Kullanıcılar</a>
         <a class="nav-link" id="shifts-tab" data-bs-toggle="tab" data-bs-target="#shifts" href="#shifts" role="tab">Çalışma Listesi</a>
@@ -830,6 +887,7 @@ foreach($roles as $r){
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/theme.js"></script>
+    <script src="../assets/user-dropdown.js"></script>
     <script>
         const hash = location.hash;
         if(hash){
