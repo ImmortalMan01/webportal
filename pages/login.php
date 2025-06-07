@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="submit" value="Giriş Yap">
                 </div>
                 <div class="links">
-                    <a href="#">Şifremi Unuttum</a>
+                    <a href="forgot_password.php">Şifremi Unuttum</a>
                     <?php if ($registrations_open == '1' && $hide_register_button != '1'): ?>
                     <a href="register.php">Kayıt Ol</a>
                     <?php endif; ?>

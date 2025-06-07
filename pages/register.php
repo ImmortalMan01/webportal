@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="links">
                     <a href="login.php">Giriş Yap</a>
+                    <a href="forgot_password.php">Şifremi Unuttum</a>
                 </div>
             </form>
         </div>
