@@ -37,7 +37,10 @@ if($theme === 'dashboard'):
       </div>
     </div>
     <button id="themeToggleGlobal" aria-label="Tema" role="button">🌙</button>
-    <a href="pages/logout.php" class="logout-btn" aria-label="Çıkış" role="button"><i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış</a>
+    <a href="pages/logout.php" class="logout-btn" aria-label="Çıkış" role="button">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      <span class="logout-text"> Çıkış</span>
+    </a>
   </div>
 </nav>
 <div class="dashboard">
