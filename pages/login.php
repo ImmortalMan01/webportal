@@ -2,6 +2,7 @@
 session_start();
 require __DIR__ . '/../includes/db.php';
 require __DIR__ . '/../includes/settings.php';
+require __DIR__ . '/../includes/activity.php';
 $registrations_open = get_setting($pdo, 'registrations_open', '1');
 $hide_register_button = get_setting($pdo, 'hide_register_button', '0');
 $error = '';
@@ -16,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['role'] = $user['role'];
         $up = $pdo->prepare('UPDATE users SET last_active=NOW() WHERE username=?');
         $up->execute([$user['username']]);
+        log_activity($pdo, 'login');
         header('Location: ../index.php');
         exit;
     } else {
