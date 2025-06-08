@@ -45,8 +45,6 @@ if($theme === 'dashboard'):
         <ul class="drop-down__menu">
           <li class="drop-down__item"><a href="pages/profile.php"><span class="material-icons drop-down__item-icon">person</span><span class="drop-down__item-text">Profil</span></a></li>
           <li class="drop-down__item"><a href="pages/messages.php"><span class="material-icons drop-down__item-icon">mail</span><span class="drop-down__item-text">Mesajlar</span></a></li>
-          <li class="drop-down__item"><a href="index.php?module=shift"><span class="material-icons drop-down__item-icon">list</span><span class="drop-down__item-text">Çalışma Listesi</span></a></li>
-          <li class="drop-down__item"><a href="index.php?module=training"><span class="material-icons drop-down__item-icon">school</span><span class="drop-down__item-text">Eğitimler</span></a></li>
           <?php if($role === 'admin'): ?>
           <li class="drop-down__item"><a href="pages/admin.php"><span class="material-icons drop-down__item-icon">admin_panel_settings</span><span class="drop-down__item-text">Admin Paneli</span></a></li>
           <?php endif; ?>
@@ -62,8 +60,6 @@ if($theme === 'dashboard'):
   <ul class="menu-list">
     <li><a href="pages/profile.php"><span class="material-icons">person</span> Profil</a></li>
     <li><a href="pages/messages.php"><span class="material-icons">mail</span> Mesajlar</a></li>
-    <li><a href="index.php?module=shift"><span class="material-icons">list</span> Çalışma Listesi</a></li>
-    <li><a href="index.php?module=training"><span class="material-icons">school</span> Eğitimler</a></li>
     <?php if($role === 'admin'): ?>
     <li><a href="pages/admin.php"><span class="material-icons">admin_panel_settings</span> Admin Paneli</a></li>
     <?php endif; ?>

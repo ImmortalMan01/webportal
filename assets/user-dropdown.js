@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(btn.id==='mobileMenuBtn' && window.innerWidth<768) return;
     btn.addEventListener('click',e=>{
       e.stopPropagation();
+      dropdowns.forEach(other=>{if(other!==dd) other.classList.remove('drop-down--active');});
       dd.classList.toggle('drop-down--active');
     });
   });
