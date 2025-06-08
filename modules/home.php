@@ -37,9 +37,23 @@ if($theme === 'dashboard'):
         </ul>
       </div>
     </div>
-    <button id="mobileMenuBtn" class="icon-btn" aria-label="Ayarlar">
-      <span class="material-icons">menu</span>
-    </button>
+    <div class="drop-down" id="desktopMenu">
+      <button id="mobileMenuBtn" class="icon-btn drop-down__button" aria-label="Ayarlar">
+        <span class="material-icons">menu</span>
+      </button>
+      <div class="drop-down__menu-box">
+        <ul class="drop-down__menu">
+          <li class="drop-down__item"><a href="pages/profile.php"><span class="material-icons drop-down__item-icon">person</span><span class="drop-down__item-text">Profil</span></a></li>
+          <li class="drop-down__item"><a href="pages/messages.php"><span class="material-icons drop-down__item-icon">mail</span><span class="drop-down__item-text">Mesajlar</span></a></li>
+          <li class="drop-down__item"><a href="index.php?module=shift"><span class="material-icons drop-down__item-icon">list</span><span class="drop-down__item-text">Çalışma Listesi</span></a></li>
+          <li class="drop-down__item"><a href="index.php?module=training"><span class="material-icons drop-down__item-icon">school</span><span class="drop-down__item-text">Eğitimler</span></a></li>
+          <?php if($role === 'admin'): ?>
+          <li class="drop-down__item"><a href="pages/admin.php"><span class="material-icons drop-down__item-icon">admin_panel_settings</span><span class="drop-down__item-text">Admin Paneli</span></a></li>
+          <?php endif; ?>
+          <li class="drop-down__item"><a href="pages/logout.php"><span class="material-icons drop-down__item-icon">logout</span><span class="drop-down__item-text">Çıkış</span></a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </nav>
 <div id="mobileMenu" class="mobile-menu" aria-label="Mobil Menü">
