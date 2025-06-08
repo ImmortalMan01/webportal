@@ -27,13 +27,12 @@ body {
 }
 .ring {
   position: relative;
-  width: 100%;
-  max-width: 420px;
-  height: auto;
-  max-height: 90vh;
+  width: clamp(320px, 80vmin, 500px);
+  height: clamp(320px, 80vmin, 500px);
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: auto;
 }
 .ring > i {
   position: absolute;
@@ -75,8 +74,8 @@ body {
 }
 .login {
   position: relative;
-  width: 100%;
-  max-width: 300px;
+  width: 85%;
+  max-width: 340px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -156,14 +155,11 @@ body {
 
 @media (max-width: 576px) {
   .ring {
-    width: 100%;
-    max-width: 420px;
-    height: auto;
-    max-height: 90vh;
+    width: 90vw;
+    height: 90vw;
     padding: 20px;
   }
   .login {
-    position: relative;
     width: 100%;
     max-width: 330px;
   }
