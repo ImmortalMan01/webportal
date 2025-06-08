@@ -224,3 +224,26 @@ body.dark .hc-container .notes,
 body.worklist-page.dark .hc-container .notes {
   color: #f8f9fa;
 }
+
+/* Legend showing leave type colors */
+.hc-container .legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+.hc-container .legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+.hc-container .legend .color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+.hc-container .legend .g { background-color: #3fa7ff; }
+.hc-container .legend .n { background-color: #dc3545; }
+.hc-container .legend .i { background-color: #198754; }
+.hc-container .legend .d { background-color: #6c757d; }
