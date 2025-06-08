@@ -120,3 +120,24 @@ body.dark .btn-close {
   flex: 1 1 100%;
   word-break: break-word;
 }
+
+/* Dark theme tweaks for activity log */
+body.dark .table {
+  color: #f8f9fa;
+  background-color: #1e1e1e;
+}
+body.dark .table th,
+body.dark .table td {
+  border-color: #343a40;
+}
+body.dark .table-striped>tbody>tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+body.dark .form-control {
+  background-color: #343a40;
+  color: #f8f9fa;
+  border-color: #495057;
+}
+body.dark .form-control::placeholder {
+  color: #adb5bd;
+}
