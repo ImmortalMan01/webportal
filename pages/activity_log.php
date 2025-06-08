@@ -51,9 +51,9 @@ $logs = $stmt->fetchAll();
 <div class="container my-4">
     <h2 class="mb-3">Activity Log</h2>
     <form method="get" class="row g-2 mb-3">
-        <div class="col-md-3"><input type="text" name="user" class="form-control" placeholder="Kullanıcı" value="<?php echo htmlspecialchars($user); ?>"></div>
-        <div class="col-md-3"><input type="text" name="action" class="form-control" placeholder="İşlem" value="<?php echo htmlspecialchars($action); ?>"></div>
-        <div class="col-md-2"><button class="btn btn-primary">Filtrele</button></div>
+        <div class="col-12 col-md-3"><input type="text" name="user" class="form-control" placeholder="Kullanıcı" value="<?php echo htmlspecialchars($user); ?>"></div>
+        <div class="col-12 col-md-3"><input type="text" name="action" class="form-control" placeholder="İşlem" value="<?php echo htmlspecialchars($action); ?>"></div>
+        <div class="col-12 col-md-2"><button class="btn btn-primary">Filtrele</button></div>
     </form>
     <table class="table table-sm table-striped">
         <tr><th>ID</th><th>Kullanıcı</th><th>İşlem</th><th>Zaman</th><th>Ayrıntı</th></tr>
