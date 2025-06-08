@@ -3,6 +3,7 @@
   let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
   const monthNames = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
   let current = new Date();
+  const typeColors = { g: '#3fa7ff', n: '#dc3545', i: '#198754', d: '#6c757d' };
   function capitalize(text){
     const map={i:'İ',ş:'Ş',ğ:'Ğ',ü:'Ü',ö:'Ö',ç:'Ç',ı:'I'};
     const f=text.charAt(0);
@@ -77,6 +78,7 @@
             if(entry){
               const code = entry.type.charAt(0);
               td.classList.add('is-holiday', code);
+              td.style.backgroundColor = typeColors[code] || '';
               const hol=document.createElement('div');
               hol.className='holiday';
               hol.textContent=capitalize(entry.type);
