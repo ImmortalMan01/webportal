@@ -136,8 +136,18 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 .login .links a {
   color: #fff;
   text-decoration: none;
+}
+
+@media (max-width: 400px) {
+  .login .links {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
 }
