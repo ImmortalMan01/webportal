@@ -331,7 +331,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
 </head>
 <body class="admin-layout">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+        <div class="container-fluid">
             <button id="sidebarToggle" class="btn btn-outline-light d-lg-none me-2" type="button"><i class="fas fa-bars"></i></button>
             <a class="navbar-brand" href="../index.php"><?php echo htmlspecialchars($site_name); ?></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
