@@ -175,8 +175,9 @@ body {
 @media (max-width: 576px) {
   .ring {
     width: 90vw;
-    aspect-ratio: 1 / 1;
     padding: 20px;
+    aspect-ratio: auto;
+    height: auto;
   }
   .login {
     width: 100%;
