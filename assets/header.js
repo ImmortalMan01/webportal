@@ -12,4 +12,19 @@ document.addEventListener('DOMContentLoaded',()=>{
     else{header.classList.remove('hide');}
     last=cur;
   });
+  const logo=document.querySelector('.portal-logo');
+  const actions=document.querySelector('.nav-actions');
+  function fitLogo(){
+    if(!logo)return;
+    if(window.innerWidth>600){logo.style.fontSize='';return;}
+    const maxWidth=header.clientWidth-(actions?actions.offsetWidth:0)-16;
+    logo.style.fontSize='';
+    let size=parseFloat(getComputedStyle(logo).fontSize);
+    while(logo.scrollWidth>maxWidth&&size>12){
+      size-=1;
+      logo.style.fontSize=size+'px';
+    }
+  }
+  window.addEventListener('resize',fitLogo);
+  fitLogo();
 });

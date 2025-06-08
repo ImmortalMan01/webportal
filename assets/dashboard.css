@@ -41,8 +41,8 @@ body.home-dashboard::before{
   transition:transform .3s;
 }
 .portal-nav.hide{transform:translateY(-100%);}
-.portal-logo{font-size:24px;font-weight:700;text-transform:uppercase;}
-.nav-left{display:flex;flex-direction:column;line-height:1.2;}
+.portal-logo{font-size:24px;font-weight:700;text-transform:uppercase;max-width:100%;word-break:break-word;}
+.nav-left{display:flex;flex-direction:column;line-height:1.2;flex:1 1 auto;min-width:0;}
 .nav-left .welcome{font-size:14px;margin-top:2px;}
 .role-pill{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:9999px;font-size:12px;margin-top:2px;display:inline-block;}
 .nav-actions{display:flex;align-items:center;gap:8px;}
@@ -113,11 +113,13 @@ body.home-dashboard::before{
 .home-dashboard.light .nav-actions .logout-btn{background:#dc3545;color:#fff;}
 @media (max-width:600px){
   .portal-nav{height:64px;padding:0 16px;}
+  .portal-logo{font-size:clamp(14px,5vw,20px);}
   .nav-left .welcome{font-size:12px;}
   .nav-actions .logout-btn{display:none;}
 }
 @media (max-width:360px){
   .nav-left .welcome{display:none;}
+  .portal-logo{font-size:clamp(12px,6vw,18px);}
 }
 .mobile-menu{position:fixed;inset:0;background:var(--bg);color:var(--fg);display:none;flex-direction:column;z-index:100;transform:translateX(100%);transition:transform .3s;}
 .mobile-menu.open{display:flex;transform:translateX(0);}
