@@ -64,9 +64,11 @@ body.light .admin-sidebar{
     width:100%;
     flex-direction:row;
     padding:.5rem;
+    overflow-x:auto;
+    white-space:nowrap;
   }
   .admin-sidebar .nav-link{
-    flex:1;
+    flex:0 0 auto;
     justify-content:center;
   }
   .admin-content{
