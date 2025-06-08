@@ -29,14 +29,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   window.showToast=function(from,msg){
-    const displayMsg = msg.length>80 ? msg.slice(0,77)+'...' : msg;
+    const truncated = msg.length>80 ? msg.slice(0,77)+'...' : msg;
+    const displayMsg = escapeHtml(truncated);
     const note=document.createElement('div');
     note.className='msg-toast';
     note.innerHTML=`<div class="msg-toast__inner">
       <div class="msg-toast__avatar" style="background:${colorFromName(from)}">${from.charAt(0).toUpperCase()}</div>
       <div class="msg-toast__content">
         <div class="msg-toast__title">${from}</div>
-        <div class="msg-toast__message">${escapeHtml(displayMsg)}</div>
+        <div class="msg-toast__message">${displayMsg}</div>
       </div>
     </div>`;
     note.addEventListener('click',()=>{
