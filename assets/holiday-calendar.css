@@ -159,7 +159,9 @@
 .hc-container .split { position: absolute; bottom: 4px; right: 4px; }
 .hc-container .holiday { opacity: 0; margin-top: 8px; font-size: .8em; transition: opacity .4s; }
 .hc-container .notes { width: 708px; margin: 64px auto 0; color: #548383; line-height: 1.8; }
-.hc-container .inactive { pointer-events: none; }
+.hc-container ul.inactive > li:not(.active) {
+  pointer-events: none;
+}
 .hc-container .active { z-index: 2; transition-delay: 0s; }
 .hc-container .active article { cursor: auto; transform: translate(-50%, -50%) scale(1); }
 .hc-container li:nth-child(4n+1).active article { transform: translate(calc(-50% + 220px), -50%) scale(1); }
