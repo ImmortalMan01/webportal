@@ -17,9 +17,11 @@ function tr_upper(string $text): string {
 <link rel="stylesheet" href="assets/holiday-calendar.css">
 <div id="wls-app">
   <header class="wl-header">
-    <div class="left">
-      <button id="wlSidebarToggle" class="menu-toggle" type="button"><i class="fa-solid fa-bars"></i></button>
-      <a href="index.php" class="home-link">Çalışma Listesi &amp; İstekler</a>
+    <div class="wl-header-inner">
+      <div class="left">
+        <button id="wlSidebarToggle" class="menu-toggle" type="button"><i class="fa-solid fa-bars"></i></button>
+        <a href="index.php" class="home-link">Çalışma Listesi &amp; İstekler</a>
+      </div>
     </div>
   </header>
   <div class="wl-container">
