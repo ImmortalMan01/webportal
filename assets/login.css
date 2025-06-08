@@ -151,3 +151,21 @@ body {
     gap: 10px;
   }
 }
+
+@media (max-width: 576px) {
+  .ring {
+    width: 100vw;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    padding: 20px;
+  }
+  .login {
+    position: relative;
+    width: 100%;
+    max-width: 330px;
+  }
+  .login h2 {
+    font-size: 1.5em;
+  }
+}
