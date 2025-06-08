@@ -18,6 +18,13 @@ try {
     if (!$c) {
         $pdo->exec("ALTER TABLE users ADD COLUMN email VARCHAR(100) UNIQUE NOT NULL DEFAULT ''");
     }
+    $pdo->exec("CREATE TABLE IF NOT EXISTS user_mutes (
+        user_id INT NOT NULL,
+        muted_user_id INT NOT NULL,
+        PRIMARY KEY (user_id, muted_user_id),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (muted_user_id) REFERENCES users(id) ON DELETE CASCADE
+    )");
 } catch (PDOException $e) {
     die('Veritabanı bağlantı hatası: ' . $e->getMessage());
 }

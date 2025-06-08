@@ -99,6 +99,14 @@ CREATE TABLE messages (
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE user_mutes (
+    user_id INT NOT NULL,
+    muted_user_id INT NOT NULL,
+    PRIMARY KEY (user_id, muted_user_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (muted_user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE announcements (
     id INT AUTO_INCREMENT PRIMARY KEY,
     content TEXT NOT NULL,

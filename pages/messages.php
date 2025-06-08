@@ -41,6 +41,9 @@ $userStmt = $pdo->prepare('SELECT u.username, COUNT(m.id) AS unread
     ORDER BY u.username');
 $userStmt->execute([$currentId, $currentId]);
 $allUsers = $userStmt->fetchAll();
+$mStmt = $pdo->prepare('SELECT u.username FROM user_mutes um JOIN users u ON um.muted_user_id=u.id WHERE um.user_id=?');
+$mStmt->execute([$currentId]);
+$mutedUsers = array_column($mStmt->fetchAll(), 'username');
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -50,6 +53,7 @@ $allUsers = $userStmt->fetchAll();
     <title>Mesajlar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <div class="container my-4">
@@ -60,9 +64,14 @@ $allUsers = $userStmt->fetchAll();
             <ul class="list-group mb-3">
                 <?php foreach ($allUsers as $u): ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center<?php if ($targetUser==$u['username']) echo ' active'; ?>">
-                        <a href="messages.php?user=<?php echo urlencode($u['username']); ?>" class="text-decoration-none<?php if ($targetUser==$u['username']) echo ' text-light'; ?>">
-                            <?php echo htmlspecialchars($u['username']); ?>
-                        </a>
+                        <div class="d-flex align-items-center">
+                            <a href="messages.php?user=<?php echo urlencode($u['username']); ?>" class="text-decoration-none<?php if ($targetUser==$u['username']) echo ' text-light'; ?>">
+                                <?php echo htmlspecialchars($u['username']); ?>
+                            </a>
+                            <button type="button" class="btn btn-link btn-sm mute-btn ms-2" data-user="<?php echo htmlspecialchars($u['username']); ?>">
+                                <i class="fa-solid <?php echo in_array($u['username'],$mutedUsers)?'fa-volume-xmark':'fa-volume-high'; ?>"></i>
+                            </button>
+                        </div>
                         <?php if ($u['unread'] > 0): ?>
                             <span class="badge bg-danger rounded-pill ms-2"><?php echo $u['unread']; ?></span>
                         <?php endif; ?>
@@ -113,6 +122,7 @@ $allUsers = $userStmt->fetchAll();
                 const currentUser = <?php echo json_encode($current); ?>;
                 const currentId = <?php echo $currentId; ?>;
                 let lastSeen = <?php echo json_encode($lastSeen); ?>;
+                let mutedUsers = <?php echo json_encode($mutedUsers); ?>;
                 const chatBox = document.getElementById('chatBox');
                 const ws = new WebSocket(`ws://${location.hostname}:8080?user=${encodeURIComponent(currentUser)}`);
                 let onlineUsers = new Set();
@@ -129,7 +139,7 @@ $allUsers = $userStmt->fetchAll();
                             if(data.from!==currentUser){
                                 ws.send(JSON.stringify({type:'seen', id:data.id, to:data.from}));
                             }
-                        } else if(window.showToast){
+                        } else if(window.showToast && !mutedUsers.includes(data.from)){
                             window.showToast(data.from, data.text);
                         }
                     }else if(data.type==='typing'){
@@ -224,6 +234,31 @@ $allUsers = $userStmt->fetchAll();
                     clearTimeout(typingTimer);
                     typingTimer = setTimeout(()=>{el.remove();},2000);
                 }
+
+                document.querySelectorAll('.mute-btn').forEach(btn=>{
+                    btn.addEventListener('click',e=>{
+                        e.preventDefault();
+                        const u = btn.dataset.user;
+                        fetch('toggle_mute.php', {
+                            method:'POST',
+                            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                            body:'user='+encodeURIComponent(u)
+                        })
+                        .then(r=>r.json())
+                        .then(d=>{
+                            const ic = btn.querySelector('i');
+                            if(d.muted){
+                                ic.classList.remove('fa-volume-high');
+                                ic.classList.add('fa-volume-xmark');
+                                if(!mutedUsers.includes(u)) mutedUsers.push(u);
+                            }else{
+                                ic.classList.remove('fa-volume-xmark');
+                                ic.classList.add('fa-volume-high');
+                                mutedUsers = mutedUsers.filter(x=>x!==u);
+                            }
+                        });
+                    });
+                });
                 </script>
             <?php else: ?>
                 <p>Soldaki listeden bir kullanıcı seçiniz.</p>

@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded',()=>{
   if(typeof currentUser==='undefined' || !currentUser) return;
+  const prefix=location.pathname.includes('/pages/')?'':'pages/';
+  fetch(prefix+'get_mutes.php').then(r=>r.json()).then(d=>{window.mutedUsers=d;}).catch(()=>{window.mutedUsers=[];});
   const container=document.createElement('div');
   container.id='msgToastContainer';
   const MAX_HEIGHT=Math.round(window.innerHeight*0.5);
@@ -11,7 +13,9 @@ document.addEventListener('DOMContentLoaded',()=>{
       try{
         const data=JSON.parse(e.data);
         if(data.type==='message' && data.from!==currentUser){
-          showToast(data.from,data.text);
+          if(!Array.isArray(window.mutedUsers) || !window.mutedUsers.includes(data.from)){
+            showToast(data.from,data.text);
+          }
         }
       }catch(err){console.error(err);}
     });
@@ -29,6 +33,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   window.showToast=function(from,msg){
+    if(Array.isArray(window.mutedUsers) && window.mutedUsers.includes(from)) return;
     const text = String(msg||'');
     const truncated = text.length>20 ? text.slice(0,17)+'...' : text;
 
