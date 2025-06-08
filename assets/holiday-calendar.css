@@ -176,3 +176,45 @@
 .hc-container .active .holiday { opacity: 1; }
 .hc-container .active th { text-indent: 0%; }
 .hc-container .active th::after { opacity: 0; }
+
+/* Dark mode overrides */
+body.dark .hc-container,
+body.worklist-page.dark .hc-container {
+  color: #f8f9fa;
+  background-color: #0F2438;
+}
+
+body.dark .hc-container .year,
+body.worklist-page.dark .hc-container .year,
+body.dark .hc-container .description,
+body.worklist-page.dark .hc-container .description {
+  color: #3fa7ff;
+}
+
+body.dark .hc-container article,
+body.worklist-page.dark .hc-container article {
+  background-color: #102A3E;
+  border-bottom-color: #112E45;
+}
+
+body.dark .hc-container td,
+body.worklist-page.dark .hc-container td {
+  background-color: #102A3E;
+}
+
+body.dark .hc-container th::after,
+body.worklist-page.dark .hc-container th::after {
+  background-color: #112E45;
+}
+
+body.dark .hc-container .dismiss,
+body.worklist-page.dark .hc-container .dismiss {
+  background-color: #3fa7ff;
+  border-color: #3fa7ff;
+  color: #000;
+}
+
+body.dark .hc-container .notes,
+body.worklist-page.dark .hc-container .notes {
+  color: #f8f9fa;
+}
