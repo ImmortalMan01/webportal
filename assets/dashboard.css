@@ -115,6 +115,14 @@ body.home-dashboard::before{
   .portal-nav{height:64px;padding:0 16px;}
   .nav-left .welcome{font-size:12px;}
   .nav-actions .logout-btn{display:none;}
+  .nav-left{flex:1;min-width:0;}
+  .portal-logo{
+    font-size:clamp(18px,6vw,24px);
+    max-width:100%;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
 }
 @media (max-width:360px){
   .nav-left .welcome{display:none;}
