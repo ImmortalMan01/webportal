@@ -55,6 +55,10 @@ body.worklist-page section.card {
   cursor:pointer;
 }
 
+@media (min-width: 769px){
+  #wlSidebarToggle{display:none;}
+}
+
 .wl-container { display: flex; flex: 1; overflow: hidden; }
 
 .wl-sidebar {
