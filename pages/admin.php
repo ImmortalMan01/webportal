@@ -379,6 +379,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     </div>
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
+                <div class="table-responsive">
                 <table class="table table-sm table-striped">
                     <tr><th>Kullanıcı</th><th>E-posta</th><th>Rol</th><th>Değiştir</th></tr>
                     <?php foreach ($users as $info): ?>
@@ -402,6 +403,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         </tr>
                     <?php endforeach; ?>
                 </table>
+</div>
             </div>
             <div class="tab-pane fade" id="shifts" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -411,6 +413,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-md-4"><input type="text" name="time" class="form-control" placeholder="Vardiya" required></div>
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
+                <div class="table-responsive">
                 <table class="table table-sm table-striped">
                     <tr><th>Tarih</th><th>Vardiya</th><th></th></tr>
                     <?php foreach ($shifts as $s): ?>
@@ -428,6 +431,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         </tr>
                     <?php endforeach; ?>
                 </table>
+</div>
             </div>
             <div class="tab-pane fade" id="trainings" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -459,6 +463,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-md-4"><input type="date" name="date" class="form-control" required></div>
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
+                <div class="table-responsive">
                 <table class="table table-sm table-striped">
                     <tr><th>Sınav</th><th>Tarih</th><th></th></tr>
                     <?php foreach ($exams as $e): ?>
@@ -476,6 +481,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         </tr>
                     <?php endforeach; ?>
                 </table>
+</div>
             </div>
             <div class="tab-pane fade" id="procedures" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -524,6 +530,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-12 mt-2"><input type="text" name="description" class="form-control" placeholder="Açıklama"></div>
                     <div class="col-12 text-end mt-2"><button class="btn btn-primary">Ekle</button></div>
                 </form>
+                <div class="table-responsive">
                 <table class="table table-sm table-striped">
                     <tr><th>Başlık</th><th>Dosya</th><th>Icon</th><th>Renk</th><th>Badge</th><th>Sınıf</th><th>Açıklama</th><th>Göster</th><th></th></tr>
                     <?php foreach ($modules as $m): ?>
@@ -554,6 +561,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         </tr>
                     <?php endforeach; ?>
                 </table>
+</div>
                 <?php foreach($modules as $m): ?>
                 <div class="modal fade" id="navModal<?php echo $m['id']; ?>" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
@@ -571,6 +579,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                                     <div class="col-5"><input type="text" name="url" class="form-control form-control-sm" placeholder="URL"></div>
                                     <div class="col-2"><button class="btn btn-sm btn-primary w-100">Ekle</button></div>
                                 </form>
+                <div class="table-responsive">
                                 <table class="table table-sm">
                                     <tr><th>Etiket</th><th>URL</th><th></th></tr>
                                     <?php foreach($module_navs[$m['id']] ?? [] as $ln): ?>
@@ -588,6 +597,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                                     </tr>
                                     <?php endforeach; ?>
                                 </table>
+</div>
                             </div>
                         </div>
                     </div>
@@ -603,6 +613,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-md-4"><input type="text" name="content" class="form-control" placeholder="İçerik" required></div>
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
+                <div class="table-responsive">
                 <table class="table table-sm table-striped">
                     <tr><th>Başlık</th><th>Slug</th><th>İçerik</th><th></th></tr>
                     <?php foreach($site_pages as $pg): ?>
@@ -621,6 +632,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         </tr>
                     <?php endforeach; ?>
                 </table>
+</div>
             </div>
             <div class="tab-pane fade" id="announcements" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -660,6 +672,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-md-2"><input type="date" name="exp_date" class="form-control"></div>
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
+                <div class="table-responsive">
                 <table class="table table-sm table-striped">
                     <tr><th>Kullanıcı</th><th>Deneyim</th><th>Tarih</th><th></th></tr>
                     <?php foreach($experiences as $ex): ?>
@@ -678,6 +691,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         </tr>
                     <?php endforeach; ?>
                 </table>
+</div>
             </div>
             <div class="tab-pane fade" id="messages" role="tabpanel">
                 <form method="get" class="row g-2 mb-3">
@@ -752,6 +766,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <?php endif; ?>
             </div>
             <div class="tab-pane fade" id="profiles" role="tabpanel">
+                <div class="table-responsive">
                 <table class="table table-sm">
                     <tr><th>Kullanıcı ID</th><th>Ad Soyad</th><th>Birim</th><th>Telefon</th><th>Doğum</th><th></th><th></th></tr>
                     <?php foreach ($profiles as $p): ?>
@@ -773,6 +788,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         </tr>
                     <?php endforeach; ?>
                 </table>
+</div>
 <?php foreach($profiles as $p): ?>
 <div class="modal fade" id="profileModal<?php echo $p['user_id']; ?>" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
