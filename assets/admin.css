@@ -24,6 +24,7 @@ body.admin-layout.light{
   display:flex;
   flex-direction:column;
   z-index:1000;
+  transition:transform .3s ease;
 }
 body.dark .admin-sidebar{
   background:rgba(14,27,43,0.9);
@@ -60,20 +61,14 @@ body.light .admin-sidebar{
 }
 @media(max-width:768px){
   .admin-sidebar{
-    position:static;
-    width:100%;
-    flex-direction:row;
-    padding:.5rem;
-    overflow-x:auto;
-    white-space:nowrap;
+    transform:translateX(-220px);
   }
-  .admin-sidebar .nav-link{
-    flex:0 0 auto;
-    justify-content:center;
+  .admin-sidebar.open{
+    transform:translateX(0);
   }
   .admin-content{
     margin-left:0;
-    margin-top:0;
+    margin-top:56px;
   }
 }
 
