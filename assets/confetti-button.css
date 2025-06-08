@@ -1,0 +1,168 @@
+/* Confetti button styles */
+@keyframes loading {
+  0% { cy: 10; }
+  25% { cy: 3; }
+  50% { cy: 10; }
+}
+
+canvas {
+  height: 100vh;
+  pointer-events: none;
+  position: fixed;
+  width: 100%;
+  z-index: 2;
+}
+#login-button {
+  background: none;
+  border: none;
+  color: #f4f7ff;
+  cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  height: 40px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 10px;
+  position: relative;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 1;
+}
+#login-button::before {
+  background: #1f2335;
+  border-radius: 50px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .4) inset;
+  content: '';
+  display: block;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+  transition: width .2s cubic-bezier(.39,1.86,.64,1) .3s;
+  width: 100%;
+}
+
+/* READY STATE */
+#login-button.ready .submitMessage svg {
+  opacity: 1;
+  top: 1px;
+  transition: top .4s ease 600ms, opacity .3s linear 600ms;
+}
+#login-button.ready .submitMessage .button-text span {
+  top: 0;
+  opacity: 1;
+  transition: all .2s ease calc(var(--dr) + 600ms);
+}
+
+/* LOADING STATE */
+#login-button.loading::before {
+  transition: width .3s ease;
+  width: 80%;
+}
+#login-button.loading .loadingMessage {
+  opacity: 1;
+}
+#login-button.loading .submitMessage {
+  display: none;
+}
+#login-button.loading .loadingCircle {
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-name: loading;
+  cy: 10;
+}
+
+/* COMPLETE STATE */
+#login-button.complete .submitMessage svg {
+  top: -30px;
+  transition: none;
+}
+#login-button.complete .submitMessage .button-text span {
+  top: -8px;
+  transition: none;
+}
+#login-button.complete .loadingMessage {
+  display: none;
+}
+#login-button.complete .submitMessage {
+  display: none;
+}
+#login-button.complete .successMessage .button-text span {
+  left: 0;
+  opacity: 1;
+  transition: all .2s ease calc(var(--d) + 1000ms);
+}
+#login-button.complete .successMessage svg {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .3s ease-in-out 1.4s;
+}
+
+#login-button .button-text span {
+  opacity: 0;
+  position: relative;
+}
+
+#login-button .message {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+}
+
+#login-button .message svg {
+  display: inline-block;
+  fill: none;
+  margin-right: 5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+#login-button .submitMessage .button-text span {
+  top: 8px;
+  transition: all .2s ease var(--d);
+}
+#login-button .submitMessage svg {
+  color: #5c86ff;
+  margin-left: -1px;
+  opacity: 0;
+  position: relative;
+  top: 30px;
+  transition: top .4s ease, opacity .3s linear;
+  width: 14px;
+}
+
+#login-button .loadingMessage {
+  opacity: 0;
+  transition: opacity .3s linear .3s, top .4s cubic-bezier(.22,0,.41,-0.57);
+}
+#login-button .loadingMessage svg {
+  fill: #5c86ff;
+  margin: 0;
+  width: 22px;
+}
+
+#login-button .successMessage {
+  display: none;
+}
+
+#login-button.complete .successMessage {
+  display: block;
+}
+
+#login-button .successMessage .button-text span {
+  left: 5px;
+  transition: all .2s ease var(--dr);
+}
+#login-button .successMessage svg {
+  color: #5cffa1;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset .3s ease-in-out;
+  width: 14px;
+}
+
+#login-button .loadingCircle:nth-child(2) { animation-delay: .1s; }
+#login-button .loadingCircle:nth-child(3) { animation-delay: .2s; }
+
