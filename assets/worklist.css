@@ -19,6 +19,13 @@ body.worklist-page section.card {
   box-shadow: none;
 }
 
+/* Keep navbar full width but add page padding */
+body.worklist-page nav.navbar .container {
+  max-width: none;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
 #wls-app {
   display: flex;
   flex-direction: column;
