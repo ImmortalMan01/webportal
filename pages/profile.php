@@ -163,7 +163,7 @@ $experiences = $expStmt->fetchAll();
         <div class="col-md-4"><input type="date" name="exp_date" class="form-control"></div>
         <div class="col-md-2"><button class="btn btn-secondary w-100">Ekle</button></div>
     </form>
-    <table class="table table-sm">
+    <table class="table table-sm stack-table">
         <tr><th>Deneyim</th><th>Tarih</th><th></th></tr>
         <?php foreach($experiences as $e): ?>
             <tr>
@@ -178,6 +178,20 @@ $experiences = $expStmt->fetchAll();
             </tr>
         <?php endforeach; ?>
     </table>
+    <div class="stack-cards">
+        <?php foreach($experiences as $e): ?>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div><strong>Deneyim:</strong> <?php echo htmlspecialchars($e['title']); ?></div>
+                    <div><strong>Tarih:</strong> <?php echo htmlspecialchars($e['exp_date']); ?></div>
+                    <form method="post" class="mt-2 d-inline">
+                        <input type="hidden" name="delete_experience" value="<?php echo $e['id']; ?>">
+                        <button class="btn btn-sm btn-danger">Sil</button>
+                    </form>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
     <hr class="my-4">
     <h4>Şifre Değiştir</h4>
     <?php if ($passMessage) echo "<div class='alert alert-info'>$passMessage</div>"; ?>
