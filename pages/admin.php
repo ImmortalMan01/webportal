@@ -368,17 +368,17 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="users">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-2"><input type="text" name="username" class="form-control" placeholder="Kullanıcı" required></div>
-                    <div class="col-md-3"><input type="email" name="email" class="form-control" placeholder="E-posta" required></div>
-                    <div class="col-md-2"><input type="password" name="password" class="form-control" placeholder="Şifre" required></div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-2"><input type="text" name="username" class="form-control" placeholder="Kullanıcı" required></div>
+                    <div class="col-12 col-md-3"><input type="email" name="email" class="form-control" placeholder="E-posta" required></div>
+                    <div class="col-12 col-md-2"><input type="password" name="password" class="form-control" placeholder="Şifre" required></div>
+                    <div class="col-12 col-md-3">
                         <select name="role" class="form-select">
                             <?php foreach (default_roles() as $r): ?>
                             <option value="<?php echo htmlspecialchars($r); ?>"><?php echo htmlspecialchars($r); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                    <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <div class="table-responsive stack-table">
                 <table class="table table-sm table-striped">
@@ -432,9 +432,9 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="shifts">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-4"><input type="date" name="date" class="form-control" required></div>
-                    <div class="col-md-4"><input type="text" name="time" class="form-control" placeholder="Vardiya" required></div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                    <div class="col-12 col-md-4"><input type="date" name="date" class="form-control" required></div>
+                    <div class="col-12 col-md-4"><input type="text" name="time" class="form-control" placeholder="Vardiya" required></div>
+                    <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <div class="table-responsive">
                 <table class="table table-sm table-striped">
@@ -460,9 +460,9 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="trainings">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-4"><input type="text" name="title" class="form-control" placeholder="Başlık" required></div>
-                    <div class="col-md-4"><input type="text" name="description" class="form-control" placeholder="Açıklama" required></div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                    <div class="col-12 col-md-4"><input type="text" name="title" class="form-control" placeholder="Başlık" required></div>
+                    <div class="col-12 col-md-4"><input type="text" name="description" class="form-control" placeholder="Açıklama" required></div>
+                    <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <ul class="list-group">
                     <?php foreach ($trainings as $t): ?>
@@ -482,9 +482,9 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="exams">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-4"><input type="text" name="title" class="form-control" placeholder="Sınav" required></div>
-                    <div class="col-md-4"><input type="date" name="date" class="form-control" required></div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                    <div class="col-12 col-md-4"><input type="text" name="title" class="form-control" placeholder="Sınav" required></div>
+                    <div class="col-12 col-md-4"><input type="date" name="date" class="form-control" required></div>
+                    <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <div class="table-responsive">
                 <table class="table table-sm table-striped">
@@ -510,9 +510,9 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="procedures">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-4"><input type="text" name="name" class="form-control" placeholder="Prosedür" required></div>
-                    <div class="col-md-4"><input type="text" name="file" class="form-control" placeholder="Dosya" required></div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                    <div class="col-12 col-md-4"><input type="text" name="name" class="form-control" placeholder="Prosedür" required></div>
+                    <div class="col-12 col-md-4"><input type="text" name="file" class="form-control" placeholder="Dosya" required></div>
+                    <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <ul class="list-group">
                     <?php foreach ($procedures as $p): ?>
@@ -532,19 +532,19 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="modules">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-2"><input type="text" name="name" class="form-control" placeholder="Başlık" required></div>
-                    <div class="col-md-2"><input type="text" name="file" class="form-control" placeholder="Dosya" required></div>
-                    <div class="col-md-2"><input type="text" name="icon" class="form-control" placeholder="Icon class"></div>
-                    <div class="col-md-1"><input type="text" name="color" class="form-control" placeholder="Renk #"></div>
-                    <div class="col-md-1"><input type="text" name="badge" class="form-control" placeholder="Badge"></div>
-                    <div class="col-md-2">
+                    <div class="col-12 col-md-2"><input type="text" name="name" class="form-control" placeholder="Başlık" required></div>
+                    <div class="col-12 col-md-2"><input type="text" name="file" class="form-control" placeholder="Dosya" required></div>
+                    <div class="col-12 col-md-2"><input type="text" name="icon" class="form-control" placeholder="Icon class"></div>
+                    <div class="col-12 col-md-1"><input type="text" name="color" class="form-control" placeholder="Renk #"></div>
+                    <div class="col-12 col-md-1"><input type="text" name="badge" class="form-control" placeholder="Badge"></div>
+                    <div class="col-12 col-md-2">
                         <select name="badge_class" class="form-select">
                             <option value="badge-green">Yeşil</option>
                             <option value="badge-blue">Mavi</option>
                             <option value="badge-orange">Turuncu</option>
                         </select>
                     </div>
-                    <div class="col-md-1 d-flex align-items-center">
+                    <div class="col-12 col-md-1 d-flex align-items-center">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="enabled" id="modEnabledAdd" checked>
                             <label class="form-check-label" for="modEnabledAdd">Göster</label>
@@ -682,10 +682,10 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="pages">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-3"><input type="text" name="title" class="form-control" placeholder="Başlık" required></div>
-                    <div class="col-md-3"><input type="text" name="slug" class="form-control" placeholder="slug" required></div>
-                    <div class="col-md-4"><input type="text" name="content" class="form-control" placeholder="İçerik" required></div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                    <div class="col-12 col-md-3"><input type="text" name="title" class="form-control" placeholder="Başlık" required></div>
+                    <div class="col-12 col-md-3"><input type="text" name="slug" class="form-control" placeholder="slug" required></div>
+                    <div class="col-12 col-md-4"><input type="text" name="content" class="form-control" placeholder="İçerik" required></div>
+                    <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <div class="table-responsive">
                 <table class="table table-sm table-striped">
@@ -712,8 +712,8 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="announcements">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-10"><input type="text" name="content" class="form-control" placeholder="Duyuru" required></div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                    <div class="col-12 col-md-10"><input type="text" name="content" class="form-control" placeholder="Duyuru" required></div>
+                    <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <ul class="list-group">
                     <?php foreach($announcements as $an): ?>
@@ -734,7 +734,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <form method="post" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="experiences">
                     <input type="hidden" name="action" value="add">
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <select name="user_id" class="form-select" required>
                             <option value="">Kullanıcı</option>
                             <?php foreach($users as $u): ?>
@@ -742,9 +742,9 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-5"><input type="text" name="title" class="form-control" placeholder="Deneyim" required></div>
-                    <div class="col-md-2"><input type="date" name="exp_date" class="form-control"></div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
+                    <div class="col-12 col-md-5"><input type="text" name="title" class="form-control" placeholder="Deneyim" required></div>
+                    <div class="col-12 col-md-2"><input type="date" name="exp_date" class="form-control"></div>
+                    <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
                 <div class="table-responsive">
                 <table class="table table-sm table-striped">
@@ -770,7 +770,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
             <div class="tab-pane fade" id="messages" role="tabpanel">
                 <form method="get" class="row g-2 mb-3">
                     <input type="hidden" name="section" value="messages">
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <select name="u1" class="form-select" required>
                             <option value="">Kullanıcı 1</option>
                             <?php foreach ($users as $u): ?>
@@ -778,7 +778,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <select name="u2" class="form-select" required>
                             <option value="">Kullanıcı 2</option>
                             <?php foreach ($users as $u): ?>
@@ -786,7 +786,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100">Göster</button></div>
+                    <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Göster</button></div>
                 </form>
                 <?php
                     $u1 = $_GET['u1'] ?? '';
@@ -908,27 +908,27 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <input type="hidden" name="section" value="profiles">
                     <input type="hidden" name="action" value="update">
                     <input type="hidden" name="user_id" value="<?php echo $p['user_id']; ?>">
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label">Ad Soyad</label>
                         <input type="text" name="full_name" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['full_name']); ?>">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label">E-posta</label>
                         <input type="email" name="email" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['email']); ?>">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label">Birim</label>
                         <input type="text" name="department" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['department']); ?>">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label">Telefon</label>
                         <input type="text" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label">Doğum</label>
                         <input type="date" name="birthdate" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['birthdate']); ?>">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label">Profil Resmi</label><br>
                         <img src="<?php echo $p['picture'] ? 'uploads/' . htmlspecialchars($p['picture']) : '../assets/profil.png'; ?>" width="80" class="mb-2">
                         <input type="file" name="picture" class="form-control form-control-sm">
