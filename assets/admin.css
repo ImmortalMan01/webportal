@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 :root{
   --accent:#0dd4a3;
+  --sidebar-width:220px;
 }
 body.admin-layout{
   font-family:'Inter',sans-serif;
@@ -17,7 +18,7 @@ body.admin-layout.light{
 .admin-sidebar{
   position:fixed;
   top:56px;left:0;bottom:0;
-  width:220px;
+  width:var(--sidebar-width);
   backdrop-filter:blur(6px);
   padding:1rem;
   overflow-y:auto;
@@ -25,6 +26,15 @@ body.admin-layout.light{
   flex-direction:column;
   z-index:1000;
   transition:transform .3s ease;
+}
+.sidebar-overlay{
+  position:fixed;
+  top:56px;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.5);
+  z-index:999;
 }
 body.dark .admin-sidebar{
   background:rgba(14,27,43,0.9);
@@ -55,13 +65,14 @@ body.light .admin-sidebar{
   text-decoration:none;
 }
 .admin-content{
-  margin-left:220px;
+  margin-left:var(--sidebar-width);
   margin-top:56px;
   padding:1rem;
 }
 @media(max-width:768px){
+  :root{--sidebar-width:80vw;}
   .admin-sidebar{
-    transform:translateX(-220px);
+    transform:translateX(calc(-1 * var(--sidebar-width)));
   }
   .admin-sidebar.open{
     transform:translateX(0);
