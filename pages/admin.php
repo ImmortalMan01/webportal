@@ -752,12 +752,12 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <input type="hidden" name="action" value="send">
                     <input type="hidden" name="u1" value="<?php echo htmlspecialchars($u1); ?>">
                     <input type="hidden" name="u2" value="<?php echo htmlspecialchars($u2); ?>">
-                    <select name="from" id="fromSelect" class="form-select me-md-2 mb-2 flex-grow-1" style="max-width:150px;">
+                    <select name="from" id="fromSelect" class="form-select me-md-2 mb-2 flex-grow-1 msg-select">
                         <option value="<?php echo htmlspecialchars($u1); ?>"><?php echo htmlspecialchars($u1); ?> olarak</option>
                         <option value="<?php echo htmlspecialchars($u2); ?>"><?php echo htmlspecialchars($u2); ?> olarak</option>
                         <option value="<?php echo htmlspecialchars($_SESSION['user']); ?>">Admin olarak</option>
                     </select>
-                    <select name="to" id="toSelect" class="form-select me-md-2 mb-2 flex-grow-1" style="max-width:150px; display:none;">
+                    <select name="to" id="toSelect" class="form-select me-md-2 mb-2 flex-grow-1 msg-select">
                         <option value="<?php echo htmlspecialchars($u1); ?>"><?php echo htmlspecialchars($u1); ?></option>
                         <option value="<?php echo htmlspecialchars($u2); ?>"><?php echo htmlspecialchars($u2); ?></option>
                     </select>
