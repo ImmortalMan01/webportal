@@ -736,7 +736,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         }
                     }
                 ?>
-                <div class="border p-2 mb-3" style="max-height:300px;overflow-y:auto;">
+                <div class="border p-2 mb-3 msg-history">
                 <?php foreach($conv as $m): ?>
                     <div class="d-flex <?php echo $m['sender_id']==$id1? 'justify-content-start':'justify-content-end'; ?>">
                         <div class="bubble <?php echo $m['sender_id']==$id1? 'theirs':'mine'; ?><?php if($m['role']==='admin') echo ' admin-msg'; ?>">
