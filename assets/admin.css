@@ -75,3 +75,17 @@ body.light .admin-sidebar{
 .admin-layout .navbar{
   z-index:1101;
 }
+
+/* message select dropdown sizing */
+.msg-select{
+  max-width:100%;
+  margin-right:.5rem;
+  margin-bottom:.5rem;
+}
+@media(max-width:768px){
+  .msg-select{
+    margin-right:0;
+  }
+}
+
+#toSelect{display:none;}
