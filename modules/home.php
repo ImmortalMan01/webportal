@@ -12,6 +12,28 @@ $theme = get_role_theme($pdo, $role);
 if($theme === 'dashboard'):
     $pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)");
     $announcements = $pdo->query('SELECT content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
+    $pdo->exec("CREATE TABLE IF NOT EXISTS announcement_views (user_id INT PRIMARY KEY, last_seen DATETIME NOT NULL DEFAULT '1970-01-01 00:00:00', FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)");
+    $newAnnCount = 0;
+    $latestAnn = null;
+    if(isset($_SESSION['user'])){
+        $uidStmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
+        $uidStmt->execute([$user]);
+        $uid = $uidStmt->fetchColumn();
+        if($uid){
+            $lsStmt = $pdo->prepare('SELECT last_seen FROM announcement_views WHERE user_id = ?');
+            $lsStmt->execute([$uid]);
+            $lastSeen = $lsStmt->fetchColumn() ?: '1970-01-01 00:00:00';
+            $cnt = $pdo->prepare('SELECT COUNT(*) FROM announcements WHERE publish_date > ?');
+            $cnt->execute([$lastSeen]);
+            $newAnnCount = (int)$cnt->fetchColumn();
+            if($newAnnCount > 0){
+                $det = $pdo->prepare('SELECT content, publish_date FROM announcements WHERE publish_date > ? ORDER BY publish_date DESC LIMIT 1');
+                $det->execute([$lastSeen]);
+                $latestAnn = $det->fetch(PDO::FETCH_ASSOC);
+            }
+        }
+    }
+    $notifCount = $newAnnCount;
 ?>
 <nav class="portal-nav" aria-label="Üst Menü">
 <script>document.body.classList.add('home-dashboard');</script>
@@ -21,10 +43,21 @@ if($theme === 'dashboard'):
     <span class="role-pill"><?php echo htmlspecialchars($role); ?></span>
   </div>
   <div class="nav-actions">
-    <button id="notifBtn" class="icon-btn" aria-label="Bildirimler">
-      <span class="material-icons">notifications</span>
-      <?php if(!empty($unreadCount)): ?><span class="badge"><?php echo $unreadCount; ?></span><?php endif; ?>
-    </button>
+    <div class="drop-down" id="notifMenu">
+      <button id="notifBtn" class="icon-btn drop-down__button" aria-label="Bildirimler">
+        <span class="material-icons">notifications</span>
+        <?php if($notifCount>0): ?><span class="badge"><?php echo $notifCount; ?></span><?php endif; ?>
+      </button>
+      <div class="drop-down__menu-box">
+        <ul class="drop-down__menu">
+          <?php if($newAnnCount>0 && $latestAnn): ?>
+          <li class="drop-down__item"><a href="#" id="newAnnLink" data-content="<?php echo htmlspecialchars($latestAnn['content'], ENT_QUOTES); ?>" data-date="<?php echo $latestAnn['publish_date']; ?>"><?php echo $newAnnCount; ?> Yeni Duyuru</a></li>
+          <?php else: ?>
+          <li class="drop-down__item">Bildirim yok</li>
+          <?php endif; ?>
+        </ul>
+      </div>
+    </div>
     <button id="themeToggleGlobal" class="icon-btn" aria-label="Tema">🌙</button>
     <div class="drop-down avatar">
       <button class="drop-down__button icon-btn" aria-label="Kullanıcı">
@@ -150,6 +183,20 @@ if($theme === 'dashboard'):
           annModal.show();
         });
       });
+      var newAnnLink = document.getElementById('newAnnLink');
+      if(newAnnLink){
+        newAnnLink.addEventListener('click',function(e){
+          e.preventDefault();
+          document.querySelector('#announcementModal .modal-body').innerText = this.getAttribute('data-content');
+          var date = this.getAttribute('data-date');
+          document.querySelector('#announcementModal .modal-title').innerText = 'Duyuru - ' + date;
+          annModal.show();
+          fetch('pages/mark_announcement.php', {method:'POST'});
+          var badge = document.querySelector('#notifBtn .badge');
+          if(badge) badge.remove();
+          this.parentElement.innerHTML = 'Bildirim yok';
+        });
+      }
     }
   });
 </script>
