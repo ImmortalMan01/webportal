@@ -176,3 +176,15 @@
 .hc-container .active .holiday { opacity: 1; }
 .hc-container .active th { text-indent: 0%; }
 .hc-container .active th::after { opacity: 0; }
+
+@media (max-width: 768px) {
+  .hc-container { width:100%; margin:20px 0; }
+  .hc-container ul { width:100%; }
+  .hc-container li { width:50%; height:180px; }
+  .hc-container table { width:100%; }
+  .hc-container th, .hc-container td { width: calc(100% / 7); }
+}
+@media (max-width: 480px) {
+  .hc-container li { width:100%; }
+}
+
