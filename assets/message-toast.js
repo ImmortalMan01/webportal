@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded',()=>{
         <div class="msg-toast__message">${msg.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}</div>
       </div>
     </div>`;
+    note.addEventListener('click',()=>{
+      const prefix=location.pathname.includes('/pages/')?'':'pages/';
+      location.href=prefix+'messages.php?user='+encodeURIComponent(from);
+    });
     container.appendChild(note);
     setTimeout(()=>note.classList.add('note--out'),4000);
     note.addEventListener('animationend',()=>{if(note.classList.contains('note--out')) note.remove();});
