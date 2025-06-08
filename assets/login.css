@@ -95,7 +95,7 @@ body {
 }
 .login .inputBx .toggle-password {
   position: absolute;
-  right: 30px;
+  right: 1rem;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2em;
