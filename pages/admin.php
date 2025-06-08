@@ -380,7 +380,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     </div>
                     <div class="col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
-                <div class="table-responsive">
+                <div class="table-responsive stack-table">
                 <table class="table table-sm table-striped">
                     <tr><th>Kullanıcı</th><th>E-posta</th><th>Rol</th><th>Değiştir</th></tr>
                     <?php foreach ($users as $info): ?>
@@ -405,6 +405,28 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <?php endforeach; ?>
                 </table>
 </div>
+                <div class="stack-cards">
+                    <?php foreach ($users as $info): ?>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div><strong>Kullanıcı:</strong> <?php echo htmlspecialchars($info['username']); ?></div>
+                            <div><strong>E-posta:</strong> <?php echo htmlspecialchars($info['email']); ?></div>
+                            <div><strong>Rol:</strong> <?php echo htmlspecialchars($info['role']); ?></div>
+                            <form method="post" class="mt-2">
+                                <input type="hidden" name="section" value="users">
+                                <input type="hidden" name="action" value="changerole">
+                                <input type="hidden" name="username" value="<?php echo htmlspecialchars($info['username']); ?>">
+                                <select name="role" class="form-select form-select-sm mb-2">
+                                    <?php foreach (default_roles() as $r): ?>
+                                    <option value="<?php echo htmlspecialchars($r); ?>" <?php if ($info['role']==$r) echo 'selected'; ?>><?php echo htmlspecialchars($r); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <button class="btn btn-sm btn-secondary">Kaydet</button>
+                            </form>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <div class="tab-pane fade" id="shifts" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -531,7 +553,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-12 mt-2"><input type="text" name="description" class="form-control" placeholder="Açıklama"></div>
                     <div class="col-12 text-end mt-2"><button class="btn btn-primary">Ekle</button></div>
                 </form>
-                <div class="table-responsive">
+                <div class="table-responsive stack-table">
                 <table class="table table-sm table-striped">
                     <tr><th>Başlık</th><th>Dosya</th><th>Icon</th><th>Renk</th><th>Badge</th><th>Sınıf</th><th>Açıklama</th><th>Göster</th><th></th></tr>
                     <?php foreach ($modules as $m): ?>
@@ -563,6 +585,57 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <?php endforeach; ?>
                 </table>
 </div>
+                <div class="stack-cards">
+                    <?php foreach ($modules as $m): ?>
+                    <div class="card mb-2">
+                        <form method="post" class="card-body">
+                            <input type="hidden" name="section" value="modules">
+                            <input type="hidden" name="id" value="<?php echo $m['id']; ?>">
+                            <div class="mb-2">
+                                <label class="form-label small">Başlık</label>
+                                <input type="text" name="name" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['name']); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Dosya</label>
+                                <input type="text" name="file" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['file']); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Icon</label>
+                                <input type="text" name="icon" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['icon']); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Renk</label>
+                                <input type="text" name="color" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['color']); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Badge</label>
+                                <input type="text" name="badge" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['badge']); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Sınıf</label>
+                                <select name="badge_class" class="form-select form-select-sm">
+                                    <option value="badge-green" <?php if($m['badge_class']=='badge-green') echo 'selected'; ?>>Yeşil</option>
+                                    <option value="badge-blue" <?php if($m['badge_class']=='badge-blue') echo 'selected'; ?>>Mavi</option>
+                                    <option value="badge-orange" <?php if($m['badge_class']=='badge-orange') echo 'selected'; ?>>Turuncu</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Açıklama</label>
+                                <input type="text" name="description" class="form-control form-control-sm" value="<?php echo htmlspecialchars($m['description']); ?>">
+                            </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="enabled" value="1" id="modEnabled<?php echo $m['id']; ?>" <?php echo $m['enabled']? 'checked':''; ?>>
+                                <label for="modEnabled<?php echo $m['id']; ?>" class="form-check-label small">Göster</label>
+                            </div>
+                            <div class="mt-2">
+                                <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
+                                <button name="action" value="delete" class="btn btn-sm btn-danger me-1">Sil</button>
+                                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#navModal<?php echo $m['id']; ?>">Başlıklar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
                 <?php foreach($modules as $m): ?>
                 <div class="modal fade" id="navModal<?php echo $m['id']; ?>" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
@@ -767,7 +840,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <?php endif; ?>
             </div>
             <div class="tab-pane fade" id="profiles" role="tabpanel">
-                <div class="table-responsive">
+                <div class="table-responsive stack-table">
                 <table class="table table-sm">
                     <tr><th>Kullanıcı ID</th><th>Ad Soyad</th><th>Birim</th><th>Telefon</th><th>Doğum</th><th></th><th></th></tr>
                     <?php foreach ($profiles as $p): ?>
@@ -789,6 +862,38 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         </tr>
                     <?php endforeach; ?>
                 </table>
+</div>
+<div class="stack-cards">
+    <?php foreach ($profiles as $p): ?>
+    <div class="card mb-2">
+        <form method="post" class="card-body">
+            <input type="hidden" name="section" value="profiles">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="user_id" value="<?php echo $p['user_id']; ?>">
+            <div class="mb-2"><strong>Kullanıcı ID:</strong> <?php echo $p['user_id']; ?></div>
+            <div class="mb-2">
+                <label class="form-label small">Ad Soyad</label>
+                <input type="text" name="full_name" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['full_name']); ?>">
+            </div>
+            <div class="mb-2">
+                <label class="form-label small">Birim</label>
+                <input type="text" name="department" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['department']); ?>">
+            </div>
+            <div class="mb-2">
+                <label class="form-label small">Telefon</label>
+                <input type="text" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>">
+            </div>
+            <div class="mb-2">
+                <label class="form-label small">Doğum</label>
+                <input type="date" name="birthdate" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['birthdate']); ?>">
+            </div>
+            <div class="mt-2">
+                <button class="btn btn-sm btn-secondary">Kaydet</button>
+                <button type="button" class="btn btn-sm btn-info ms-1" data-bs-toggle="modal" data-bs-target="#profileModal<?php echo $p['user_id']; ?>">Detaylar</button>
+            </div>
+        </form>
+    </div>
+    <?php endforeach; ?>
 </div>
 <?php foreach($profiles as $p): ?>
 <div class="modal fade" id="profileModal<?php echo $p['user_id']; ?>" tabindex="-1" aria-hidden="true">

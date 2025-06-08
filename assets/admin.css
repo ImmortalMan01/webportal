@@ -95,3 +95,11 @@ body.light .admin-sidebar{
   max-height:50vh;
   overflow-y:auto;
 }
+
+/* stacked card layout for small screens */
+.stack-cards{display:none;}
+
+@media(max-width:575.98px){
+  .stack-table{display:none;}
+  .stack-cards{display:block;}
+}
