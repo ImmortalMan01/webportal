@@ -19,6 +19,9 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS activity_log (
 
 $user = trim($_GET['user'] ?? '');
 $action = trim($_GET['action'] ?? '');
+$start = trim($_GET['start'] ?? '');
+$end = trim($_GET['end'] ?? '');
+$detail = trim($_GET['detail'] ?? '');
 $where = [];
 $params = [];
 if ($user !== '') {
@@ -28,6 +31,18 @@ if ($user !== '') {
 if ($action !== '') {
     $where[] = 'l.action LIKE ?';
     $params[] = $action;
+}
+if ($detail !== '') {
+    $where[] = 'l.details LIKE ?';
+    $params[] = "%$detail%";
+}
+if ($start !== '') {
+    $where[] = 'l.timestamp >= ?';
+    $params[] = $start . ' 00:00:00';
+}
+if ($end !== '') {
+    $where[] = 'l.timestamp <= ?';
+    $params[] = $end . ' 23:59:59';
 }
 $sql = "SELECT l.id, u.username, l.action, l.timestamp, l.details FROM activity_log l JOIN users u ON l.user_id=u.id";
 if ($where) {
@@ -43,17 +58,20 @@ $logs = $stmt->fetchAll();
 <head>
     <meta charset='UTF-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Activity Log</title>
+    <title>Etkinlik Günlüğü</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
 <div class="container my-4">
-    <h2 class="mb-3">Activity Log</h2>
+    <h2 class="mb-3">Etkinlik Günlüğü</h2>
     <form method="get" class="row g-2 mb-3">
-        <div class="col-12 col-md-3"><input type="text" name="user" class="form-control" placeholder="Kullanıcı" value="<?php echo htmlspecialchars($user); ?>"></div>
-        <div class="col-12 col-md-3"><input type="text" name="action" class="form-control" placeholder="İşlem" value="<?php echo htmlspecialchars($action); ?>"></div>
-        <div class="col-12 col-md-2"><button class="btn btn-primary">Filtrele</button></div>
+        <div class="col-12 col-md-2"><input type="text" name="user" class="form-control" placeholder="Kullanıcı" value="<?php echo htmlspecialchars($user); ?>"></div>
+        <div class="col-12 col-md-2"><input type="text" name="action" class="form-control" placeholder="İşlem" value="<?php echo htmlspecialchars($action); ?>"></div>
+        <div class="col-12 col-md-2"><input type="text" name="detail" class="form-control" placeholder="Ayrıntı" value="<?php echo htmlspecialchars($detail); ?>"></div>
+        <div class="col-12 col-md-2"><input type="date" name="start" class="form-control" value="<?php echo htmlspecialchars($start); ?>"></div>
+        <div class="col-12 col-md-2"><input type="date" name="end" class="form-control" value="<?php echo htmlspecialchars($end); ?>"></div>
+        <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Filtrele</button></div>
     </form>
     <table class="table table-sm table-striped">
         <tr><th>ID</th><th>Kullanıcı</th><th>İşlem</th><th>Zaman</th><th>Ayrıntı</th></tr>
