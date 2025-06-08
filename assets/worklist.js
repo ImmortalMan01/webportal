@@ -55,7 +55,7 @@
       const table=document.createElement('table');
       const thead=document.createElement('thead');
       const trh=document.createElement('tr');
-      ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{ const th=document.createElement('th'); th.textContent=d; trh.appendChild(th); });
+      ['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'].forEach(d=>{ const th=document.createElement('th'); th.textContent=d; trh.appendChild(th); });
       thead.appendChild(trh); table.appendChild(thead);
       const tbody=document.createElement('tbody');
 
