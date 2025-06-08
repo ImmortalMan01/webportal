@@ -39,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($message) echo "<div class='alert alert-info'>$message</div>"; ?>
         <form method="post">
             <div class="inputBx">
-                <input type="text" name="identifier" placeholder="Kullanıcı Adı veya E-posta" required>
+                <label for="identifier" class="form-label">Kullanıcı Adı veya E-posta</label>
+                <input id="identifier" type="text" name="identifier" placeholder="Kullanıcı Adı veya E-posta" required>
             </div>
             <div class="inputBx">
                 <input type="submit" value="Gönder">

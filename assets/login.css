@@ -80,6 +80,11 @@ body {
   position: relative;
   width: 100%;
 }
+.login .inputBx label {
+  display: block;
+  margin-bottom: 5px;
+  color: #fff;
+}
 .login .inputBx input {
   position: relative;
   width: 100%;
