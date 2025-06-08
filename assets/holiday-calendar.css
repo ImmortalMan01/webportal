@@ -126,6 +126,7 @@
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 4px;
+  min-height: 452px;
 }
 .hc-container th {
   position: relative;
@@ -154,8 +155,13 @@
   background-color: #dfe7e7;
 }
 .hc-container td:empty { background-color: transparent; }
-.hc-container .is-holiday { color: #fff; background-color: #548383; }
+.hc-container .is-holiday { color: #fff; }
+.hc-container .is-holiday.g { background-color: #3fa7ff; }
+.hc-container .is-holiday.n { background-color: #dc3545; }
+.hc-container .is-holiday.i { background-color: #198754; }
+.hc-container .is-holiday.d { background-color: #6c757d; }
 .hc-container .day { opacity: 0; font-size: 1.1em; font-weight: bold; transition: opacity .4s; }
+.hc-container .is-holiday .day { opacity: 1; }
 .hc-container .split { position: absolute; bottom: 4px; right: 4px; }
 .hc-container .holiday { opacity: 0; margin-top: 8px; font-size: .8em; transition: opacity .4s; }
 .hc-container .notes { width: 708px; margin: 64px auto 0; color: #548383; line-height: 1.8; }
