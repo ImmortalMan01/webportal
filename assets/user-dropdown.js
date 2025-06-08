@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   dropdowns.forEach(dd=>{
     const btn=dd.querySelector('.drop-down__button');
     if(!btn) return;
+    if(btn.id==='mobileMenuBtn' && window.innerWidth<768) return;
     btn.addEventListener('click',e=>{
       e.stopPropagation();
       dd.classList.toggle('drop-down--active');
