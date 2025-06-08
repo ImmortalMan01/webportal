@@ -29,17 +29,33 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   window.showToast=function(from,msg){
-    const truncated = msg.length>80 ? msg.slice(0,77)+'...' : msg;
-    const displayMsg = escapeHtml(truncated);
+    const text = String(msg||'');
+    const truncated = text.length>80 ? text.slice(0,77)+'...' : text;
+
     const note=document.createElement('div');
     note.className='msg-toast';
-    note.innerHTML=`<div class="msg-toast__inner">
-      <div class="msg-toast__avatar" style="background:${colorFromName(from)}">${from.charAt(0).toUpperCase()}</div>
-      <div class="msg-toast__content">
-        <div class="msg-toast__title">${from}</div>
-        <div class="msg-toast__message">${displayMsg}</div>
-      </div>
-    </div>`;
+    const inner=document.createElement('div');
+    inner.className='msg-toast__inner';
+
+    const avatar=document.createElement('div');
+    avatar.className='msg-toast__avatar';
+    avatar.style.background=colorFromName(from);
+    avatar.textContent=from.charAt(0).toUpperCase();
+
+    const content=document.createElement('div');
+    content.className='msg-toast__content';
+    const title=document.createElement('div');
+    title.className='msg-toast__title';
+    title.textContent=from;
+    const message=document.createElement('div');
+    message.className='msg-toast__message';
+    message.textContent=truncated;
+
+    content.appendChild(title);
+    content.appendChild(message);
+    inner.appendChild(avatar);
+    inner.appendChild(content);
+    note.appendChild(inner);
     note.addEventListener('click',()=>{
       const prefix=location.pathname.includes('/pages/')?'':'pages/';
       location.href=prefix+'messages.php?user='+encodeURIComponent(from);

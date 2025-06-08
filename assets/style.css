@@ -226,6 +226,7 @@ body.dark .msg-toast__avatar {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-word;
 }
 @keyframes msgIn {
   from { opacity:0; transform: translateY(20px) scale(0.8); filter: blur(4px); }
