@@ -75,7 +75,8 @@
             td.appendChild(divDay);
             const entry=data[dateStr];
             if(entry){
-              td.classList.add('is-holiday');
+              const code = entry.type.charAt(0);
+              td.classList.add('is-holiday', code);
               const hol=document.createElement('div');
               hol.className='holiday';
               hol.textContent=capitalize(entry.type);
@@ -97,12 +98,28 @@
     }
 
     wrap.appendChild(ul);
+
+    const legend=document.createElement('div');
+    legend.className='legend';
+    [
+      ['Gündüz','g'],
+      ['Nöbet','n'],
+      ['İzin','i'],
+      ['Diğer','d']
+    ].forEach(([text,cls])=>{
+      const span=document.createElement('span');
+      const color=document.createElement('div');
+      color.className='color '+cls;
+      span.appendChild(color);
+      span.appendChild(document.createTextNode(text));
+      legend.appendChild(span);
+    });
+    wrap.appendChild(legend);
+
     cont.appendChild(wrap);
 
     if(typeof setupHolidayCalendar==='function') setupHolidayCalendar(ul);
   }
-
-  function bgColor(t){ return t==='gündüz'? '#0b3e6f' : t==='nöbet'? '#661314' : t==='izin'? '#0f4d2f' : '#3a3a3a'; }
 
   // Modal logic
   const modal = document.getElementById('wls-modal');
