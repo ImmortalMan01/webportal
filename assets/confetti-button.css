@@ -12,8 +12,7 @@ canvas {
   width: 100%;
   z-index: 2;
 }
-
-button {
+#login-button {
   background: none;
   border: none;
   color: #f4f7ff;
@@ -22,18 +21,15 @@ button {
   font-size: 14px;
   font-weight: 500;
   height: 40px;
-  left: 50%;
   outline: none;
   overflow: hidden;
   padding: 0 10px;
-  position: fixed;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 190px;
+  position: relative;
+  width: 100%;
   -webkit-tap-highlight-color: transparent;
   z-index: 1;
 }
-button::before {
+#login-button::before {
   background: #1f2335;
   border-radius: 50px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, .4) inset;
@@ -47,26 +43,26 @@ button::before {
 }
 
 /* READY STATE */
-button.ready .submitMessage svg {
+#login-button.ready .submitMessage svg {
   opacity: 1;
   top: 1px;
   transition: top .4s ease 600ms, opacity .3s linear 600ms;
 }
-button.ready .submitMessage .button-text span {
+#login-button.ready .submitMessage .button-text span {
   top: 0;
   opacity: 1;
   transition: all .2s ease calc(var(--dr) + 600ms);
 }
 
 /* LOADING STATE */
-button.loading::before {
+#login-button.loading::before {
   transition: width .3s ease;
   width: 80%;
 }
-button.loading .loadingMessage {
+#login-button.loading .loadingMessage {
   opacity: 1;
 }
-button.loading .loadingCircle {
+#login-button.loading .loadingCircle {
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-name: loading;
@@ -74,33 +70,33 @@ button.loading .loadingCircle {
 }
 
 /* COMPLETE STATE */
-button.complete .submitMessage svg {
+#login-button.complete .submitMessage svg {
   top: -30px;
   transition: none;
 }
-button.complete .submitMessage .button-text span {
+#login-button.complete .submitMessage .button-text span {
   top: -8px;
   transition: none;
 }
-button.complete .loadingMessage {
+#login-button.complete .loadingMessage {
   top: 80px;
 }
-button.complete .successMessage .button-text span {
+#login-button.complete .successMessage .button-text span {
   left: 0;
   opacity: 1;
   transition: all .2s ease calc(var(--d) + 1000ms);
 }
-button.complete .successMessage svg {
+#login-button.complete .successMessage svg {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset .3s ease-in-out 1.4s;
 }
 
-.button-text span {
+#login-button .button-text span {
   opacity: 0;
   position: relative;
 }
 
-.message {
+#login-button .message {
   left: 50%;
   position: absolute;
   top: 50%;
@@ -108,7 +104,7 @@ button.complete .successMessage svg {
   width: 100%;
 }
 
-.message svg {
+#login-button .message svg {
   display: inline-block;
   fill: none;
   margin-right: 5px;
@@ -117,11 +113,11 @@ button.complete .successMessage svg {
   stroke-width: 2;
 }
 
-.submitMessage .button-text span {
+#login-button .submitMessage .button-text span {
   top: 8px;
   transition: all .2s ease var(--d);
 }
-.submitMessage svg {
+#login-button .submitMessage svg {
   color: #5c86ff;
   margin-left: -1px;
   opacity: 0;
@@ -131,21 +127,21 @@ button.complete .successMessage svg {
   width: 14px;
 }
 
-.loadingMessage {
+#login-button .loadingMessage {
   opacity: 0;
   transition: opacity .3s linear .3s, top .4s cubic-bezier(.22,0,.41,-0.57);
 }
-.loadingMessage svg {
+#login-button .loadingMessage svg {
   fill: #5c86ff;
   margin: 0;
   width: 22px;
 }
 
-.successMessage .button-text span {
+#login-button .successMessage .button-text span {
   left: 5px;
   transition: all .2s ease var(--dr);
 }
-.successMessage svg {
+#login-button .successMessage svg {
   color: #5cffa1;
   stroke-dasharray: 20;
   stroke-dashoffset: 20;
@@ -153,6 +149,6 @@ button.complete .successMessage svg {
   width: 14px;
 }
 
-.loadingCircle:nth-child(2) { animation-delay: .1s; }
-.loadingCircle:nth-child(3) { animation-delay: .2s; }
+#login-button .loadingCircle:nth-child(2) { animation-delay: .1s; }
+#login-button .loadingCircle:nth-child(3) { animation-delay: .2s; }
 
