@@ -162,6 +162,9 @@
 .hc-container ul.inactive > li:not(.active) {
   pointer-events: none;
 }
+.hc-container li:not(.active) td {
+  pointer-events: none;
+}
 .hc-container .active { z-index: 2; transition-delay: 0s; }
 .hc-container .active article { cursor: auto; transform: translate(-50%, -50%) scale(1); }
 .hc-container li:nth-child(4n+1).active article { transform: translate(calc(-50% + 220px), -50%) scale(1); }
