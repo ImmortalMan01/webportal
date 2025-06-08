@@ -41,7 +41,7 @@ body.home-dashboard::before{
   transition:transform .3s;
 }
 .portal-nav.hide{transform:translateY(-100%);}
-.portal-logo{font-size:24px;font-weight:700;text-transform:uppercase;}
+.portal-logo{font-size:24px;font-weight:700;text-transform:uppercase;white-space:nowrap;}
 .nav-left{display:flex;flex-direction:column;line-height:1.2;}
 .nav-left .welcome{font-size:14px;margin-top:2px;}
 .role-pill{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:9999px;font-size:12px;margin-top:2px;display:inline-block;}
@@ -113,6 +113,8 @@ body.home-dashboard::before{
 .home-dashboard.light .nav-actions .logout-btn{background:#dc3545;color:#fff;}
 @media (max-width:600px){
   .portal-nav{height:64px;padding:0 16px;}
+  .nav-left{min-width:0;flex:1 1 auto;}
+  .portal-logo{font-size:clamp(14px,5vw,24px);}
   .nav-left .welcome{font-size:12px;}
   .nav-actions .logout-btn{display:none;}
 }
