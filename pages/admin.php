@@ -359,6 +359,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
         <a class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" href="#messages" role="tab">Mesajlar</a>
         <a class="nav-link" id="profiles-tab" data-bs-toggle="tab" data-bs-target="#profiles" href="#profiles" role="tab">Profiller</a>
         <a class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" href="#settings" role="tab">Ayarlar</a>
+        <a class="nav-link" href="activity_log.php"><i class="fa-solid fa-list-check me-1"></i>Activity Log</a>
     </nav>
     <main class="admin-content">
         <h2 class="mb-4">Admin Panel</h2>
