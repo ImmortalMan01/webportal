@@ -52,7 +52,7 @@ if($theme === 'dashboard'):
         <ul class="drop-down__menu">
           <?php if($newAnnCount>0 && !empty($newAnnouncements)): ?>
             <?php foreach($newAnnouncements as $ann): ?>
-              <li class="drop-down__item"><a href="#" class="newAnnLink" data-content="<?php echo htmlspecialchars($ann['content'], ENT_QUOTES); ?>" data-date="<?php echo $ann['publish_date']; ?>"><?php echo htmlspecialchars($ann['content']); ?></a></li>
+              <li class="drop-down__item"><a href="#" class="newAnnLink notif-text" data-content="<?php echo htmlspecialchars($ann['content'], ENT_QUOTES); ?>" data-date="<?php echo $ann['publish_date']; ?>"><?php echo htmlspecialchars($ann['content']); ?></a></li>
             <?php endforeach; ?>
           <?php else: ?>
             <li class="drop-down__item">Bildirim yok</li>
