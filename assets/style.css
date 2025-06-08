@@ -38,10 +38,12 @@ body {
 body.light {
   background-color: #f8f9fa;
   color: #212529;
+  color-scheme: light;
 }
 body.dark {
   background-color: #121212;
   color: #f8f9fa;
+  color-scheme: dark;
 }
 body.dark .card {
   background-color: #1e1e1e;

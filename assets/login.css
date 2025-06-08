@@ -113,20 +113,11 @@ body {
   color: rgba(255, 255, 255, 0.75);
 }
 .login .inputBx select {
-  position: relative;
   width: 100%;
   padding: 12px 20px;
-  background: transparent;
   border: 2px solid #fff;
   border-radius: 40px;
   font-size: 1.2em;
-  color: #fff;
-  box-shadow: none;
-  outline: none;
-}
-.login .inputBx select option {
-  color: #000;
-  background: #fff;
 }
 
 .login .links {
