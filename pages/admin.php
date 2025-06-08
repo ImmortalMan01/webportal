@@ -948,7 +948,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                                 <td class="align-middle"><?php echo $p['user_id']; ?></td>
                                 <td><input type="text" name="full_name" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['full_name']); ?>"></td>
                                 <td><input type="text" name="department" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['department']); ?>"></td>
-                                <td><input type="text" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>"></td>
+                                <td><input type="tel" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>"></td>
                                 <td><input type="date" name="birthdate" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['birthdate']); ?>"></td>
                                 <td>
                                     <button class="btn btn-sm btn-secondary">Kaydet</button>
@@ -977,7 +977,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
             </div>
             <div class="mb-2">
                 <label class="form-label small">Telefon</label>
-                <input type="text" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>">
+                <input type="tel" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>">
             </div>
             <div class="mb-2">
                 <label class="form-label small">Doğum</label>
@@ -1018,7 +1018,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label">Telefon</label>
-                        <input type="text" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>">
+                        <input type="tel" name="phone" class="form-control form-control-sm" value="<?php echo htmlspecialchars($p['phone']); ?>">
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label">Doğum</label>
