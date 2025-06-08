@@ -16,8 +16,10 @@ body {
 }
 .ring {
   position: relative;
-  width: 500px;
-  height: 500px;
+  width: 90vw;
+  height: 90vw;
+  max-width: 500px;
+  max-height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
