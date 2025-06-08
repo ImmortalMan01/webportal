@@ -389,7 +389,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                             <td><?php echo htmlspecialchars($info['email']); ?></td>
                             <td><?php echo htmlspecialchars($info['role']); ?></td>
                             <td>
-                                <form method="post" class="d-flex">
+                                <form method="post" class="d-flex flex-wrap">
                                     <input type="hidden" name="section" value="users">
                                     <input type="hidden" name="action" value="changerole">
                                     <input type="hidden" name="username" value="<?php echo htmlspecialchars($info['username']); ?>">
@@ -692,7 +692,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <tr><th>Başlık</th><th>Slug</th><th>İçerik</th><th></th></tr>
                     <?php foreach($site_pages as $pg): ?>
                         <tr>
-                            <form method="post" class="d-flex">
+                            <form method="post" class="d-flex flex-wrap">
                                 <input type="hidden" name="section" value="pages">
                                 <input type="hidden" name="id" value="<?php echo $pg['id']; ?>">
                                 <td><input type="text" name="title" class="form-control form-control-sm" value="<?php echo htmlspecialchars($pg['title']); ?>"></td>
@@ -751,7 +751,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <tr><th>Kullanıcı</th><th>Deneyim</th><th>Tarih</th><th></th></tr>
                     <?php foreach($experiences as $ex): ?>
                         <tr>
-                            <form method="post" class="d-flex align-items-center">
+                            <form method="post" class="d-flex flex-wrap align-items-center">
                                 <input type="hidden" name="section" value="experiences">
                                 <input type="hidden" name="id" value="<?php echo $ex['id']; ?>">
                                 <td class="align-middle"><?php echo htmlspecialchars($ex['username']); ?></td>
@@ -845,7 +845,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <tr><th>Kullanıcı ID</th><th>Ad Soyad</th><th>Birim</th><th>Telefon</th><th>Doğum</th><th></th><th></th></tr>
                     <?php foreach ($profiles as $p): ?>
                         <tr>
-                            <form method="post" class="d-flex">
+                            <form method="post" class="d-flex flex-wrap">
                                 <input type="hidden" name="section" value="profiles">
                                 <input type="hidden" name="action" value="update">
                                 <input type="hidden" name="user_id" value="<?php echo $p['user_id']; ?>">
