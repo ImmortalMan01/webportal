@@ -13,33 +13,49 @@ if($theme === 'dashboard'):
     $pdo->exec("CREATE TABLE IF NOT EXISTS announcements (id INT AUTO_INCREMENT PRIMARY KEY, content TEXT NOT NULL, publish_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)");
     $announcements = $pdo->query('SELECT content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
 ?>
-<nav class="portal-nav">
+<nav class="portal-nav" aria-label="Üst Menü">
 <script>document.body.classList.add('home-dashboard');</script>
   <div class="nav-left">
     <div class="portal-logo"><?php echo htmlspecialchars($site_name); ?></div>
     <div class="welcome">Hoşgeldiniz, <?php echo htmlspecialchars($full); ?></div>
     <span class="role-pill"><?php echo htmlspecialchars($role); ?></span>
   </div>
-  <div class="nav-right">
-    <div class="drop-down">
-      <div class="drop-down__button">
-        <span class="drop-down__name">Ayarlar</span>
-        <i class="fa-solid fa-gear drop-down__icon"></i>
-      </div>
+  <div class="nav-actions">
+    <button id="notifBtn" class="icon-btn" aria-label="Bildirimler">
+      <span class="material-icons">notifications</span>
+      <?php if(!empty($unreadCount)): ?><span class="badge"><?php echo $unreadCount; ?></span><?php endif; ?>
+    </button>
+    <button id="themeToggleGlobal" class="icon-btn" aria-label="Tema">🌙</button>
+    <div class="drop-down avatar">
+      <button class="drop-down__button icon-btn" aria-label="Kullanıcı">
+        <?php echo strtoupper(mb_substr($full,0,1)); ?>
+      </button>
       <div class="drop-down__menu-box">
         <ul class="drop-down__menu">
-          <li class="drop-down__item"><a href="pages/profile.php"><i class="fa-solid fa-user drop-down__item-icon"></i><span class="drop-down__item-text">Profil</span></a></li>
-          <li class="drop-down__item"><a href="pages/messages.php"><i class="fa-solid fa-envelope drop-down__item-icon"></i><span class="drop-down__item-text">Mesajlar</span></a></li>
-          <?php if($role === 'admin'): ?>
-          <li class="drop-down__item"><a href="pages/admin.php"><i class="fa-solid fa-toolbox drop-down__item-icon"></i><span class="drop-down__item-text">Admin Paneli</span></a></li>
-          <?php endif; ?>
+          <li class="drop-down__item"><a href="pages/profile.php">Profil</a></li>
+          <li class="drop-down__item"><a href="pages/logout.php">Çıkış</a></li>
         </ul>
       </div>
     </div>
-    <button id="themeToggleGlobal" aria-label="Tema" role="button">🌙</button>
-    <a href="pages/logout.php" class="logout-btn" aria-label="Çıkış" role="button"><i class="fa-solid fa-arrow-right-from-bracket"></i> Çıkış</a>
+    <button id="mobileMenuBtn" class="icon-btn" aria-label="Ayarlar">
+      <span class="material-icons">menu</span>
+    </button>
   </div>
 </nav>
+<div id="mobileMenu" class="mobile-menu" aria-label="Mobil Menü">
+  <button id="closeMenu" class="close-btn" aria-label="Kapat">✕</button>
+  <div class="menu-welcome">Hoşgeldiniz, <?php echo htmlspecialchars($full); ?></div>
+  <ul class="menu-list">
+    <li><a href="pages/profile.php"><span class="material-icons">person</span> Profil</a></li>
+    <li><a href="pages/messages.php"><span class="material-icons">mail</span> Mesajlar</a></li>
+    <li><a href="index.php?module=shift"><span class="material-icons">list</span> Çalışma Listesi</a></li>
+    <li><a href="index.php?module=training"><span class="material-icons">school</span> Eğitimler</a></li>
+    <?php if($role === 'admin'): ?>
+    <li><a href="pages/admin.php"><span class="material-icons">admin_panel_settings</span> Admin Paneli</a></li>
+    <?php endif; ?>
+    <li><a href="pages/logout.php"><span class="material-icons">logout</span> Çıkış</a></li>
+  </ul>
+</div>
 <div class="dashboard">
   <?php
     $modCols = $pdo->query("SHOW COLUMNS FROM modules")->fetchAll(PDO::FETCH_COLUMN);
