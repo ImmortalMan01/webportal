@@ -112,6 +112,8 @@ body {
 .login .inputBx .input-group .form-control {
   border-right: none;
   border-radius: 40px 0 0 40px;
+  width: auto;
+  flex: 1 1 auto;
 }
 
 .login .inputBx .input-group-text {
@@ -121,6 +123,8 @@ body {
   background: transparent;
   color: #fff;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 .login .inputBx .toggle-password {
   cursor: pointer;
