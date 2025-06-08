@@ -2,7 +2,6 @@
   const storageKey = 'acibadem-requests';
   let data = JSON.parse(localStorage.getItem(storageKey) || '{}');
   const monthNames = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-  const dayNames = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
   let current = new Date();
   function capitalize(text){
     const map={i:'İ',ş:'Ş',ğ:'Ğ',ü:'Ü',ö:'Ö',ç:'Ç',ı:'I'};
@@ -24,60 +23,83 @@
 
   function renderCalendar(){
     const year = current.getFullYear();
-    const month = current.getMonth();
-    const first = new Date(year, month, 1);
-    const startDay = (first.getDay()+6)%7; // monday start
-    const daysInMonth = new Date(year, month+1, 0).getDate();
-    const tbl = document.createElement('table');
-    const thead = document.createElement('thead');
-    const trh = document.createElement('tr');
-    dayNames.forEach(d=>{ const th=document.createElement('th'); th.textContent=d; trh.appendChild(th); });
-    thead.appendChild(trh); tbl.appendChild(thead);
-    const tbody = document.createElement('tbody');
-    let d = 1; let done=false;
-    for(let r=0;r<6;r++){
-      const tr=document.createElement('tr');
-      for(let c=0;c<7;c++){
-        const td=document.createElement('td');
-        if(r===0 && c<startDay || d>daysInMonth){ td.innerHTML=''; } else {
-          const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-          const span=document.createElement('span'); span.textContent=d; td.appendChild(span);
-          const entry=data[dateStr];
-          if(entry){
-            const code=document.createElement('div');
-            code.className='code';
-            code.textContent=entry.type[0].toUpperCase();
-            code.classList.add(entry.type.charAt(0));
-            td.appendChild(code);
-            const status=document.createElement('div');
-            status.className='status';
-            status.textContent=`${capitalize(entry.type)} İsteğinde Bulunuldu Onay Bekleniyor`;
-            td.appendChild(status);
-            td.style.background=bgColor(entry.type);
-          }
-          td.dataset.date=dateStr;
-          td.addEventListener('click',()=>openModal(dateStr));
-          d++; if(d>daysInMonth) done=true;
-        }
-        tr.appendChild(td);
-      }
-      tbody.appendChild(tr);
-      if(done) break;
-    }
-    tbl.appendChild(tbody);
-    const cont=document.getElementById('calendarComponent');
+    const cont = document.getElementById('calendarComponent');
+    if(!cont) return;
     cont.innerHTML='';
-    const header=document.createElement('div');
-    header.className='cal-header';
-    const prev=document.createElement('button'); prev.textContent='Önceki Ay'; prev.addEventListener('click',()=>{current.setMonth(current.getMonth()-1); renderCalendar();});
-    const next=document.createElement('button'); next.textContent='Sonraki Ay'; next.addEventListener('click',()=>{current.setMonth(current.getMonth()+1); renderCalendar();});
-    const title=document.createElement('div'); title.textContent=monthNames[month]+ ' '+year;
-    header.appendChild(prev); header.appendChild(title); header.appendChild(next);
-    cont.appendChild(header); cont.appendChild(tbl);
-    const legend=document.createElement('div'); legend.className='legend';
-    legend.innerHTML=`<span><div class="color g"></div>Gündüz</span><span><div class="color n"></div>Nöbet</span><span><div class="color i"></div>İzin</span><span><div class="color d"></div>Diğer</span>`;
-    cont.appendChild(legend);
-    tbl.classList.add('wl-calendar');
+
+    const wrap=document.createElement('div');
+    wrap.className='hc-container';
+
+    const y=document.createElement('h1');
+    y.className='year';
+    y.textContent='\u2014 '+year+' \u2014';
+    wrap.appendChild(y);
+
+    const desc=document.createElement('h2');
+    desc.className='description';
+    desc.textContent='İstek/İzin Takvimi';
+    wrap.appendChild(desc);
+
+    const ul=document.createElement('ul');
+
+    for(let month=0; month<12; month++){
+      const li=document.createElement('li');
+      const article=document.createElement('article');
+      article.tabIndex=0;
+      article.innerHTML='<div class="outline"></div><div class="dismiss"></div><div class="binding"></div>';
+      const h=document.createElement('h1');
+      h.textContent=monthNames[month];
+      article.appendChild(h);
+
+      const table=document.createElement('table');
+      const thead=document.createElement('thead');
+      const trh=document.createElement('tr');
+      ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{ const th=document.createElement('th'); th.textContent=d; trh.appendChild(th); });
+      thead.appendChild(trh); table.appendChild(thead);
+      const tbody=document.createElement('tbody');
+
+      const first=new Date(year, month,1);
+      const start=first.getDay();
+      const days=new Date(year, month+1,0).getDate();
+      let day=1;
+      for(let r=0;r<6;r++){
+        const tr=document.createElement('tr');
+        for(let c=0;c<7;c++){
+          const td=document.createElement('td');
+          if(r===0 && c<start || day>days){
+          }else{
+            const dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            const divDay=document.createElement('div');
+            divDay.className='day';
+            divDay.textContent=day;
+            td.appendChild(divDay);
+            const entry=data[dateStr];
+            if(entry){
+              td.classList.add('is-holiday');
+              const hol=document.createElement('div');
+              hol.className='holiday';
+              hol.textContent=capitalize(entry.type);
+              td.appendChild(hol);
+            }
+            td.dataset.date=dateStr;
+            td.addEventListener('click',e=>{e.stopPropagation(); openModal(dateStr);});
+            day++;
+          }
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+        if(day>days) break;
+      }
+      table.appendChild(tbody);
+      article.appendChild(table);
+      li.appendChild(article);
+      ul.appendChild(li);
+    }
+
+    wrap.appendChild(ul);
+    cont.appendChild(wrap);
+
+    if(typeof setupHolidayCalendar==='function') setupHolidayCalendar(ul);
   }
 
   function bgColor(t){ return t==='gündüz'? '#0b3e6f' : t==='nöbet'? '#661314' : t==='izin'? '#0f4d2f' : '#3a3a3a'; }
