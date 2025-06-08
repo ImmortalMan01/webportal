@@ -53,8 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="email" name="email" placeholder="E-posta" required>
                 </div>
                 <div class="inputBx">
-                    <input type="password" name="password" placeholder="Şifre" required>
-                    <i class="toggle-password bi bi-eye"></i>
+                    <div class="input-group">
+                        <input type="password" name="password" placeholder="Şifre" class="form-control" required>
+                        <span class="input-group-text"><i class="toggle-password bi bi-eye"></i></span>
+                    </div>
                 </div>
                 <div class="inputBx">
                     <select name="role">
@@ -78,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script>
         document.querySelectorAll('.toggle-password').forEach(function(el) {
             el.addEventListener('click', function() {
-                const input = this.previousElementSibling;
+                const input = this.closest('.input-group').querySelector('input');
                 if (input.type === 'password') {
                     input.type = 'text';
                     this.classList.remove('bi-eye');
