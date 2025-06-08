@@ -14,6 +14,9 @@
 .drop-down__item:hover{background:#f8f9fa;}
 .drop-down__item a{display:flex;align-items:center;width:100%;text-decoration:none;color:inherit;white-space:normal;word-break:break-word;}
 
+/* Truncate long notification text */
+.drop-down__item .notif-text{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
 /* Dark theme overrides */
 body.dark .drop-down__menu-box{background:#1f1f1f;border-color:#333;}
 body.dark .drop-down__item{color:#f8f9fa;border-bottom:1px solid #444;}
