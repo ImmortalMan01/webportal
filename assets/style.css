@@ -123,6 +123,10 @@ body.dark .btn-close {
 
 /* Dark theme tweaks for activity log */
 body.dark .table {
+  --bs-table-bg: #1e1e1e;
+  --bs-table-color: #f8f9fa;
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.05);
+  --bs-table-border-color: #343a40;
   color: #f8f9fa;
   background-color: #1e1e1e;
 }
