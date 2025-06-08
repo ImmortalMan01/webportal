@@ -78,8 +78,8 @@ body.home-dashboard::before{
 .badge-green{background:linear-gradient(90deg,#0dd4a3,#0bad88);}
 .badge-blue{background:linear-gradient(90deg,#28c46b,#1aa957);}
 .badge-orange{background:linear-gradient(90deg,#ff9a28,#ff7a00);}
-.announcements{max-width:1000px;margin:24px auto;padding:24px;}
-.announcements h3{font-size:20px;margin-bottom:16px;color:#fff;}
+.announcements{max-width:1200px;margin:24px auto;padding:24px;}
+.announcements h3{font-size:20px;margin-bottom:16px;color:#fff;white-space:nowrap;}
 .home-dashboard.light .announcements h3{color:#212529;}
 .announcement-item{border-bottom:1px solid rgba(255,255,255,0.1);padding:8px 0;cursor:pointer;}
 .announcement-item:last-child{border-bottom:none;}
