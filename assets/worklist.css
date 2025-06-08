@@ -27,13 +27,18 @@ body.worklist-page section.card {
 
 .wl-header {
   height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
   background: rgba(0,0,0,0.3);
   backdrop-filter: blur(6px);
   box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+.wl-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
 }
 .wl-header .left {
   font-weight: 700;
