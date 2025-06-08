@@ -19,7 +19,7 @@ function tr_upper(string $text): string {
   <header class="wl-header">
     <div class="left">
       <button id="wlSidebarToggle" class="menu-toggle" type="button"><i class="fa-solid fa-bars"></i></button>
-      <a href="index.php" class="home-link">Ana Sayfa</a>
+      <a href="index.php" class="home-link">Çalışma Listesi &amp; İstekler</a>
     </div>
   </header>
   <div class="wl-container">

@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   function openSidebar(){
+    if(window.innerWidth>768){
+      return; // desktop layout does not toggle
+    }
     sidebar.classList.add('open');
     if(!overlay){
       overlay=document.createElement('div');
@@ -23,6 +26,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   function toggleSidebar(){
+    if(window.innerWidth>768){
+      return; // ignore clicks on desktop
+    }
     if(sidebar.classList.contains('open')){
       closeSidebar();
     }else{
