@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(typeof currentUser==='undefined' || !currentUser) return;
   const container=document.createElement('div');
   container.id='msgToastContainer';
+  const MAX_HEIGHT=Math.round(window.innerHeight*0.5);
   document.body.appendChild(container);
 
   if(!window.NO_TOAST_WS){
@@ -38,6 +39,11 @@ document.addEventListener('DOMContentLoaded',()=>{
       location.href=prefix+'messages.php?user='+encodeURIComponent(from);
     });
     container.appendChild(note);
+    while(container.offsetHeight>MAX_HEIGHT){
+      const first=container.firstElementChild;
+      if(first && !first.classList.contains('note--out')) first.classList.add('note--out');
+      else break;
+    }
     setTimeout(()=>note.classList.add('note--out'),4000);
     note.addEventListener('animationend',()=>{if(note.classList.contains('note--out')) note.remove();});
   };
