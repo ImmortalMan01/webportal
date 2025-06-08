@@ -6,6 +6,7 @@ require __DIR__ . '/../includes/activity.php';
 $registrations_open = get_setting($pdo, 'registrations_open', '1');
 $hide_register_button = get_setting($pdo, 'hide_register_button', '0');
 $error = '';
+$login_success = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $u = $_POST['username'] ?? '';
     $p = $_POST['password'] ?? '';
@@ -18,8 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $up = $pdo->prepare('UPDATE users SET last_active=NOW() WHERE username=?');
         $up->execute([$user['username']]);
         log_activity($pdo, 'login');
-        header('Location: ../index.php');
-        exit;
+        $login_success = true;
     } else {
         $error = 'Hatalı kullanıcı adı veya şifre';
     }
@@ -56,7 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 <div class="inputBx">
-                    <input type="submit" value="Giriş Yap">
+                    <button type="submit" class="button" id="loginButton">
+                        <span class="text">Giriş Yap</span>
+                        <div class="progress-bar"></div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 11">
+                            <polyline class="check" points="1.4,5.8 5.1,9.5 11.6,2.1"/>
+                        </svg>
+                    </button>
                 </div>
                 <div class="links">
                     <a href="forgot_password.php">Şifremi Unuttum</a>
@@ -69,6 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/theme.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script>
+        window.loginSuccess = <?php echo $login_success ? 'true' : 'false'; ?>;
+    </script>
     <script>
         document.querySelectorAll('.toggle-password').forEach(function(el) {
             el.addEventListener('click', function() {
@@ -83,6 +93,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     this.classList.add('bi-eye');
                 }
             });
+        });
+
+        function playSuccessAnimation() {
+            var button = document.getElementById('loginButton');
+            var text = button.querySelector('.text');
+            var progressBar = button.querySelector('.progress-bar');
+            var checkPath = button.querySelector('.check');
+            var offset = anime.setDashoffset(checkPath);
+            checkPath.setAttribute('stroke-dashoffset', offset);
+            var startWidth = button.offsetWidth;
+
+            var tl = anime.timeline();
+            tl.add({ targets: text, duration: 1, opacity: 0 })
+              .add({ targets: button, duration: 1300, height: 10, width: startWidth, backgroundColor: '#2B2D2F', borderRadius: 100 })
+              .add({ targets: progressBar, duration: 2000, width: startWidth, easing: 'linear' })
+              .add({ targets: button, width: 0, duration: 1 })
+              .add({ targets: progressBar, width: 80, height: 80, delay: 500, duration: 750, borderRadius: 80, backgroundColor: '#71DFBE' })
+              .add({ targets: checkPath, strokeDashoffset: [offset, 0], duration: 200, easing: 'easeInOutSine' });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.loginSuccess) {
+                playSuccessAnimation();
+                setTimeout(function() {
+                    window.location.href = '../index.php';
+                }, 3500);
+            }
         });
     </script>
 </body>
