@@ -43,6 +43,7 @@ if (in_array($module, $protected) && !isset($_SESSION['user'])) {
     exit;
 }
 $unreadCount = 0;
+$mutedUsers = [];
 if (isset($_SESSION['user'])) {
     $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
     $stmt->execute([$_SESSION['user']]);
@@ -51,6 +52,9 @@ if (isset($_SESSION['user'])) {
         $q = $pdo->prepare('SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND is_read = 0');
         $q->execute([$uid]);
         $unreadCount = $q->fetchColumn();
+        $m = $pdo->prepare('SELECT u.username FROM user_mutes um JOIN users u ON um.muted_user_id=u.id WHERE um.user_id=?');
+        $m->execute([$uid]);
+        $mutedUsers = array_column($m->fetchAll(), 'username');
     }
 }
 function render_menu($mods) {
@@ -158,6 +162,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     <script src="assets/header.js"></script>
     <script>
         var currentUser = <?php echo json_encode($_SESSION['user'] ?? null); ?>;
+        var mutedUsers = <?php echo json_encode($mutedUsers); ?>;
     </script>
     <script src="assets/message-toast.js"></script>
 </body>
