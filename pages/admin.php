@@ -436,7 +436,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-12 col-md-4"><input type="text" name="time" class="form-control" placeholder="Vardiya" required></div>
                     <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
-                <div class="table-responsive">
+                <div class="table-responsive stack-table">
                 <table class="table table-sm table-striped">
                     <tr><th>Tarih</th><th>Vardiya</th><th></th></tr>
                     <?php foreach ($shifts as $s): ?>
@@ -455,6 +455,22 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <?php endforeach; ?>
                 </table>
 </div>
+                <div class="stack-cards">
+                    <?php foreach ($shifts as $s): ?>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div><strong>Tarih:</strong> <?php echo htmlspecialchars($s['date']); ?></div>
+                            <div><strong>Vardiya:</strong> <?php echo htmlspecialchars($s['time']); ?></div>
+                            <form method="post" class="mt-2">
+                                <input type="hidden" name="section" value="shifts">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="<?php echo $s['id']; ?>">
+                                <button class="btn btn-sm btn-danger">Sil</button>
+                            </form>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <div class="tab-pane fade" id="trainings" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -464,7 +480,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-12 col-md-4"><input type="text" name="description" class="form-control" placeholder="Açıklama" required></div>
                     <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
-                <ul class="list-group">
+                <ul class="list-group stack-table">
                     <?php foreach ($trainings as $t): ?>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span><strong><?php echo htmlspecialchars($t['title']); ?></strong> - <?php echo htmlspecialchars($t['description']); ?></span>
@@ -477,6 +493,21 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                         </li>
                     <?php endforeach; ?>
                 </ul>
+                <div class="stack-cards">
+                    <?php foreach ($trainings as $t): ?>
+                    <div class="card mb-2">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <span><strong><?php echo htmlspecialchars($t['title']); ?></strong> - <?php echo htmlspecialchars($t['description']); ?></span>
+                            <form method="post" class="ms-3">
+                                <input type="hidden" name="section" value="trainings">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="<?php echo $t['id']; ?>">
+                                <button class="btn btn-sm btn-danger">Sil</button>
+                            </form>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <div class="tab-pane fade" id="exams" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -486,7 +517,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-12 col-md-4"><input type="date" name="date" class="form-control" required></div>
                     <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
-                <div class="table-responsive">
+                <div class="table-responsive stack-table">
                 <table class="table table-sm table-striped">
                     <tr><th>Sınav</th><th>Tarih</th><th></th></tr>
                     <?php foreach ($exams as $e): ?>
@@ -505,6 +536,22 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <?php endforeach; ?>
                 </table>
 </div>
+                <div class="stack-cards">
+                    <?php foreach ($exams as $e): ?>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div><strong>Sınav:</strong> <?php echo htmlspecialchars($e['title']); ?></div>
+                            <div><strong>Tarih:</strong> <?php echo htmlspecialchars($e['date']); ?></div>
+                            <form method="post" class="mt-2">
+                                <input type="hidden" name="section" value="exams">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="<?php echo $e['id']; ?>">
+                                <button class="btn btn-sm btn-danger">Sil</button>
+                            </form>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <div class="tab-pane fade" id="procedures" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -687,7 +734,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-12 col-md-4"><input type="text" name="content" class="form-control" placeholder="İçerik" required></div>
                     <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
-                <div class="table-responsive">
+                <div class="table-responsive stack-table">
                 <table class="table table-sm table-striped">
                     <tr><th>Başlık</th><th>Slug</th><th>İçerik</th><th></th></tr>
                     <?php foreach($site_pages as $pg): ?>
@@ -707,6 +754,32 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <?php endforeach; ?>
                 </table>
 </div>
+                <div class="stack-cards">
+                    <?php foreach($site_pages as $pg): ?>
+                    <div class="card mb-2">
+                        <form method="post" class="card-body">
+                            <input type="hidden" name="section" value="pages">
+                            <input type="hidden" name="id" value="<?php echo $pg['id']; ?>">
+                            <div class="mb-2">
+                                <label class="form-label small">Başlık</label>
+                                <input type="text" name="title" class="form-control form-control-sm" value="<?php echo htmlspecialchars($pg['title']); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Slug</label>
+                                <input type="text" name="slug" class="form-control form-control-sm" value="<?php echo htmlspecialchars($pg['slug']); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">İçerik</label>
+                                <textarea name="content" class="form-control form-control-sm" rows="2"><?php echo htmlspecialchars($pg['content']); ?></textarea>
+                            </div>
+                            <div class="mt-2">
+                                <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
+                                <button name="action" value="delete" class="btn btn-sm btn-danger">Sil</button>
+                            </div>
+                        </form>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <div class="tab-pane fade" id="announcements" role="tabpanel">
                 <form method="post" class="row g-2 mb-3">
@@ -746,7 +819,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <div class="col-12 col-md-2"><input type="date" name="exp_date" class="form-control"></div>
                     <div class="col-12 col-md-2"><button class="btn btn-primary w-100">Ekle</button></div>
                 </form>
-                <div class="table-responsive">
+                <div class="table-responsive stack-table">
                 <table class="table table-sm table-striped">
                     <tr><th>Kullanıcı</th><th>Deneyim</th><th>Tarih</th><th></th></tr>
                     <?php foreach($experiences as $ex): ?>
@@ -766,6 +839,29 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                     <?php endforeach; ?>
                 </table>
 </div>
+                <div class="stack-cards">
+                    <?php foreach($experiences as $ex): ?>
+                    <div class="card mb-2">
+                        <form method="post" class="card-body">
+                            <input type="hidden" name="section" value="experiences">
+                            <input type="hidden" name="id" value="<?php echo $ex['id']; ?>">
+                            <div class="mb-2"><strong>Kullanıcı:</strong> <?php echo htmlspecialchars($ex['username']); ?></div>
+                            <div class="mb-2">
+                                <label class="form-label small">Deneyim</label>
+                                <input type="text" name="title" class="form-control form-control-sm" value="<?php echo htmlspecialchars($ex['title']); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small">Tarih</label>
+                                <input type="date" name="exp_date" class="form-control form-control-sm" value="<?php echo htmlspecialchars($ex['exp_date']); ?>">
+                            </div>
+                            <div class="mt-2">
+                                <button name="action" value="update" class="btn btn-sm btn-secondary me-1">Kaydet</button>
+                                <button name="action" value="delete" class="btn btn-sm btn-danger">Sil</button>
+                            </div>
+                        </form>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <div class="tab-pane fade" id="messages" role="tabpanel">
                 <form method="get" class="row g-2 mb-3">
