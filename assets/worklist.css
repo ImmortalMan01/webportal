@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+:root{--wl-sidebar-width:240px;}
 
 body.worklist-page {
   font-family: 'Inter', sans-serif;
@@ -46,11 +47,18 @@ body.worklist-page section.card {
   text-decoration: none;
   font-weight: 500;
 }
+.wl-header .menu-toggle{
+  background:none;
+  border:none;
+  color:inherit;
+  font-size:20px;
+  cursor:pointer;
+}
 
 .wl-container { display: flex; flex: 1; overflow: hidden; }
 
 .wl-sidebar {
-  width: 240px;
+  width: var(--wl-sidebar-width);
   background: linear-gradient(180deg,#0e1b2b,#142438);
   padding-top: 24px;
   display: flex;
@@ -191,5 +199,20 @@ body.worklist-page.light .request-item {
   background:#f8f9fa;
   color:#212529;
   box-shadow:0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Sidebar toggle for mobile */
+.sidebar-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;}
+@media(max-width:768px){
+  :root{--wl-sidebar-width:80vw;}
+  .wl-sidebar{
+    position:fixed;
+    top:0;left:0;bottom:0;
+    transform:translateX(calc(-1 * var(--wl-sidebar-width)));
+    transition:transform .3s ease;
+    z-index:1000;
+  }
+  .wl-sidebar.open{transform:translateX(0);}
+  .wl-main{margin-left:0;}
 }
 
