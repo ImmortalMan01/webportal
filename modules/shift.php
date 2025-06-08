@@ -28,10 +28,10 @@ function tr_upper(string $text): string {
     </aside>
     <main class="wl-main">
       <div id="weekly" class="wl-view active"><div class="wl-card">Haftalık Liste Henüz Uygulanmadı.</div></div>
-      <div id="calendar" class="wl-view" style="display:none"><div class="wl-card"><div id="calendarComponent" class="wl-calendar"></div></div></div>
-      <div id="yearly" class="wl-view" style="display:none"><div class="wl-card">Yıllık İzin Görünümü.</div></div>
-      <div id="requests" class="wl-view" style="display:none"><div class="wl-card">İstekler panelinden görüntüleyiniz.</div></div>
-      <div id="stats" class="wl-view" style="display:none"><div class="wl-card">İstatistikler.</div></div>
+      <div id="calendar" class="wl-view"><div class="wl-card"><div id="calendarComponent" class="wl-calendar"></div></div></div>
+      <div id="yearly" class="wl-view"><div class="wl-card">Yıllık İzin Görünümü.</div></div>
+      <div id="requests" class="wl-view"><div class="wl-card">İstekler panelinden görüntüleyiniz.</div></div>
+      <div id="stats" class="wl-view"><div class="wl-card">İstatistikler.</div></div>
     </main>
   </div>
 </div>
