@@ -332,6 +332,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
 <body class="admin-layout">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
+            <button id="sidebarToggle" class="btn btn-outline-light d-lg-none me-2" type="button"><i class="fas fa-bars"></i></button>
             <a class="navbar-brand" href="../index.php"><?php echo htmlspecialchars($site_name); ?></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -904,6 +905,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/theme.js"></script>
     <script src="../assets/user-dropdown.js"></script>
+    <script src="../assets/admin-sidebar.js"></script>
     <script>
         const hash = location.hash;
         if(hash){
