@@ -137,6 +137,14 @@ canvas {
   width: 22px;
 }
 
+#login-button .successMessage {
+  display: none;
+}
+
+#login-button.complete .successMessage {
+  display: block;
+}
+
 #login-button .successMessage .button-text span {
   left: 5px;
   transition: all .2s ease var(--dr);
