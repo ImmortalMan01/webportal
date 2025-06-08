@@ -107,10 +107,14 @@ body.light .admin-sidebar{
   overflow-y:auto;
 }
 
-/* stacked card layout for small screens */
-.stack-cards{display:none;}
-
 @media(max-width:575.98px){
+  .msg-history{
+    /* fill more of the screen on small devices */
+    max-height:calc(100vh - 260px);
+  }
   .stack-table{display:none;}
   .stack-cards{display:block;}
 }
+
+/* stacked card layout for small screens */
+.stack-cards{display:none;}
