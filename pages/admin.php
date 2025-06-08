@@ -347,19 +347,19 @@ function render_auth($count, $registrations_open, $hide_register_button) {
         </div>
     </nav>
     <nav class="admin-sidebar nav flex-column" id="adminTab" role="tablist">
-        <a class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" href="#users" role="tab">Kullanıcılar</a>
-        <a class="nav-link" id="shifts-tab" data-bs-toggle="tab" data-bs-target="#shifts" href="#shifts" role="tab">Çalışma Listesi</a>
-        <a class="nav-link" id="trainings-tab" data-bs-toggle="tab" data-bs-target="#trainings" href="#trainings" role="tab">Eğitimler</a>
-        <a class="nav-link" id="exams-tab" data-bs-toggle="tab" data-bs-target="#exams" href="#exams" role="tab">Sınavlar</a>
-        <a class="nav-link" id="procedures-tab" data-bs-toggle="tab" data-bs-target="#procedures" href="#procedures" role="tab">Prosedürler</a>
-        <a class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules" href="#modules" role="tab">Modüller</a>
-        <a class="nav-link" id="pages-tab" data-bs-toggle="tab" data-bs-target="#pages" href="#pages" role="tab">Sayfalar</a>
-        <a class="nav-link" id="announcements-tab" data-bs-toggle="tab" data-bs-target="#announcements" href="#announcements" role="tab">Duyurular</a>
-        <a class="nav-link" id="experiences-tab" data-bs-toggle="tab" data-bs-target="#experiences" href="#experiences" role="tab">Deneyimler</a>
-        <a class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" href="#messages" role="tab">Mesajlar</a>
-        <a class="nav-link" id="profiles-tab" data-bs-toggle="tab" data-bs-target="#profiles" href="#profiles" role="tab">Profiller</a>
-        <a class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" href="#settings" role="tab">Ayarlar</a>
-        <a class="nav-link" href="activity_log.php"><i class="fa-solid fa-list-check me-1"></i>Activity Log</a>
+        <a class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" href="#users" role="tab"><i class="fa-solid fa-users me-1"></i>Kullanıcılar</a>
+        <a class="nav-link" id="shifts-tab" data-bs-toggle="tab" data-bs-target="#shifts" href="#shifts" role="tab"><i class="fa-solid fa-calendar me-1"></i>Çalışma Listesi</a>
+        <a class="nav-link" id="trainings-tab" data-bs-toggle="tab" data-bs-target="#trainings" href="#trainings" role="tab"><i class="fa-solid fa-graduation-cap me-1"></i>Eğitimler</a>
+        <a class="nav-link" id="exams-tab" data-bs-toggle="tab" data-bs-target="#exams" href="#exams" role="tab"><i class="fa-solid fa-clipboard-check me-1"></i>Sınavlar</a>
+        <a class="nav-link" id="procedures-tab" data-bs-toggle="tab" data-bs-target="#procedures" href="#procedures" role="tab"><i class="fa-solid fa-book me-1"></i>Prosedürler</a>
+        <a class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules" href="#modules" role="tab"><i class="fa-solid fa-cubes me-1"></i>Modüller</a>
+        <a class="nav-link" id="pages-tab" data-bs-toggle="tab" data-bs-target="#pages" href="#pages" role="tab"><i class="fa-solid fa-file-lines me-1"></i>Sayfalar</a>
+        <a class="nav-link" id="announcements-tab" data-bs-toggle="tab" data-bs-target="#announcements" href="#announcements" role="tab"><i class="fa-solid fa-bullhorn me-1"></i>Duyurular</a>
+        <a class="nav-link" id="experiences-tab" data-bs-toggle="tab" data-bs-target="#experiences" href="#experiences" role="tab"><i class="fa-solid fa-briefcase me-1"></i>Deneyimler</a>
+        <a class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" href="#messages" role="tab"><i class="fa-solid fa-envelope me-1"></i>Mesajlar</a>
+        <a class="nav-link" id="profiles-tab" data-bs-toggle="tab" data-bs-target="#profiles" href="#profiles" role="tab"><i class="fa-solid fa-id-badge me-1"></i>Profiller</a>
+        <a class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" href="#settings" role="tab"><i class="fa-solid fa-gear me-1"></i>Ayarlar</a>
+        <a class="nav-link" href="activity_log.php"><i class="fa-solid fa-list-check me-1"></i>Aktivite Günlüğü</a>
     </nav>
     <main class="admin-content">
         <h2 class="mb-4">Admin Panel</h2>
