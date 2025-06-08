@@ -19,11 +19,11 @@ body.worklist-page section.card {
   box-shadow: none;
 }
 
-/* Restore spacing for the main navbar */
+/* Keep navbar full width but add page padding */
 body.worklist-page nav.navbar .container {
-  max-width: 1320px;
-  padding-left: var(--bs-gutter-x, 0.75rem);
-  padding-right: var(--bs-gutter-x, 0.75rem);
+  max-width: none;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 #wls-app {
