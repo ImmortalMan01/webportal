@@ -110,6 +110,7 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php if($theme === 'dashboard'): ?>
     <link rel="stylesheet" href="assets/dashboard.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <?php endif; ?>
     <link rel="stylesheet" href="assets/user-dropdown.css">
 </head>
@@ -153,6 +154,9 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/theme.js"></script>
+    <?php if($theme === 'dashboard'): ?>
+    <script src="assets/header.js"></script>
+    <?php endif; ?>
     <script src="assets/user-dropdown.js"></script>
 </body>
 </html>
