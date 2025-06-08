@@ -4,6 +4,11 @@
   const monthNames = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
   const dayNames = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
   let current = new Date();
+  function capitalize(text){
+    const map={i:'İ',ş:'Ş',ğ:'Ğ',ü:'Ü',ö:'Ö',ç:'Ç',ı:'I'};
+    const f=text.charAt(0);
+    return (map[f]||f.toUpperCase())+text.slice(1);
+  }
   const views = document.querySelectorAll('.wl-view');
   document.querySelectorAll('.wl-sidebar li').forEach(li=>{
     li.addEventListener('click',()=>{
@@ -38,7 +43,18 @@
           const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
           const span=document.createElement('span'); span.textContent=d; td.appendChild(span);
           const entry=data[dateStr];
-          if(entry){ const code=document.createElement('div'); code.className='code'; code.textContent=entry.type[0].toUpperCase(); code.classList.add(entry.type.charAt(0)); td.appendChild(code); td.style.background=bgColor(entry.type); }
+          if(entry){
+            const code=document.createElement('div');
+            code.className='code';
+            code.textContent=entry.type[0].toUpperCase();
+            code.classList.add(entry.type.charAt(0));
+            td.appendChild(code);
+            const status=document.createElement('div');
+            status.className='status';
+            status.textContent=`${capitalize(entry.type)} İsteğinde Bulunuldu Onay Bekleniyor`;
+            td.appendChild(status);
+            td.style.background=bgColor(entry.type);
+          }
           td.dataset.date=dateStr;
           td.addEventListener('click',()=>openModal(dateStr));
           d++; if(d>daysInMonth) done=true;
@@ -70,7 +86,6 @@
   const modal = document.getElementById('wls-modal');
   const modalDate = modal.querySelector('.subtitle');
   const radios = modal.querySelectorAll('input[name="type"]');
-  const noteEl = modal.querySelector('textarea');
 
   function openModal(date){
     modal.classList.add('active');
@@ -78,7 +93,6 @@
     const d=new Date(date); modalDate.textContent='Seçilen Tarih: '+d.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric',weekday:'long'});
     const entry=data[date]||{};
     radios.forEach(r=>r.checked=r.value===entry.type);
-    noteEl.value=entry.note||'';
   }
   function closeModal(){ modal.classList.remove('active'); }
   modal.querySelector('.cancel').addEventListener('click',closeModal);
@@ -87,8 +101,7 @@
   modal.querySelector('.save').addEventListener('click',()=>{
     const date=modal.dataset.date;
     const type=[...radios].find(r=>r.checked)?.value;
-    const note=noteEl.value.trim();
-    if(type){ data[date]={type,note}; save(); }
+    if(type){ data[date]={type}; save(); }
     closeModal(); renderCalendar(); refreshList();
   });
 
@@ -106,7 +119,6 @@
       const div=document.createElement('div');
       div.className='request-item';
       div.innerHTML=`<div>${new Date(date).toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric',weekday:'long'})} <span class="badge ${entry.type.charAt(0)}">${entry.type[0].toUpperCase()}</span></div>`;
-      if(entry.note) div.innerHTML+=`<div class="note">${entry.note}</div>`;
       const actions=document.createElement('div'); actions.className='actions';
       const edit=document.createElement('i'); edit.className='fa-solid fa-pencil';
       const del=document.createElement('i'); del.className='fa-solid fa-trash';

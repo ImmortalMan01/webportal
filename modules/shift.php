@@ -45,7 +45,6 @@ function tr_upper(string $text): string {
       <label><input type="radio" name="type" value="izin"> İZİN</label><br>
       <label><input type="radio" name="type" value="diğer"> DİĞER</label>
     </div>
-    <textarea placeholder="İsteğinizi buraya yazın…"></textarea>
     <div class="actions">
       <button class="ghost cancel">İptal</button>
       <button class="fill save">Kaydet</button>

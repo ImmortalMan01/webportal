@@ -84,6 +84,7 @@ body.worklist-page section.card {
 .wl-calendar td:hover { outline:1px solid rgba(63,167,255,0.4); cursor:pointer; }
 .wl-calendar td.selected { outline:2px solid #3fa7ff; }
 .wl-calendar .code { position:absolute; top:4px; right:4px; font-size:12px; padding:2px 4px; border-radius:4px; }
+.wl-calendar .status { position:absolute; left:4px; right:4px; bottom:4px; font-size:10px; line-height:1.1; background:rgba(0,0,0,0.6); padding:2px 4px; border-radius:4px; }
 .legend { display:flex; justify-content:center; gap:16px; margin-top:8px; }
 .legend span { display:flex; align-items:center; gap:4px; font-size:14px; }
 .legend .g { background:#3fa7ff; }
@@ -115,7 +116,6 @@ body.worklist-page section.card {
 .request-item .badge.n { background:#dc3545; }
 .request-item .badge.i { background:#198754; }
 .request-item .badge.d { background:#6c757d; }
-.request-item .note { font-style:italic; margin-top:4px; opacity:0.8; }
 .request-item .actions { text-align:right; margin-top:4px; }
 .request-item i { cursor:pointer; margin-left:8px; }
 
@@ -160,6 +160,10 @@ body.worklist-page.light .wl-calendar td {
 }
 body.worklist-page.light .wl-calendar td:hover {
   outline:1px solid rgba(13,110,253,0.3);
+}
+body.worklist-page.light .wl-calendar .status {
+  background:rgba(255,255,255,0.8);
+  color:#212529;
 }
 body.worklist-page.light .wl-modal-card {
   background:#fff;
