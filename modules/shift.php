@@ -56,5 +56,5 @@ function tr_upper(string $text): string {
   <div class="header"><span>İsteklerim</span><i class="fa-solid fa-xmark close" style="cursor:pointer"></i></div>
   <div class="list"></div>
 </div>
-<script src="assets/worklist.js"></script>
 <script src="assets/holiday-calendar.js"></script>
+<script src="assets/worklist.js"></script>
