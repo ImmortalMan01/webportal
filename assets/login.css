@@ -93,13 +93,9 @@ body {
   outline: none;
 }
 .login .inputBx .toggle-password {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2em;
   cursor: pointer;
   color: #fff;
+  font-size: 1.2em;
 }
 .login .inputBx input[type="submit"] {
   width: 100%;
