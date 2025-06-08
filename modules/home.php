@@ -14,7 +14,7 @@ if($theme === 'dashboard'):
     $announcements = $pdo->query('SELECT content, publish_date FROM announcements ORDER BY publish_date DESC')->fetchAll();
     $pdo->exec("CREATE TABLE IF NOT EXISTS announcement_views (user_id INT PRIMARY KEY, last_seen DATETIME NOT NULL DEFAULT '1970-01-01 00:00:00', FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)");
     $newAnnCount = 0;
-    $latestAnn = null;
+    $newAnnouncements = [];
     if(isset($_SESSION['user'])){
         $uidStmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
         $uidStmt->execute([$user]);
@@ -27,9 +27,9 @@ if($theme === 'dashboard'):
             $cnt->execute([$lastSeen]);
             $newAnnCount = (int)$cnt->fetchColumn();
             if($newAnnCount > 0){
-                $det = $pdo->prepare('SELECT content, publish_date FROM announcements WHERE publish_date > ? ORDER BY publish_date DESC LIMIT 1');
+                $det = $pdo->prepare('SELECT content, publish_date FROM announcements WHERE publish_date > ? ORDER BY publish_date DESC');
                 $det->execute([$lastSeen]);
-                $latestAnn = $det->fetch(PDO::FETCH_ASSOC);
+                $newAnnouncements = $det->fetchAll(PDO::FETCH_ASSOC);
             }
         }
     }
@@ -50,10 +50,12 @@ if($theme === 'dashboard'):
       </button>
       <div class="drop-down__menu-box">
         <ul class="drop-down__menu">
-          <?php if($newAnnCount>0 && $latestAnn): ?>
-          <li class="drop-down__item"><a href="#" id="newAnnLink" data-content="<?php echo htmlspecialchars($latestAnn['content'], ENT_QUOTES); ?>" data-date="<?php echo $latestAnn['publish_date']; ?>"><?php echo $newAnnCount; ?> Yeni Duyuru</a></li>
+          <?php if($newAnnCount>0 && !empty($newAnnouncements)): ?>
+            <?php foreach($newAnnouncements as $ann): ?>
+              <li class="drop-down__item"><a href="#" class="newAnnLink" data-content="<?php echo htmlspecialchars($ann['content'], ENT_QUOTES); ?>" data-date="<?php echo $ann['publish_date']; ?>"><?php echo htmlspecialchars($ann['content']); ?></a></li>
+            <?php endforeach; ?>
           <?php else: ?>
-          <li class="drop-down__item">Bildirim yok</li>
+            <li class="drop-down__item">Bildirim yok</li>
           <?php endif; ?>
         </ul>
       </div>
@@ -183,8 +185,7 @@ if($theme === 'dashboard'):
           annModal.show();
         });
       });
-      var newAnnLink = document.getElementById('newAnnLink');
-      if(newAnnLink){
+      document.querySelectorAll('.newAnnLink').forEach(function(newAnnLink){
         newAnnLink.addEventListener('click',function(e){
           e.preventDefault();
           document.querySelector('#announcementModal .modal-body').innerText = this.getAttribute('data-content');
@@ -194,9 +195,10 @@ if($theme === 'dashboard'):
           fetch('pages/mark_announcement.php', {method:'POST'});
           var badge = document.querySelector('#notifBtn .badge');
           if(badge) badge.remove();
-          this.parentElement.innerHTML = 'Bildirim yok';
+          var menu = document.querySelector('#notifMenu .drop-down__menu');
+          if(menu) menu.innerHTML = '<li class="drop-down__item">Bildirim yok</li>';
         });
-      }
+      });
     }
   });
 </script>
