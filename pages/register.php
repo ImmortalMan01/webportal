@@ -47,19 +47,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if ($message) echo "<div class='alert alert-info'>$message</div>"; ?>
             <form method="post">
                 <div class="inputBx">
-                    <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                    <label for="reg_username" class="form-label">Kullanıcı Adı</label>
+                    <input id="reg_username" type="text" name="username" placeholder="Kullanıcı Adı" required>
                 </div>
                 <div class="inputBx">
-                    <input type="email" name="email" placeholder="E-posta" required>
+                    <label for="reg_email" class="form-label">E-posta</label>
+                    <input id="reg_email" type="email" name="email" placeholder="E-posta" required>
                 </div>
                 <div class="inputBx">
+                    <label for="reg_password" class="form-label">Şifre</label>
                     <div class="input-group">
-                        <input type="password" name="password" placeholder="Şifre" class="form-control" required>
+                        <input id="reg_password" type="password" name="password" placeholder="Şifre" class="form-control" required>
                         <span class="input-group-text"><i class="toggle-password bi bi-eye"></i></span>
                     </div>
                 </div>
                 <div class="inputBx">
-                    <select name="role">
+                    <label for="reg_role" class="form-label">Rol</label>
+                    <select id="reg_role" name="role">
                         <?php foreach (default_roles() as $r): ?>
                         <option value="<?php echo htmlspecialchars($r); ?>"><?php echo htmlspecialchars($r); ?></option>
                         <?php endforeach; ?>

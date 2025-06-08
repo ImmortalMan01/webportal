@@ -45,11 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if ($error) echo "<div class='alert alert-danger'>$error</div>"; ?>
             <form method="post">
                 <div class="inputBx">
-                    <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                    <label for="username" class="form-label">Kullanıcı Adı</label>
+                    <input id="username" type="text" name="username" placeholder="Kullanıcı Adı" required>
                 </div>
                 <div class="inputBx">
+                    <label for="password" class="form-label">Şifre</label>
                     <div class="input-group">
-                        <input type="password" name="password" placeholder="Şifre" class="form-control" required>
+                        <input id="password" type="password" name="password" placeholder="Şifre" class="form-control" required>
                         <span class="input-group-text"><i class="toggle-password bi bi-eye"></i></span>
                     </div>
                 </div>

@@ -43,10 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if ($message) echo "<div class='alert alert-danger'>$message</div>"; ?>
             <form method="post">
                 <div class="inputBx">
-                    <input type="password" name="password" placeholder="Yeni Şifre" required>
+                    <label for="new_password" class="form-label">Yeni Şifre</label>
+                    <input id="new_password" type="password" name="password" placeholder="Yeni Şifre" required>
                 </div>
                 <div class="inputBx">
-                    <input type="password" name="password2" placeholder="Yeni Şifre (Tekrar)" required>
+                    <label for="new_password2" class="form-label">Yeni Şifre (Tekrar)</label>
+                    <input id="new_password2" type="password" name="password2" placeholder="Yeni Şifre (Tekrar)" required>
                 </div>
                 <div class="inputBx">
                     <input type="submit" value="Sıfırla">
