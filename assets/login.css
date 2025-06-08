@@ -107,6 +107,20 @@ body {
   box-shadow: none;
   outline: none;
 }
+
+.login .inputBx .input-group .form-control {
+  border-right: none;
+  border-radius: 40px 0 0 40px;
+}
+
+.login .inputBx .input-group-text {
+  border: 2px solid #fff;
+  border-left: none;
+  border-radius: 0 40px 40px 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
 .login .inputBx .toggle-password {
   cursor: pointer;
   color: #fff;
