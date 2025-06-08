@@ -16,10 +16,9 @@ body {
 }
 .ring {
   position: relative;
-  width: min(90vw, 500px);
+  width: 100%;
+  max-width: 420px;
   height: auto;
-  aspect-ratio: 1 / 1;
-  max-width: 500px;
   max-height: 90vh;
   display: flex;
   justify-content: center;
@@ -64,10 +63,9 @@ body {
   }
 }
 .login {
-  position: absolute;
-  width: 90vw;
+  position: relative;
+  width: 100%;
   max-width: 300px;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -155,10 +153,9 @@ body {
 
 @media (max-width: 576px) {
   .ring {
-    width: min(100vw, 500px);
+    width: 100%;
+    max-width: 420px;
     height: auto;
-    aspect-ratio: 1 / 1;
-    max-width: none;
     max-height: 90vh;
     padding: 20px;
   }
