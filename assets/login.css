@@ -20,10 +20,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
   background: #111;
   width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 .ring {
   position: relative;
