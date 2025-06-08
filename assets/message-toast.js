@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   window.showToast=function(from,msg){
     const text = String(msg||'');
-    const truncated = text.length>80 ? text.slice(0,77)+'...' : text;
+    const truncated = text.length>20 ? text.slice(0,17)+'...' : text;
 
     const note=document.createElement('div');
     note.className='msg-toast';
