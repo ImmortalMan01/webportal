@@ -30,6 +30,7 @@ body.home-dashboard::before{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  flex-wrap:wrap;
   padding:12px 24px;
   position:sticky;
   top:0;left:0;right:0;
@@ -41,9 +42,9 @@ body.home-dashboard::before{
   transition:transform .3s;
 }
 .portal-nav.hide{transform:translateY(-100%);}
-.portal-logo{font-size:24px;font-weight:700;text-transform:uppercase;}
-.nav-left{display:flex;flex-direction:column;line-height:1.2;}
-.nav-left .welcome{font-size:14px;margin-top:2px;}
+.portal-logo{font-size:24px;font-weight:700;text-transform:uppercase;overflow-wrap:anywhere;}
+.nav-left{display:flex;flex-direction:column;line-height:1.2;flex:1 1 auto;min-width:0;}
+.nav-left .welcome{font-size:14px;margin-top:2px;overflow-wrap:anywhere;}
 .role-pill{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:9999px;font-size:12px;margin-top:2px;display:inline-block;}
 .nav-actions{display:flex;align-items:center;gap:8px;}
 .nav-actions .icon-btn{background:none;border:none;color:var(--fg);width:22px;height:22px;font-size:22px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;}
