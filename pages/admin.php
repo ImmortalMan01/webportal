@@ -746,22 +746,22 @@ function render_auth($count, $registrations_open, $hide_register_button) {
                 <?php endforeach; ?>
                 </div>
                 <?php if($u1 && $u2): ?>
-                <form method="post" class="d-flex align-items-start" id="adminMsgForm">
+                <form method="post" class="d-flex flex-wrap align-items-start" id="adminMsgForm">
                     <input type="hidden" name="section" value="admin_messages">
                     <input type="hidden" name="action" value="send">
                     <input type="hidden" name="u1" value="<?php echo htmlspecialchars($u1); ?>">
                     <input type="hidden" name="u2" value="<?php echo htmlspecialchars($u2); ?>">
-                    <select name="from" id="fromSelect" class="form-select me-2" style="max-width:150px;">
+                    <select name="from" id="fromSelect" class="form-select me-md-2 mb-2 flex-grow-1" style="max-width:150px;">
                         <option value="<?php echo htmlspecialchars($u1); ?>"><?php echo htmlspecialchars($u1); ?> olarak</option>
                         <option value="<?php echo htmlspecialchars($u2); ?>"><?php echo htmlspecialchars($u2); ?> olarak</option>
                         <option value="<?php echo htmlspecialchars($_SESSION['user']); ?>">Admin olarak</option>
                     </select>
-                    <select name="to" id="toSelect" class="form-select me-2" style="max-width:150px; display:none;">
+                    <select name="to" id="toSelect" class="form-select me-md-2 mb-2 flex-grow-1" style="max-width:150px; display:none;">
                         <option value="<?php echo htmlspecialchars($u1); ?>"><?php echo htmlspecialchars($u1); ?></option>
                         <option value="<?php echo htmlspecialchars($u2); ?>"><?php echo htmlspecialchars($u2); ?></option>
                     </select>
-                    <input type="text" name="message" class="form-control me-2" required>
-                    <button class="btn btn-primary">Gönder</button>
+                    <input type="text" name="message" class="form-control me-md-2 mb-2 flex-grow-1" required>
+                    <button class="btn btn-primary mb-2">Gönder</button>
                 </form>
                 <?php endif; ?>
             </div>
