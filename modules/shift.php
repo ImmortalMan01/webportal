@@ -14,6 +14,7 @@ function tr_upper(string $text): string {
 ?>
 <script>document.body.classList.add('worklist-page');</script>
 <link rel="stylesheet" href="assets/worklist.css">
+<link rel="stylesheet" href="assets/holiday-calendar.css">
 <div id="wls-app">
   <div class="wl-container">
     <aside class="wl-sidebar">
@@ -56,3 +57,4 @@ function tr_upper(string $text): string {
   <div class="list"></div>
 </div>
 <script src="assets/worklist.js"></script>
+<script src="assets/holiday-calendar.js"></script>
