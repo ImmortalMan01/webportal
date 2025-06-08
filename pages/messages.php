@@ -124,9 +124,13 @@ $allUsers = $userStmt->fetchAll();
                 ws.addEventListener('message', e => {
                     const data = JSON.parse(e.data);
                     if(data.type==='message'){
-                        appendMsg(data.from===currentUser, data.text, data.time, data.id, data.status, data.role);
-                        if(data.from!==currentUser){
-                            ws.send(JSON.stringify({type:'seen', id:data.id, to:data.from}));
+                        if(data.from===partner || data.from===currentUser){
+                            appendMsg(data.from===currentUser, data.text, data.time, data.id, data.status, data.role);
+                            if(data.from!==currentUser){
+                                ws.send(JSON.stringify({type:'seen', id:data.id, to:data.from}));
+                            }
+                        } else if(window.showToast){
+                            window.showToast(data.from, data.text);
                         }
                     }else if(data.type==='typing'){
                         showTyping();
@@ -230,5 +234,10 @@ $allUsers = $userStmt->fetchAll();
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../assets/theme.js"></script>
+<script>
+    window.NO_TOAST_WS = true;
+    window.currentUser = <?php echo json_encode($current); ?>;
+</script>
+<script src="../assets/message-toast.js"></script>
 </body>
 </html>

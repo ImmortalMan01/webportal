@@ -156,5 +156,9 @@ function render_auth($count, $registrations_open, $hide_register_button) {
     <script src="assets/theme.js"></script>
     <script src="assets/user-dropdown.js"></script>
     <script src="assets/header.js"></script>
+    <script>
+        var currentUser = <?php echo json_encode($_SESSION['user'] ?? null); ?>;
+    </script>
+    <script src="assets/message-toast.js"></script>
 </body>
 </html>
