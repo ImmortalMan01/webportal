@@ -89,3 +89,9 @@ body.light .admin-sidebar{
 }
 
 #toSelect{display:none;}
+
+/* message history scroll container */
+.msg-history{
+  max-height:50vh;
+  overflow-y:auto;
+}
