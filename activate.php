@@ -1,7 +1,7 @@
 <?php
 session_start();
 require __DIR__ . '/includes/db.php';
-require __DIR__ . '/includes/license.php';
+require_once __DIR__ . '/includes/license.php';
 
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
