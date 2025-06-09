@@ -3,13 +3,19 @@ let disabled = false;
 
 async function loginAndAnimate() {
   if (disabled) return;
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  if (!username || !password) {
+    showError('Kullanıcı adı ve şifre gerekli');
+    return;
+  }
   disabled = true;
   document.getElementById('login-error').style.display = 'none';
   button.classList.add('loading');
   button.classList.remove('ready');
   const formData = new FormData();
-  formData.append('username', document.getElementById('username').value);
-  formData.append('password', document.getElementById('password').value);
+  formData.append('username', username);
+  formData.append('password', password);
   try {
     const response = await fetch('login_api.php', { method: 'POST', body: formData });
     const result = await response.json();
