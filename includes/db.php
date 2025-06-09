@@ -25,6 +25,8 @@ try {
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (muted_user_id) REFERENCES users(id) ON DELETE CASCADE
     )");
+    require_once __DIR__ . '/license.php';
+    enforce_license($pdo);
 } catch (PDOException $e) {
     die('Veritabanı bağlantı hatası: ' . $e->getMessage());
 }
